@@ -38,5 +38,5 @@ Instalar las dependencias en el entorno ya creado y cargado
 Ya está listo para ejecutar el servidor de desarrollo
 
 ```sh
-    python manage.py runserver
+    python manage.py runserver 0.0.0.0:8000
 ```
