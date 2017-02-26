@@ -17,18 +17,16 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from rest_framework import routers
 from quickstart import views
-from customer.views import CustomerViewSet, get_all_customers
+from customer.views import CustomerDetail, CustomerList
 from rest_framework.authtoken import views as rest_views
 
 router = routers.DefaultRouter()
-router.register(r'api/users/', views.UserViewSet)
-router.register(r'api/groups/', views.GroupViewSet)
-router.register(r'api/customerss/', CustomerViewSet)
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include(router.urls)),
-    url(r'^api/customers/', get_all_customers),
+    url(r'^api/customers/(?P<pk>[0-9]+)/', CustomerDetail.as_view()),
+    url(r'^api/customers/', CustomerList.as_view()),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/token-auth/', rest_views.obtain_auth_token),
 ]

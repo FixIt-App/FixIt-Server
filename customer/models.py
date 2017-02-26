@@ -9,6 +9,8 @@ from rest_framework.authtoken.models import Token
 class Customer(models.Model):
     """
         Model that represents a FixIt Customer
+        This is not a good example to use as reference for future models
+        as this one has a relationship with django user        
     """
     user = models.OneToOneField(User)
     city = models.CharField(max_length = 255)
