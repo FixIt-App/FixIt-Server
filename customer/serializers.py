@@ -22,4 +22,4 @@ class AddressSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Address
-        fields  = fields = ('id', 'name', 'address',  'city', 'country', 'customer')
+        fields  = fields = ('id', 'name', 'address',  'city', 'country')

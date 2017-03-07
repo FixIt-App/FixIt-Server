@@ -30,5 +30,5 @@ urlpatterns = [
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/token-auth/', rest_views.obtain_auth_token),
     url(r'^api/addresses/', AddressList.as_view()),
-    url(r'^api/addresses/(?P<pk>[0-9]+)/', AddressDetail.as_view()),
+    url(r'^api/address/(?P<pk>[0-9]+)/', AddressDetail.as_view()),
 ]

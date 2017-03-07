@@ -10,9 +10,9 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
         # Write permissions are only allowed to the owner of the snippet.
-        if(obje.user):
+        if(hasattr(obj, 'user')):
             return obj.user == request.user
-        elif (obje.customer):
+        elif (hasattr(obj, 'customer')):
             return obj.customer.user == request.user
         else:
             return False
