@@ -16,8 +16,8 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from rest_framework import routers
-from quickstart import views
 from customer.views import CustomerDetail, CustomerList, AddressList, AddressDetail
+from customer.views import get_customer_authenticated
 from rest_framework.authtoken import views as rest_views
 
 router = routers.DefaultRouter()
@@ -25,10 +25,11 @@ router = routers.DefaultRouter()
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include(router.urls)),
-    url(r'^api/customers/(?P<pk>[0-9]+)/', CustomerDetail.as_view(), name='customer-detail'),
-    url(r'^api/customers/', CustomerList.as_view()),
+    url(r'^api/customers/(?P<pk>[0-9]+)/$', CustomerDetail.as_view(), name='customer-detail'),
+    url(r'^api/customers/$', CustomerList.as_view()),
+    url(r'^api/customer/authenticated/$', get_customer_authenticated),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/token-auth/', rest_views.obtain_auth_token),
-    url(r'^api/addresses/', AddressList.as_view()),
-    url(r'^api/address/(?P<pk>[0-9]+)/', AddressDetail.as_view()),
+    url(r'^api/addresses/(?P<pk>[0-9]+)/$', AddressDetail.as_view()),
+    url(r'^api/addresses/$', AddressList.as_view()),
 ]

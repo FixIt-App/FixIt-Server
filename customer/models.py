@@ -33,5 +33,5 @@ class Address(models.Model):
     address = models.CharField(max_length=255, help_text="actual address")
     city = models.CharField(max_length = 255)
     country = models.CharField(max_length = 255)
-    customer = models.ForeignKey('Customer', on_delete=models.SET_NULL, null=True)
+    customer = models.ForeignKey('Customer', related_name='addresses', on_delete=models.SET_NULL, null=True)
 

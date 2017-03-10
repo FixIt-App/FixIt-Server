@@ -89,9 +89,9 @@ class AddressList(APIView):
         if serializer.is_valid():
             customer = Customer.objects.filter(user__id__iexact=request.user.id).first()
             address = Address(name = serializer.data['name'], \
-                        address = serializer.data['address'],     \
-                        city = serializer.data['city'],         \
-                        country = serializer.data['country'],         \
+                        address = serializer.data['address'], \
+                        city = serializer.data['city'],       \
+                        country = serializer.data['country'], \
                         customer = customer)
             address.save()
             return Response(serializer.data, status = status.HTTP_201_CREATED)
@@ -134,3 +134,17 @@ class AddressDetail(APIView):
         self.check_object_permissions(self.request, address)
         address.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET'])
+def get_customer_authenticated(request):
+    """
+    Retrieve customer instance given the auth token.
+    """
+    try:
+        user = request.user
+        customer = Customer.objects.filter(user__id__iexact=user.id).first()
+    except Snippet.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+        
+    serializer = CustomerSerializer(customer)
+    return Response(serializer.data)
