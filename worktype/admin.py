@@ -1,3 +1,7 @@
 from django.contrib import admin
+from worktype.models import WorkType
 
-# Register your models here.
+class WorkTypeAdmin(admin.ModelAdmin):
+    pass
+
+admin.site.register(WorkType, WorkTypeAdmin)
