@@ -16,6 +16,10 @@ class Customer(models.Model):
     city = models.CharField(max_length = 255)
 
 
+    def __str__(self):
+        return self.user.username
+
+
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     """

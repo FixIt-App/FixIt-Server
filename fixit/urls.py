@@ -15,10 +15,16 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+
 from rest_framework import routers
+from rest_framework.authtoken import views as rest_views
+
+from worktype.views import WorkTypeList
+
 from customer.views import CustomerDetail, CustomerList, AddressList, AddressDetail
 from customer.views import get_customer_authenticated
-from rest_framework.authtoken import views as rest_views
+
+
 
 router = routers.DefaultRouter()
 
@@ -32,4 +38,5 @@ urlpatterns = [
     url(r'^api/token-auth/', rest_views.obtain_auth_token),
     url(r'^api/addresses/(?P<pk>[0-9]+)/$', AddressDetail.as_view()),
     url(r'^api/addresses/$', AddressList.as_view()),
+    url(r'^api/worktypes/$', WorkTypeList.as_view()),
 ]
