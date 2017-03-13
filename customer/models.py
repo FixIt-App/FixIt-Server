@@ -25,5 +25,13 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
         Token.objects.create(user=instance)
 
 
-
+class Address(models.Model):
+    """
+        Model that represents an address of a customer       
+    """
+    name = models.CharField(max_length=255, help_text="short name to recognize the address")
+    address = models.CharField(max_length=255, help_text="actual address")
+    city = models.CharField(max_length = 255)
+    country = models.CharField(max_length = 255)
+    customer = models.ForeignKey('Customer', related_name='addresses', on_delete=models.SET_NULL, null=True)
 
