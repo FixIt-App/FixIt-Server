@@ -94,6 +94,7 @@ class AddressList(APIView):
                         country = serializer.data['country'], \
                         customer = customer)
             address.save()
+            serializer = AddressSerializer(address)
             return Response(serializer.data, status = status.HTTP_201_CREATED)
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
@@ -121,11 +122,7 @@ class AddressDetail(APIView):
         self.check_object_permissions(self.request, address)
         serializer = AddressSerializer(data=request.data)
         if serializer.is_valid():
-            address.name = serializer.data['name']
-            address.address = serializer.data['address']
-            address.city = serializer.data['city']
-            address.country = serializer.data['country']
-            address.save()
+            serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
