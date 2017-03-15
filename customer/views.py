@@ -142,9 +142,25 @@ def get_customer_authenticated(request):
     """
     try:
         user = request.user
-        customer = Customer.objects.filter(user__id__iexact=user.id).first()
-    except Snippet.DoesNotExist:
+        customer = Customer.objects.filter(user__id__exact=user.id).first()
+    except Customer.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
         
     serializer = CustomerSerializer(customer)
     return Response(serializer.data)
+
+
+@api_view(['GET'])
+def get_customer_adresses(request):
+    """
+        Gets the user adresses
+    """
+    try:
+        user = request.user
+        customer = Customer.objects.filter(user__id__exact = user.id).first()
+        addresses = Address.objects.filter(customer__id__exact = customer.id)
+        serializer = AddressSerializer(addresses, many = True)
+        return Response(serializer.data)
+    except Customer.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
