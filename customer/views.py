@@ -8,12 +8,17 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
+
 from customer.serializers import CustomerSerializer, AddressSerializer
 from customer.models import Customer, Address
 from customer.permissions import IsOwnerOrReadOnly
+from rest_framework import permissions
 
 # It seems that two class based views is the best option
 class CustomerList(APIView):
+
+    permission_classes = (permissions.AllowAny, )
+
     """
         List all customers or create new customer endpoint
     """
