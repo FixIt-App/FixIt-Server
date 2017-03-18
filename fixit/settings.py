@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'quickstart.apps.QuickstartConfig',
     'customer.apps.CustomerConfig',
-    'worktype.apps.WorkTypeConfig'
+    'worktype.apps.WorkTypeConfig',
+    'work.apps.WorkConfig'
 ]
 
 
