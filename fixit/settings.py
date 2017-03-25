@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'quickstart.apps.QuickstartConfig',
     'customer.apps.CustomerConfig',
-    'worktype.apps.WorkTypeConfig'
+    'worktype.apps.WorkTypeConfig',
+    'work.apps.WorkConfig'
 ]
 
 
@@ -52,7 +53,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
     ),
-    'PAGE_SIZE': 10,
+    'PAGE_SIZE': 30,
 }
 
 
@@ -135,3 +136,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+
+PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')

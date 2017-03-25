@@ -89,3 +89,11 @@ ENV/
 .ropeproject
 #mac ugly file
 .DS_Store
+
+
+# Django and Django Rest Framework Static files
+fixit/static/admin
+fixit/static/rest_framework
+
+#logs
+server.log
