@@ -34,6 +34,7 @@ class CustomerList(APIView):
                         last_name = serializer.data['last_name'],   \
                         username = serializer.data['username'],     \
                         email = serializer.data['email'])
+            user.set_password(serializer.data['password'])
             user.save()
             customer = Customer(user = user, city = serializer.data['city'])
             customer.save()
