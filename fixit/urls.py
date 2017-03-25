@@ -25,6 +25,12 @@ from customer.views import CustomerDetail, CustomerList, AddressList, AddressDet
 from customer.views import get_customer_authenticated, get_customer_adresses
 
 
+# VERY IMPORTANT, development ONLY, GUNICORN should not go upfront in production, NGINX should
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+# end very important
+
+
+
 
 router = routers.DefaultRouter()
 
@@ -41,3 +47,7 @@ urlpatterns = [
     url(r'^api/addresses/$', AddressList.as_view()),
     url(r'^api/worktypes/$', WorkTypeList.as_view()),
 ]
+
+# VERY IMPORTANT, development ONLY, GUNICORN should not go upfront in production, NGINX should
+urlpatterns += staticfiles_urlpatterns()
+# end very important
