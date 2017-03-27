@@ -39,3 +39,7 @@ class Address(models.Model):
     country = models.CharField(max_length = 255)
     customer = models.ForeignKey('Customer', related_name='addresses', on_delete=models.SET_NULL, null=True)
 
+
+    def __str__(self):
+        return self.name + "  " + self.address
+
