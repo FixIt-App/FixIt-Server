@@ -1,15 +1,25 @@
-from celery.task.schedules import crontab
-from celery.decorators import periodic_task
-from myapp.utils import scrapers
-from celery.utils.log import get_task_logger
-from datetime import datetime
- 
-logger = get_task_logger(__name__)
- 
-# A periodic task that will run every minute (the symbol "*" means every)
-@periodic_task(run_every=(crontab(hour="*", minute="*", day_of_week="*")))
-def scraper_example():
-    logger.info("Start task")
-    now = datetime.now()
-    result = scrapers.scraper_example(now.day, now.minute)
-    logger.info("Task finished: result = %i" % result)
+# Create your tasks here
+from __future__ import absolute_import, unicode_literals
+from celery import shared_task
+from celery.decorators import task
+
+@task()
+def create_work(work):
+    print('creating work started')
+    for n in range(0,1000000):
+        pass
+    print("Finished work")
+
+@shared_task
+def add(x, y):
+    return x + y
+
+
+@shared_task
+def mul(x, y):
+    return x * y
+
+
+@shared_task
+def xsum(numbers):
+    return sum(numbers)

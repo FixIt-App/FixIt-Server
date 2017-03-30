@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
-    'djcelery',
     'quickstart.apps.QuickstartConfig',
     'customer.apps.CustomerConfig',
     'worktype.apps.WorkTypeConfig',
@@ -111,12 +110,10 @@ DATABASES = {
     }
 }
 
-BROKER_URL = os.environ.get('BROKER_URL')
+CELERY_BROKER_URL = os.environ.get('BROKER_URL')
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
-CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
-CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
