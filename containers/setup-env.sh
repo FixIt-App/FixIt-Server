@@ -8,3 +8,6 @@ export BROKER_URL="amqp://$RABBITMQ_DEFAULT_USER:$RABBITMQ_DEFAULT_PASS@localhos
 # environment variables for postgres server
 export POSTGRES_USER=fixit
 export POSTGRES_PASSWORD=
+
+#django configurations
+export MEDIA_ROOT=
