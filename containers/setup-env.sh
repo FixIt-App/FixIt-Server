@@ -9,5 +9,13 @@ export BROKER_URL="amqp://$RABBITMQ_DEFAULT_USER:$RABBITMQ_DEFAULT_PASS@localhos
 export POSTGRES_USER=fixit
 export POSTGRES_PASSWORD=
 
-#django configurations
+# django configurations
 export MEDIA_ROOT=
+
+# email configuration
+export EMAIL_API_KEY=
+
+# aws configuration
+export AWS_ACCESS_KEY_ID=
+export AWS_SECRET_ACCESS_KEY=
+
