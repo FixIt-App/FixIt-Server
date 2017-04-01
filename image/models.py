@@ -6,4 +6,4 @@ class Image(models.Model):
      image = models.ImageField(null=False)
 
      def __str__(self):
-         return "ID: %s | ID Work: %s | Hora: %s | Dirección: %s " % (self.id,self.id_work)
+         return "ID: %s" % (self.id)
