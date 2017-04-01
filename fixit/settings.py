@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'quickstart.apps.QuickstartConfig',
     'customer.apps.CustomerConfig',
     'worktype.apps.WorkTypeConfig',
-    'work.apps.WorkConfig'
+    'work.apps.WorkConfig',
+    'image.apps.ImageConfig'
 ]
 
 
@@ -139,3 +140,4 @@ STATIC_URL = '/static/'
 
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
+MEDIA_ROOT = os.environ.get('MEDIA_ROOT')
