@@ -93,7 +93,7 @@ class AddressList(APIView):
     def post(self, request, format = None):
         serializer = AddressSerializer(data = request.data)
         if serializer.is_valid():
-            customer = Customer.objects.filter(user__id__iexact=request.user.id).first()
+            customer = Customer.objects.filter(user__id__exact=request.user.id).first()
             address = Address(name = serializer.data['name'], \
                         address = serializer.data['address'], \
                         city = serializer.data['city'],       \
