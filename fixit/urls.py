@@ -25,7 +25,7 @@ from customer.views import CustomerDetail, CustomerList, AddressList, AddressDet
 from customer.views import get_customer_authenticated, get_customer_adresses
 from image.views import  ImageUploadView
 
-from work.views import create_work
+from work.views import create_work, get_my_works
 
 # VERY IMPORTANT, development ONLY, GUNICORN should not go upfront in production, NGINX should
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
@@ -49,6 +49,7 @@ urlpatterns = [
     url(r'^api/addresses/$', AddressList.as_view()),
     url(r'^api/worktypes/$', WorkTypeList.as_view()),
     url(r'^api/work/upload-image/$', ImageUploadView.as_view()),
+    url(r'^api/myworks/$', get_my_works),
     url(r'^api/work/$', create_work),
 ]
 

@@ -14,6 +14,7 @@ from worktype.models import WorkType
 from work.models import Work
 
 from .tasks import create_work as create_work_async
+from .serializers import DetailWorkSerializer
 
 @api_view(['POST'])
 def create_work(request):
@@ -46,7 +47,21 @@ def create_work(request):
     except Address.DoesNotExist:
         return Response(status = status.HTTP_400_BAD_REQUEST)
 
-        
-    
+@api_view(['GET'])
+def get_my_works(request):
+    user = request.user
+    customer = Customer.objects.filter(user__id__exact = user.id).first()
+    works = Work.objects.filter(customer__id__exact = customer.id).order_by('-time', '-id').all()
+    my_works = []
+    for work in works:
+        images = Image.objects.filter(work__id__exact = work.id)
+        work.images = images
+        my_works.append(work)
+    serializer = DetailWorkSerializer(data = my_works, many = True)
+    if serializer.is_valid() == False:
+        return Response(serializer.data)
+    else:
+        return Response(status = status.HTTP_500_INTERNAL_SERVER_ERROR) 
+
 
     
