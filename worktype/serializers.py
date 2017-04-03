@@ -8,7 +8,7 @@ class WorkTypeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = WorkType
-        fields = ('name', 'description', 'icon')
+        fields = ('id', 'name', 'description', 'icon')
 
 
 
