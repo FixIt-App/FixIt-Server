@@ -26,3 +26,4 @@ class DetailWorkSerializer(serializers.Serializer):
     address = AddressSerializer()
     id = serializers.IntegerField()
     description = serializers.CharField()
+    time = serializers.DateTimeField()
