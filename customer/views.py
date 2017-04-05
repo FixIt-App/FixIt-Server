@@ -12,6 +12,7 @@ from rest_framework import status
 from customer.serializers import CustomerSerializer, AddressSerializer
 from customer.models import Customer, Address
 from customer.permissions import IsOwnerOrReadOnly
+from customer.tasks import confirm_user
 from rest_framework import permissions
 
 # It seems that two class based views is the best option
@@ -36,8 +37,9 @@ class CustomerList(APIView):
                         email = serializer.data['email'])
             user.set_password(serializer.data['password'])
             user.save()
-            customer = Customer(user = user, city = serializer.data['city'])
+            customer = Customer(user = user, city = serializer.data['city'], phone = serializer.data['phone'])
             customer.save()
+            confirm_user.delay(serializer.data['phone'])
             return Response(serializer.data, status = status.HTTP_201_CREATED)
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 

@@ -14,6 +14,7 @@ class Customer(models.Model):
     """
     user = models.OneToOneField(User)
     city = models.CharField(max_length = 255)
+    phone = models.CharField(blank = True, unique = True, max_length = 50)
 
 
     def __str__(self):
