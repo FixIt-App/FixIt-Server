@@ -4,6 +4,8 @@ python:
 # command to install dependencies
 install: "pip install -r requirements.txt"
 # services needed to run the application
+before_script:
+  - psql -c 'create database fixit;' -U postgres
 env:
 - POSTGRES_USER=postgres
 - POSTGRES_PASSWORD=
