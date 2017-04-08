@@ -1,16 +1,20 @@
 language: python
 python:
-  - "3.5"
-# command to install dependencies
-install: "pip install -r requirements.txt"
-# services needed to run the application
+- '3.5'
+install: pip install -r requirements.txt
 before_script:
-  - psql -c 'create database fixit;' -U postgres
+- psql -c 'create database fixit;' -U postgres
 env:
-- POSTGRES_DATABASE=fixit POSTGRES_USER=postgres PACKAGE_VERSION="1.0.*" POSTGRES_PASSWORD=
-
+  matrix:
+  - POSTGRES_DATABASE=fixit POSTGRES_USER=postgres PACKAGE_VERSION="1.0.*" POSTGRES_PASSWORD=
 services:
-  - postgres
-  - rabbitmq
-# command to run tests
+- postgres
+- rabbitmq
 script: python3 manage.py test
+deploy:
+  provider: script
+  script: scripts/deploy.sh
+  on:
+    branch: develop
+export:
+  secure: rNti6aTAYOE4IPTu/3zHysB6xz6weyPTWkWHjGSiGe8VEEgIaPkNbE/vVmdHJrIzvuwNnWedJBFa9PyhzafwfjYltmXQHvyM+osS9Clf7lHkPgJRcCVk5kJFWiijswHK8hutKbSc9ESc/KO/WAQovsG8ndY5PiUwo36/IjGC0tNXyND2VvoGeY0d7UhOgExz/pFlBPFWNlpkPkprqLScfR9mD596Jrmr5/GPPt5o/T1b0r+thKNvh0f8wuj7Wb8LyHGKD/fg9lVWeDhidw0xHWgpojSdBD/SItnv+MRgrD7qrFRQwglkRSTf/wZRauS2NH+yfrgVClg8o5g9hoNe+E+KOc5ghF4YdNzd2z1yuRjd2de8cS9p4Sw6B5G2RLoonBpgRKLnTFG+8HU7JgjcaScpF1EduO0USC4xksfybNmlLQzC8LjpLJZgkLicX6gFltA5V2lDa/SIcxasiuaCljBw/dTf1TiawN74ripNo5hEKv8nG7pjWPjcCkl7UQbBhLhiSJngU8gTKZRMDfrHeTy4vM26cjUwCvN0h4jo9BT4mB5/6s5m2VHJEcsqlmea1rLZzuesRYkNU0nRmcoRv6ElNf4ia7P+DMjkJv9eEqBfPnLnG9GH6xeUZz/sqU/0IxWcaIOvK+BlZ6ONfl8T9AysLomQLqRfZyZmnCzhsFU=
