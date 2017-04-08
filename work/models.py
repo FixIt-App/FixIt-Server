@@ -10,6 +10,16 @@ class Work(models.Model):
     time = models.DateTimeField(auto_now = False, blank = False)
     description = models.TextField(blank = True)
 
+    STATE_CHOICES = (
+        ('ORDERED', 'ORDERED'),
+        ('SCHEDULED', 'SCHEDULED'),
+        ('FINISHED', 'FINISHED'),
+        ('FAILED', 'FAILED'),
+        ('CANCELED', 'CANCELED')
+    )
+
+    state = models.CharField(max_length = 20, choices = STATE_CHOICES, default = 'ORDERED')
+
     def __str__(self):
         return "Usuario: %s | Trabajo: %s | Hora: %s | Dirección: %s " % (self.customer.user.email, self.worktype.name, str(self.time), self.address.address, )
         
