@@ -51,7 +51,11 @@ def create_work(request):
 def get_my_works(request):
     user = request.user
     customer = Customer.objects.filter(user__id__exact = user.id).first()
-    works = Work.objects.filter(customer__id__exact = customer.id).order_by('-time', '-id').all()
+    works = Work.objects.filter(customer__id__exact = customer.id)
+    state = request.query_params.get('state', None)
+    if state is not None: # query has state filter
+        works = works.filter(state = state)
+    works = works.order_by('+time', '-id').all()
     my_works = []
     for work in works:
         images = Image.objects.filter(work__id__exact = work.id)
@@ -62,6 +66,8 @@ def get_my_works(request):
         return Response(serializer.data)
     else:
         return Response(status = status.HTTP_500_INTERNAL_SERVER_ERROR) 
+    
+
 
 
     

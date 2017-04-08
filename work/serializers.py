@@ -21,9 +21,9 @@ class WorkDTOSerializer(serializers.Serializer):
 
 
 class DetailWorkSerializer(serializers.Serializer):
-    images = ImageSerializer(many = True)
-    worktype = WorkTypeSerializer()
-    address = AddressSerializer()
     id = serializers.IntegerField()
     description = serializers.CharField()
     time = serializers.DateTimeField()
+    images = ImageSerializer(many = True)
+    worktype = WorkTypeSerializer()
+    address = AddressSerializer()
