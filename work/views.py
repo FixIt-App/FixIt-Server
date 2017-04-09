@@ -37,9 +37,11 @@ def create_work(request):
                 image = Image.objects.filter(id = image).first()
                 image.work = work
                 image.save()
-            
-            create_work_async.delay(work.id)
-            return Response(serializer.data)
+            try:
+                create_work_async.delay(work.id)
+                return Response(serializer.data)
+            except:
+                return Response(serializer.data)
         else:
             return Response(status = status.HTTP_400_BAD_REQUEST)
     except WorkType.DoesNotExist:
