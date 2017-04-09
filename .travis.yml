@@ -10,12 +10,7 @@ env:
 services:
 - postgres
 - rabbitmq
-script: python3 manage.py test
-deploy:
-  provider: script
-  script: scripts/deploy.sh
-  on:
-       branch: develop
+script: python3 manage.py migrate && python3 manage.py test
 
 export:
   secure: VwWIf2kQteFHU1D2oPz6LajtOJym0r5gUKn8dNvKTWWbcIX6ayLeBnFso37hJcgiGb8FoZtBpRBf+sYgvApzZKe/fMfbCqZwtAIDE0uJ9croQSwqfoW5Hox7++M/3i0m2ygosK9WV4M/I3OAEfLVz6IxIYER/SUt81X1g9hDp2VqZ1I2CYynqErUGWe832404+NSCfLw2Nob+X9A8H6UV+lrmKYTagVEUm69HTWB9aIaHifYLK+/hgi4Xiq1zh/SvAOhd+/YkAAox9Oqy/7AC8g+eHcT6N5zPlKqmjUx4qVm6/aX6+OmIXzD//4SM4PF7FEYgNPg/kzOogITqxRi+sHBM4noAp2TnxfzRTtb9jCyTik6aIyL/oH+8PZsWS+SKQEQNw3/3Tgih0WBB2d65vxS6csR4WQ6lk0x/o4wToqOCxYa+GJjh7Gm2VjyJMPOPaW3vhzG9R3HMUo/dPWaHc4jOsVidYcwD2SNSCR0CEkK1UTEaywI+xu1Tmg+SYYfek9iiJgVLiRC+Ou0QNxTdGEEFFyOm25xivr21KWbyqEOzSVa8lXWE1sk6eW0zoyFkZF9wLU6btjSK+jY7D0HMa1kSJfHL9N1CP43hrYnXyusm/120L2u3M+nm/GnaK/SKJpn8E71jiPRQs0aJaNpk57QHGRHGYqs7S9foSlMRfI=

@@ -11,4 +11,4 @@ class WorkTypeTestCase(TestCase):
         """Wortypes are correctly created"""
         worktype = WorkType.objects.get(name = "Carpintería")
         
-        self.assertEqual(worktype.name, 'Carpintería')
+        self.assertEqual(worktype.name, 'Carpinteríaaa', 'it should find the user and return the same name')
