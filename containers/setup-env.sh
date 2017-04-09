@@ -6,6 +6,7 @@ export BROKER_URL="amqp://$RABBITMQ_DEFAULT_USER:$RABBITMQ_DEFAULT_PASS@localhos
 
 
 # environment variables for postgres server
+export POSTGRES_DATABASE=fixit
 export POSTGRES_USER=fixit
 export POSTGRES_PASSWORD=
 
