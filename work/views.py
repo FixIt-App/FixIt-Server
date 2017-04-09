@@ -55,7 +55,7 @@ def get_my_works(request):
     state = request.query_params.get('state', None)
     if state is not None: # query has state filter
         works = works.filter(state = state)
-    works = works.order_by('+time', '-id').all()
+    works = works.order_by('time', '-id').all()
     my_works = []
     for work in works:
         images = Image.objects.filter(work__id__exact = work.id)
