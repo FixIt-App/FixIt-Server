@@ -11,10 +11,12 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
     first_name = serializers.CharField(source = 'user.first_name')
     last_name = serializers.CharField(source = 'user.last_name')
     email = serializers.CharField(source = 'user.email')
+    password = serializers.CharField(source = 'user.password')
 
     class Meta:
         model = Customer
-        fields  = fields = ('id', 'username', 'first_name', 'last_name', 'email', 'city')
+        fields = ('id', 'username', 'first_name', 'last_name', 'email', 'city', 'password', 'phone')
+
 
 class AddressSerializer(serializers.ModelSerializer):
     """

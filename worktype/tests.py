@@ -1,3 +1,14 @@
 from django.test import TestCase
 
-# Create your tests here.
+from worktype.models import WorkType
+
+class WorkTypeTestCase(TestCase):
+
+    def setUp(self):
+        WorkType.objects.create(name = "Carpintería", description = "Un trabajo muy duro", icon = "random/url.png" )
+
+    def test_works_are_created(self):
+        """Wortypes are correctly created"""
+        worktype = WorkType.objects.get(name = "Carpintería")
+        
+        self.assertEqual(worktype.name, 'Carpintería')

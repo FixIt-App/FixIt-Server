@@ -14,6 +14,11 @@ class Customer(models.Model):
     """
     user = models.OneToOneField(User)
     city = models.CharField(max_length = 255)
+    phone = models.CharField(blank = True, unique = True, max_length = 50)
+
+
+    def __str__(self):
+        return self.user.username
 
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
@@ -34,4 +39,8 @@ class Address(models.Model):
     city = models.CharField(max_length = 255)
     country = models.CharField(max_length = 255)
     customer = models.ForeignKey('Customer', related_name='addresses', on_delete=models.SET_NULL, null=True)
+
+
+    def __str__(self):
+        return self.name + "  " + self.address
 

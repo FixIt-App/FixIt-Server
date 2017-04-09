@@ -15,10 +15,24 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+
 from rest_framework import routers
-from customer.views import CustomerDetail, CustomerList, AddressList, AddressDetail
-from customer.views import get_customer_authenticated
 from rest_framework.authtoken import views as rest_views
+
+from worktype.views import WorkTypeList
+
+from customer.views import CustomerDetail, CustomerList, AddressList, AddressDetail
+from customer.views import get_customer_authenticated, get_customer_adresses
+from image.views import  ImageUploadView
+
+from work.views import create_work, get_my_works
+
+# VERY IMPORTANT, development ONLY, GUNICORN should not go upfront in production, NGINX should
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+# end very important
+
+
+
 
 router = routers.DefaultRouter()
 
@@ -30,6 +44,15 @@ urlpatterns = [
     url(r'^api/customer/authenticated/$', get_customer_authenticated),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/token-auth/', rest_views.obtain_auth_token),
+    url(r'^api/myadresses/$', get_customer_adresses),
     url(r'^api/addresses/(?P<pk>[0-9]+)/$', AddressDetail.as_view()),
     url(r'^api/addresses/$', AddressList.as_view()),
+    url(r'^api/worktypes/$', WorkTypeList.as_view()),
+    url(r'^api/work/upload-image/$', ImageUploadView.as_view()),
+    url(r'^api/myworks/$', get_my_works),
+    url(r'^api/work/$', create_work),
 ]
+
+# VERY IMPORTANT, development ONLY, GUNICORN should not go upfront in production, NGINX should
+urlpatterns += staticfiles_urlpatterns()
+# end very important

@@ -8,12 +8,18 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
+
 from customer.serializers import CustomerSerializer, AddressSerializer
 from customer.models import Customer, Address
 from customer.permissions import IsOwnerOrReadOnly
+from customer.tasks import confirm_user
+from rest_framework import permissions
 
 # It seems that two class based views is the best option
 class CustomerList(APIView):
+
+    permission_classes = (permissions.AllowAny, )
+
     """
         List all customers or create new customer endpoint
     """
@@ -29,9 +35,11 @@ class CustomerList(APIView):
                         last_name = serializer.data['last_name'],   \
                         username = serializer.data['username'],     \
                         email = serializer.data['email'])
+            user.set_password(serializer.data['password'])
             user.save()
-            customer = Customer(user = user, city = serializer.data['city'])
+            customer = Customer(user = user, city = serializer.data['city'], phone = serializer.data['phone'])
             customer.save()
+            confirm_user.delay(serializer.data['phone'])
             return Response(serializer.data, status = status.HTTP_201_CREATED)
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
@@ -87,13 +95,14 @@ class AddressList(APIView):
     def post(self, request, format = None):
         serializer = AddressSerializer(data = request.data)
         if serializer.is_valid():
-            customer = Customer.objects.filter(user__id__iexact=request.user.id).first()
+            customer = Customer.objects.filter(user__id__exact=request.user.id).first()
             address = Address(name = serializer.data['name'], \
                         address = serializer.data['address'], \
                         city = serializer.data['city'],       \
                         country = serializer.data['country'], \
                         customer = customer)
             address.save()
+            serializer = AddressSerializer(address)
             return Response(serializer.data, status = status.HTTP_201_CREATED)
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
@@ -121,11 +130,7 @@ class AddressDetail(APIView):
         self.check_object_permissions(self.request, address)
         serializer = AddressSerializer(data=request.data)
         if serializer.is_valid():
-            address.name = serializer.data['name']
-            address.address = serializer.data['address']
-            address.city = serializer.data['city']
-            address.country = serializer.data['country']
-            address.save()
+            serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -142,9 +147,25 @@ def get_customer_authenticated(request):
     """
     try:
         user = request.user
-        customer = Customer.objects.filter(user__id__iexact=user.id).first()
-    except Snippet.DoesNotExist:
+        customer = Customer.objects.filter(user__id__exact=user.id).first()
+    except Customer.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
         
     serializer = CustomerSerializer(customer)
     return Response(serializer.data)
+
+
+@api_view(['GET'])
+def get_customer_adresses(request):
+    """
+        Gets the user adresses
+    """
+    try:
+        user = request.user
+        customer = Customer.objects.filter(user__id__exact = user.id).first()
+        addresses = Address.objects.filter(customer__id__exact = customer.id)
+        serializer = AddressSerializer(addresses, many = True)
+        return Response(serializer.data)
+    except Customer.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
