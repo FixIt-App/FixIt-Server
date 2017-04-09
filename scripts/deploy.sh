@@ -1,3 +1,12 @@
+  # install & run ssh-agent
+apt-get -qq update -y
+apt-get -qq install openssh-client -y
+  # setup the private key
+eval $(ssh-agent -s)
+ssh-add <(echo "$ALPHA_SSH_KEY")
+mkdir -p ~/.ssh
+echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+ssh -t root@104.131.151.33
 # stop all processes
 pkill python3
 pkill celery
@@ -15,7 +24,6 @@ git pull origin develop
 
 source venv/bin/activate
 pip3 install -r requirements.txt
-python3 manage.py collectstatic
 python3 manage.py migrate
 
 # start gunicorn, only two workers for now
