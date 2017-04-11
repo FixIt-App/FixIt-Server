@@ -1,0 +1,38 @@
+[
+    {
+        "model": "worktype.worktype",
+        "pk": 1,
+        "fields": {
+            "name": "Carpinter\u00eda",
+            "description": "Profesionales 50,000 COP/hora",
+            "icon": "images/carpinteria.png"
+        }
+    },
+    {
+        "model": "worktype.worktype",
+        "pk": 2,
+        "fields": {
+            "name": "Plomer\u00eda",
+            "description": "Profesionales 24,000 COP/hora",
+            "icon": "images/plomeria.png"
+        }
+    },
+    {
+        "model": "worktype.worktype",
+        "pk": 3,
+        "fields": {
+            "name": "Cerrajer\u00eda",
+            "description": "Profesionales 42,000 COP/hora",
+            "icon": "images/cerrajeria.jpg"
+        }
+    },
+    {
+        "model": "worktype.worktype",
+        "pk": 4,
+        "fields": {
+            "name": "Electricista",
+            "description": "Profesionales 33,000 COP/hora",
+            "icon": "images/electricista.jpg"
+        }
+    }
+]

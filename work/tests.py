@@ -38,8 +38,6 @@ class WorkTypeTestCase(TestCase):
     def test_create_work_response(self):
         """Wortypes are correctly created"""
         worktype = WorkType.objects.get(name = "Carpintería")
-        
-        print("hay un total de " + str(len(WorkType.objects.all())))
 
         factory = APIRequestFactory()
         user = User.objects.get(username='testusername')

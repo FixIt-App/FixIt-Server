@@ -1,0 +1,49 @@
+[
+    {
+        "model": "customer.customer",
+        "pk": 1,
+        "fields": {
+            "user": 1,
+            "city": "Bogot\u00e1, Colombia",
+            "phone": ""
+        }
+    },
+    {
+        "model": "customer.customer",
+        "pk": 9,
+        "fields": {
+            "user": 20,
+            "city": "Bogot\u00e1, Colombia",
+            "phone": "+573116714204"
+        }
+    },
+    {
+        "model": "customer.customer",
+        "pk": 10,
+        "fields": {
+            "user": 21,
+            "city": "Bogot\u00e1, Colombia",
+            "phone": "+573016617071"
+        }
+    },
+    {
+        "model": "customer.customer",
+        "pk": 11,
+        "fields": {
+            "user": 22,
+            "city": "Bogota",
+            "phone": "3186017866"
+        }
+    },
+    {
+        "model": "customer.address",
+        "pk": 1,
+        "fields": {
+            "name": "Casa",
+            "address": "Carrera 2 #34-23",
+            "city": "Bogot\u00e1",
+            "country": "Colombia",
+            "customer": 1
+        }
+    }
+]
