@@ -39,6 +39,8 @@ class WorkTypeTestCase(TestCase):
         """Wortypes are correctly created"""
         worktype = WorkType.objects.get(name = "Carpintería")
         
+        print("hay un total de " + str(len(WorkType.objects.all())))
+
         factory = APIRequestFactory()
         user = User.objects.get(username='testusername')
 
@@ -54,6 +56,6 @@ class WorkTypeTestCase(TestCase):
         response = create_work(request)
 
         self.assertEqual(response.status_code, 201, 'It should return 201, created')
-        self.assertEqual(response.data['id'], '1', 'It shloud return workid id 1')
+        self.assertEqual(response.data['id'], 1, 'It should return workid id 1')
         self.assertEqual(response.data['description'], 'Se me dañó la ducha D:', 'It should hace a description')
         self.assertEqual(response.data['state'], 'ORDERED', 'It should be ordered')
