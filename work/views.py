@@ -1,9 +1,10 @@
 from django.shortcuts import render
+from django.http import Http404
 
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-
+from rest_framework.views import APIView
 
 from customer.models import Address, Customer
 
@@ -12,9 +13,10 @@ from image.models import Image
 from work.serializers import WorkDTOSerializer
 from worktype.models import WorkType
 from work.models import Work
+from customer.permissions import IsOwnerOrReadOnly
 
 from .tasks import create_work as create_work_async
-from .serializers import DetailWorkSerializer
+from .serializers import DetailWorkSerializer, DetailWorkDTOSerializer
 
 @api_view(['POST'])
 def create_work(request):
@@ -25,7 +27,10 @@ def create_work(request):
         if serializer.is_valid():
             worktype = WorkType.objects.filter(id = serializer.data['worktypeid']).first()
             date = serializer.data['date']
-            description = serializer.data['description']
+            if(serializer.data.get('description', None) != None):
+                description = serializer.data['description']
+            else:
+                description = ''
             address = Address.objects.filter(id = serializer.data['addressid']).first()
             user = request.user
             customer = Customer.objects.filter(user__id__exact = user.id).first()
@@ -33,10 +38,11 @@ def create_work(request):
                         address = address, time = date, 
                         description = description)
             work.save()
-            for image in serializer.data['images']:
-                image = Image.objects.filter(id = image).first()
-                image.work = work
-                image.save()
+            if(serializer.data.get('images', None) != None):
+                for image in serializer.data['images']:
+                    image = Image.objects.filter(id = image).first()
+                    image.work = work
+                    image.save()
             try:
                 create_work_async.delay(work.id)
                 return Response(serializer.data)
@@ -48,6 +54,33 @@ def create_work(request):
         return Response(status = status.HTTP_400_BAD_REQUEST)
     except Address.DoesNotExist:
         return Response(status = status.HTTP_400_BAD_REQUEST)
+
+class WorkDetail(APIView):
+    """
+        Retrieve, update or delete a customer instance.
+    """
+    permission_classes = ( IsOwnerOrReadOnly,)
+
+    def get_object(self, pk):
+        try:
+            return Work.objects.get(pk = pk)
+        except Work.DoesNotExist:
+            raise Http404
+
+    def put(self, request, pk, format = None):
+        work = self.get_object(pk)
+        self.check_object_permissions(self.request, work)
+        serializer = DetailWorkDTOSerializer(data=request.data)
+        if serializer.is_valid():
+            description = serializer.data['description']
+            work.description = description
+            for image in serializer.data['images']:
+                image = Image.objects.filter(id = image).first()
+                image.work = work
+                image.save()
+            work.save()
+            return Response(status = status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 def get_my_works(request):
