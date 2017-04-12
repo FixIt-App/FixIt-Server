@@ -9,7 +9,7 @@ from customer.models import Address, Customer
 
 from image.models import Image
 
-from work.serializers import WorkDTOSerializer, WorkModelSerializer
+from work.serializers import WorkDTOSerializer, DetailWorkSerializer
 from worktype.models import WorkType
 from work.models import Work
 
@@ -37,7 +37,9 @@ def create_work(request):
                 image = Image.objects.filter(id = image).first()
                 image.work = work
                 image.save()
-            serializer = WorkModelSerializer(work)
+            work.images = Image.objects.filter(pk__in = map(int, serializer.data['images']))
+            
+            serializer = DetailWorkSerializer(work)
             try:
                 create_work_async.delay(work.id)
                 return Response(serializer.data, status = status.HTTP_201_CREATED)
