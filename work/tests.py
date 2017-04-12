@@ -4,7 +4,7 @@ from rest_framework.test import APIRequestFactory, force_authenticate
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 
-from work.views import create_work, WorkDetail
+from work.views import create_work, WorkDetail, get_my_works
 from worktype.models import WorkType
 from customer.models import Customer, Address
 from django.contrib.auth.models import User 
@@ -82,5 +82,42 @@ class WorkTypeTestCase(TestCase):
         
         response = WorkDetail.as_view()(request,  work.id)
         self.assertEqual(response.status_code, 403, 'It should return 403, forbidden: user not owner of work')
+
+
+    def test_get_my_works_filter(self):
+        """My works and its filters"""
+
+        factory = APIRequestFactory()
+        user = User.objects.get(pk = 1)
+
+        request = factory.get('/api/myworks/')
+        force_authenticate(request, user=user, token=self.token.key)
+        
+        response = get_my_works(request)
+
+        self.assertEqual(response.status_code, 200, 'It should return 200, ok')
+        self.assertEqual(len(response.data), 2, 'It should have 2 works regardless of the state')
+
+        # finished works
+
+        request = factory.get('/api/myworks/?state=FINISHED')
+        force_authenticate(request, user=user, token=self.token.key)
+        
+        response = get_my_works(request)
+
+        self.assertEqual(response.status_code, 200, 'It should return 200, ok')
+        self.assertEqual(len(response.data), 1, 'It should have 1 finished work')
+
+
+        request = factory.get('/api/myworks/?state=ORDERED')
+        force_authenticate(request, user=user, token=self.token.key)
+        
+        response = get_my_works(request)
+
+        self.assertEqual(response.status_code, 200, 'It should return 200, ok')
+        self.assertEqual(len(response.data), 1, 'It should have 1 ordered work')
+
+
+
 
         

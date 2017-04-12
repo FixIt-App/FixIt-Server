@@ -10,7 +10,8 @@ def confirm_user(phone):
     sns = boto3.client('sns')
     result = sns.publish(
         PhoneNumber = phone,
-        Message = 'Bienvenido a FixIt, tu código es 654'
+        Message = 'Bienvenido a FixIt, tu código es 654',
+        Type = 'Transactional'
     )
     print(result)
 
