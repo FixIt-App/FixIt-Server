@@ -9,7 +9,7 @@ from customer.models import Address, Customer
 
 from image.models import Image
 
-from work.serializers import WorkDTOSerializer
+from work.serializers import WorkDTOSerializer, DetailWorkSerializer
 from worktype.models import WorkType
 from work.models import Work
 
@@ -37,11 +37,15 @@ def create_work(request):
                 image = Image.objects.filter(id = image).first()
                 image.work = work
                 image.save()
+            work.images = Image.objects.filter(pk__in = map(int, serializer.data['images']))
+            
+            serializer = DetailWorkSerializer(work)
             try:
                 create_work_async.delay(work.id)
-                return Response(serializer.data)
+                return Response(serializer.data, status = status.HTTP_201_CREATED)
             except:
-                return Response(serializer.data)
+                print("Queue not found")
+                return Response(serializer.data, status = status.HTTP_201_CREATED)
         else:
             return Response(status = status.HTTP_400_BAD_REQUEST)
     except WorkType.DoesNotExist:
@@ -53,7 +57,7 @@ def create_work(request):
 def get_my_works(request):
     user = request.user
     customer = Customer.objects.filter(user__id__exact = user.id).first()
-    works = Work.objects.filter(customer__id__exact = customer.id)
+    works = Work.objects.filter(customer__id__exact = customer  .id)
     state = request.query_params.get('state', None)
     if state is not None: # query has state filter
         works = works.filter(state = state)

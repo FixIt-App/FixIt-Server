@@ -27,3 +27,9 @@ class DetailWorkSerializer(serializers.Serializer):
     images = ImageSerializer(many = True)
     worktype = WorkTypeSerializer()
     address = AddressSerializer()
+    state = serializers.CharField()
+
+class WorkModelSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Work
+        fields = ('id', 'description', 'state')
