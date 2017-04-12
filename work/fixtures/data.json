@@ -42,103 +42,13 @@
         "password": "pbkdf2_sha256$30000$MumTxAzZqrQ3$jW4KWOspcBSKAY4G9gp6Cs+BIZGyEzWYtRMwLXDl8GQ=",
         "last_login": null,
         "is_superuser": false,
-        "username": "davidcalle9430@gmail.com",
-        "first_name": "David",
-        "last_name": "Calle",
-        "email": "davidcalle9430@gmail.com",
+        "username": "alfredo1_00@hotmail.com",
+        "first_name": "Alfredo",
+        "last_name": "Santamaria",
+        "email": "alfredo1_00@hotmail.com",
         "is_staff": false,
         "is_active": true,
         "date_joined": "2017-04-05T01:48:37.267Z",
-        "groups": [],
-        "user_permissions": []
-    }
-},
-{
-    "model": "auth.user",
-    "pk": 18,
-    "fields": {
-        "password": "pbkdf2_sha256$30000$IysXkiAl7mcP$R6ocT0hL/m5sl3/5YwCE7Oozno10iySpQu5w4JDWQ6I=",
-        "last_login": null,
-        "is_superuser": false,
-        "username": "soniajack@gmail.com",
-        "first_name": "Sonia",
-        "last_name": "Restrepo",
-        "email": "soniajack@gmail.com",
-        "is_staff": false,
-        "is_active": true,
-        "date_joined": "2017-04-05T02:00:27.344Z",
-        "groups": [],
-        "user_permissions": []
-    }
-},
-{
-    "model": "auth.user",
-    "pk": 19,
-    "fields": {
-        "password": "pbkdf2_sha256$30000$1VU98nPJr1VJ$+wHXyk7bF2wwiBQPFdHyad/ryKrvT504tbimGsCVE4M=",
-        "last_login": null,
-        "is_superuser": false,
-        "username": "francall1@gmail.com",
-        "first_name": "Francisco",
-        "last_name": "Calle",
-        "email": "francall1@gmail.com",
-        "is_staff": false,
-        "is_active": true,
-        "date_joined": "2017-04-05T02:04:09.864Z",
-        "groups": [],
-        "user_permissions": []
-    }
-},
-{
-    "model": "auth.user",
-    "pk": 20,
-    "fields": {
-        "password": "pbkdf2_sha256$30000$xSY7zWf1Zqd8$RYIxDtTfYeQ+mVN2WB2C6A0o4CMQacPZD3UoJdjOK/c=",
-        "last_login": null,
-        "is_superuser": false,
-        "username": "francall1@pepemail.com",
-        "first_name": "Francisco",
-        "last_name": "Calle",
-        "email": "francall1@pepemail.com",
-        "is_staff": false,
-        "is_active": true,
-        "date_joined": "2017-04-05T02:28:48.461Z",
-        "groups": [],
-        "user_permissions": []
-    }
-},
-{
-    "model": "auth.user",
-    "pk": 21,
-    "fields": {
-        "password": "pbkdf2_sha256$30000$FIP7Y0MT279K$lV+C7SAmn8knw0UE7c8BOYv8sYrXJ9XO6eUek4bLrF8=",
-        "last_login": null,
-        "is_superuser": false,
-        "username": "thisis@wert.com",
-        "first_name": "David",
-        "last_name": "Calle",
-        "email": "thisis@wert.com",
-        "is_staff": false,
-        "is_active": true,
-        "date_joined": "2017-04-07T11:35:21.302Z",
-        "groups": [],
-        "user_permissions": []
-    }
-},
-{
-    "model": "auth.user",
-    "pk": 22,
-    "fields": {
-        "password": "pbkdf2_sha256$30000$3eoEXi782Ejk$uU/qpd/KkGahw+S+BzJ+kZYehpc6Npk29DNaa6fU8jY=",
-        "last_login": null,
-        "is_superuser": false,
-        "username": "test",
-        "first_name": "test",
-        "last_name": "test",
-        "email": "davidcalle9430@gmail.com",
-        "is_staff": false,
-        "is_active": true,
-        "date_joined": "2017-04-09T22:29:34.254Z",
         "groups": [],
         "user_permissions": []
     }
@@ -149,14 +59,14 @@
     "fields": {
         "user": 1,
         "city": "Bogot\u00e1, Colombia",
-        "phone": ""
+        "phone": "+573016617071"
     }
 },
 {
     "model": "customer.customer",
     "pk": 9,
     "fields": {
-        "user": 20,
+        "user": 2,
         "city": "Bogot\u00e1, Colombia",
         "phone": "+573116714204"
     }
@@ -165,18 +75,9 @@
     "model": "customer.customer",
     "pk": 10,
     "fields": {
-        "user": 21,
+        "user": 17,
         "city": "Bogot\u00e1, Colombia",
-        "phone": "+573016617071"
-    }
-},
-{
-    "model": "customer.customer",
-    "pk": 11,
-    "fields": {
-        "user": 22,
-        "city": "Bogota",
-        "phone": "3186017866"
+        "phone": "+573186017866"
     }
 },
 {
@@ -251,310 +152,9 @@
     }
 },
 {
-    "model": "work.work",
-    "pk": 51,
-    "fields": {
-        "worktype": 1,
-        "customer": 1,
-        "address": 1,
-        "time": "2017-04-05T01:37:00Z",
-        "description": "me jod\u00ec",
-        "state": "CANCELED"
-    }
-},
-{
-    "model": "work.work",
-    "pk": 52,
-    "fields": {
-        "worktype": 1,
-        "customer": 1,
-        "address": 1,
-        "time": "2017-03-30T01:36:30.023Z",
-        "description": "Se me da\u00f1\u00f3 la ducha D:",
-        "state": "ORDERED"
-    }
-},
-{
-    "model": "work.work",
-    "pk": 53,
-    "fields": {
-        "worktype": 1,
-        "customer": 1,
-        "address": 1,
-        "time": "2017-03-30T01:36:30.023Z",
-        "description": "Se me da\u00f1\u00f3 la ducha D:",
-        "state": "ORDERED"
-    }
-},
-{
-    "model": "work.work",
-    "pk": 54,
-    "fields": {
-        "worktype": 1,
-        "customer": 1,
-        "address": 1,
-        "time": "2017-03-30T01:36:30.023Z",
-        "description": "Se me da\u00f1\u00f3 la ducha D:",
-        "state": "ORDERED"
-    }
-},
-{
-    "model": "work.work",
-    "pk": 55,
-    "fields": {
-        "worktype": 1,
-        "customer": 1,
-        "address": 1,
-        "time": "2017-03-30T01:36:30.023Z",
-        "description": "Se me da\u00f1\u00f3 la ducha D:",
-        "state": "ORDERED"
-    }
-},
-{
-    "model": "work.work",
-    "pk": 56,
-    "fields": {
-        "worktype": 1,
-        "customer": 1,
-        "address": 1,
-        "time": "2017-03-30T01:36:30.023Z",
-        "description": "Se me da\u00f1\u00f3 la ducha D:",
-        "state": "ORDERED"
-    }
-},
-{
-    "model": "work.work",
-    "pk": 57,
-    "fields": {
-        "worktype": 1,
-        "customer": 1,
-        "address": 1,
-        "time": "2017-03-30T01:36:30.023Z",
-        "description": "Se me da\u00f1\u00f3 la ducha D:",
-        "state": "ORDERED"
-    }
-},
-{
-    "model": "work.work",
-    "pk": 58,
-    "fields": {
-        "worktype": 1,
-        "customer": 1,
-        "address": 1,
-        "time": "2017-03-30T01:36:30.023Z",
-        "description": "Se me da\u00f1\u00f3 la ducha D:",
-        "state": "ORDERED"
-    }
-},
-{
-    "model": "work.work",
-    "pk": 59,
-    "fields": {
-        "worktype": 1,
-        "customer": 1,
-        "address": 1,
-        "time": "2017-03-30T01:36:30.023Z",
-        "description": "Se me da\u00f1\u00f3 la ducha D:",
-        "state": "ORDERED"
-    }
-},
-{
-    "model": "work.work",
-    "pk": 60,
-    "fields": {
-        "worktype": 1,
-        "customer": 1,
-        "address": 1,
-        "time": "2017-03-30T01:36:30.023Z",
-        "description": "Se me da\u00f1\u00f3 la ducha D:",
-        "state": "ORDERED"
-    }
-},
-{
-    "model": "work.work",
-    "pk": 61,
-    "fields": {
-        "worktype": 1,
-        "customer": 1,
-        "address": 1,
-        "time": "2017-03-30T01:36:30.023Z",
-        "description": "Se me da\u00f1\u00f3 la ducha D:",
-        "state": "ORDERED"
-    }
-},
-{
-    "model": "work.work",
-    "pk": 62,
-    "fields": {
-        "worktype": 1,
-        "customer": 1,
-        "address": 1,
-        "time": "2017-03-30T01:36:30.023Z",
-        "description": "Se me da\u00f1\u00f3 la ducha D:",
-        "state": "ORDERED"
-    }
-},
-{
-    "model": "work.work",
-    "pk": 63,
-    "fields": {
-        "worktype": 1,
-        "customer": 1,
-        "address": 1,
-        "time": "2017-03-30T01:36:30.023Z",
-        "description": "Se me da\u00f1\u00f3 la ducha D:",
-        "state": "ORDERED"
-    }
-},
-{
-    "model": "work.work",
-    "pk": 64,
-    "fields": {
-        "worktype": 1,
-        "customer": 1,
-        "address": 1,
-        "time": "2017-03-30T01:36:30.023Z",
-        "description": "Se me da\u00f1\u00f3 la ducha D:",
-        "state": "ORDERED"
-    }
-},
-{
-    "model": "work.work",
-    "pk": 65,
-    "fields": {
-        "worktype": 1,
-        "customer": 1,
-        "address": 1,
-        "time": "2017-03-30T01:36:30.023Z",
-        "description": "Se me da\u00f1\u00f3 la ducha D:",
-        "state": "ORDERED"
-    }
-},
-{
-    "model": "work.work",
-    "pk": 66,
-    "fields": {
-        "worktype": 1,
-        "customer": 1,
-        "address": 1,
-        "time": "2017-03-30T01:36:30.023Z",
-        "description": "Se me da\u00f1\u00f3 la ducha D:",
-        "state": "ORDERED"
-    }
-},
-{
-    "model": "work.work",
-    "pk": 67,
-    "fields": {
-        "worktype": 1,
-        "customer": 1,
-        "address": 1,
-        "time": "2017-03-30T01:36:30.023Z",
-        "description": "Se me da\u00f1\u00f3 la ducha D:",
-        "state": "ORDERED"
-    }
-},
-{
-    "model": "work.work",
-    "pk": 68,
-    "fields": {
-        "worktype": 1,
-        "customer": 1,
-        "address": 1,
-        "time": "2017-03-30T01:36:30.023Z",
-        "description": "Se me da\u00f1\u00f3 la ducha D:",
-        "state": "ORDERED"
-    }
-},
-{
-    "model": "work.work",
-    "pk": 69,
-    "fields": {
-        "worktype": 1,
-        "customer": 1,
-        "address": 1,
-        "time": "2017-03-30T01:36:30.023Z",
-        "description": "Se me da\u00f1\u00f3 la ducha D:",
-        "state": "ORDERED"
-    }
-},
-{
-    "model": "work.work",
-    "pk": 70,
-    "fields": {
-        "worktype": 1,
-        "customer": 1,
-        "address": 1,
-        "time": "2017-03-30T01:36:30.023Z",
-        "description": "Se me da\u00f1\u00f3 la ducha D:",
-        "state": "ORDERED"
-    }
-},
-{
-    "model": "work.work",
-    "pk": 71,
-    "fields": {
-        "worktype": 1,
-        "customer": 1,
-        "address": 1,
-        "time": "2017-03-30T01:36:30.023Z",
-        "description": "Se me da\u00f1\u00f3 la ducha D:",
-        "state": "ORDERED"
-    }
-},
-{
-    "model": "work.work",
-    "pk": 72,
-    "fields": {
-        "worktype": 1,
-        "customer": 1,
-        "address": 1,
-        "time": "2017-03-30T01:36:30.023Z",
-        "description": "Se me da\u00f1\u00f3 la ducha D:",
-        "state": "ORDERED"
-    }
-},
-{
-    "model": "work.work",
-    "pk": 73,
-    "fields": {
-        "worktype": 1,
-        "customer": 1,
-        "address": 1,
-        "time": "2017-03-30T01:36:30.023Z",
-        "description": "Se me da\u00f1\u00f3 la ducha D:",
-        "state": "ORDERED"
-    }
-},
-{
-    "model": "work.work",
-    "pk": 74,
-    "fields": {
-        "worktype": 1,
-        "customer": 1,
-        "address": 1,
-        "time": "2017-03-30T01:36:30.023Z",
-        "description": "Se me da\u00f1\u00f3 la ducha D:",
-        "state": "ORDERED"
-    }
-},
-{
-    "model": "work.work",
-    "pk": 75,
-    "fields": {
-        "worktype": 1,
-        "customer": 1,
-        "address": 1,
-        "time": "2017-03-30T01:36:30.023Z",
-        "description": "Se me da\u00f1\u00f3 la ducha D:",
-        "state": "ORDERED"
-    }
-},
-{
     "model": "image.image",
     "pk": 1,
     "fields": {
-        "work": 50,
         "image": "6217d191-efd.jpg"
     }
 },
@@ -564,22 +164,6 @@
     "fields": {
         "work": 50,
         "image": "3125a352-433.jpg"
-    }
-},
-{
-    "model": "image.image",
-    "pk": 3,
-    "fields": {
-        "work": 50,
-        "image": "31f1666b-0b4.jpg"
-    }
-},
-{
-    "model": "image.image",
-    "pk": 4,
-    "fields": {
-        "work": 75,
-        "image": "6dac06cf-1fa.jpg"
     }
 }
 ]

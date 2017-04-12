@@ -15,9 +15,9 @@ class StringListField(serializers.ListField):
 class WorkDTOSerializer(serializers.Serializer):
     worktypeid = serializers.IntegerField()
     date = serializers.DateTimeField()
-    description = serializers.CharField(max_length = 500)
+    description = serializers.CharField(max_length = 500, required = False)
     addressid = serializers.IntegerField()
-    images = StringListField()
+    images = StringListField(required = False)
 
 
 class DetailWorkSerializer(serializers.Serializer):
@@ -29,7 +29,6 @@ class DetailWorkSerializer(serializers.Serializer):
     address = AddressSerializer()
     state = serializers.CharField()
 
-class WorkModelSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Work
-        fields = ('id', 'description', 'state')
+class DetailWorkDTOSerializer(serializers.Serializer):
+    description = serializers.CharField()
+    images = StringListField()
