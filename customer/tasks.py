@@ -11,7 +11,6 @@ def confirm_user(phone):
     result = sns.publish(
         PhoneNumber = phone,
         Message = 'Bienvenido a FixIt, tu código es 654',
-        Type = 'Transactional'
     )
     print(result)
 
