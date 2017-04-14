@@ -53,7 +53,7 @@ urlpatterns = [
     url(r'^api/myworks/$', get_my_works),
     url(r'^api/work/$', create_work),
     url(r'^api/work/(?P<pk>[0-9]+)/$', WorkDetail.as_view()),
-    url(r'^confirmations/(?P<string>[\w\-]+)/$', confirm_email),
+    url(r'^confirmations/(?P<code>[\w\-]+)/$', confirm_email),
     
     
 ]

@@ -48,6 +48,9 @@ class Confirmation(models.Model):
      )
      confirmation_type = models.CharField(max_length = 40, choices = TYPE_CHOICES, default = 'ORDERED')
 
+     def __str__(self):
+         return self.code
+
 
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)

@@ -204,6 +204,7 @@ def confirm_email(request, code):
     try:
         confirmation = Confirmation.objects.get(code = code)
         confirmation.state = True
+        confirmation.save()
         return HttpResponse("Ya confirmaste tu correo. Muchas gracias")
     except Confirmation.DoesNotExist:
          raise Http404("Confirmation not exist")
