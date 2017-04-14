@@ -6,7 +6,9 @@ from django.http import Http404, HttpResponse
 from random import randint
 import uuid
 
+import logging
 
+logger = logging.getLogger(__name__)
 
 from rest_framework import viewsets
 from rest_framework.decorators import api_view
@@ -31,6 +33,7 @@ class CustomerList(APIView):
         List all customers or create new customer endpoint
     """
     def get(self, request, format = None):
+        logger.info('get all customers endpoint')
         customers = Customer.objects.all()
         serializer = CustomerSerializer(customers, many = True)
         return Response(serializer.data)
@@ -39,6 +42,7 @@ class CustomerList(APIView):
     def post(self, request, format = None):
         serializer = CustomerSerializer(data = request.data)
         if serializer.is_valid():
+            logger.info('Creating user %s started' % serializer.data['username'])
             user = User(first_name = serializer.data['first_name'], \
                         last_name = serializer.data['last_name'],   \
                         username = serializer.data['username'],     \
@@ -70,9 +74,9 @@ class CustomerList(APIView):
             confirmation_type = 'MAIL'
         )
         mail_confirmation.save()
-        print("Sending confirmation sms to ... " + customer.phone)
+        logger.info("Sending confirmation sms to ... " + customer.phone)
         confirm_user.delay(customer.phone, code)
-        print("Sending email confirmation to " + customer.user.email)
+        logger.info("Sending email confirmation to " + customer.user.email)
         confirm_email_async.delay(customer.user.email, e_code)
 
 
@@ -90,6 +94,7 @@ class CustomerDetail(APIView):
 
     def get(self, request, pk, format = None):
         customer = self.get_object(pk)
+        logger.info('Getting details from customer'  % customer.user.username)
         self.check_object_permissions(self.request, customer)
         serializer = CustomerSerializer(customer)
         return Response(serializer.data)
@@ -99,6 +104,7 @@ class CustomerDetail(APIView):
         self.check_object_permissions(self.request, customer)
         serializer = CustomerSerializer(data=request.data)
         if serializer.is_valid():
+            logger.info('Updating customer ' + customer.user.username)
             user = customer.user
             user.first_name = serializer.data['first_name']
             user.last_name = serializer.data['last_name']
@@ -180,6 +186,7 @@ def get_customer_authenticated(request):
     try:
         user = request.user
         customer = Customer.objects.filter(user__id__exact=user.id).first()
+        logger.info('getting auth data for customer ' + customer.user.username)
         customer.confirmations = Confirmation.objects.filter(customer__id = customer.id)
     except Customer.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
@@ -198,6 +205,7 @@ def get_customer_adresses(request):
         customer = Customer.objects.filter(user__id__exact = user.id).first()
         addresses = Address.objects.filter(customer__id__exact = customer.id)
         serializer = AddressSerializer(addresses, many = True)
+        logger.info('getting all addresses from customer ' + customer.user.username)
         return Response(serializer.data)
     except Customer.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
@@ -219,6 +227,7 @@ def confirm_phone(request):
         confirmation = Confirmation.objects.get(code = serializer.data['code'], customer = customer)
         confirmation.state = True
         confirmation.save()
+        logger.info('Confirmed users phone ' + user.username)
         return Response(status=status.HTTP_200_OK)
     except Confirmation.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
@@ -227,6 +236,7 @@ def confirm_phone(request):
 @api_view(['GET'])
 def my_confirmation(request):
     user = request.user
+    logger.info('getting al confirmations for ' +  user.username)
     customer = Customer.objects.filter(user__id__exact = user.id).first()
     confimation = Confirmation.objects.filter(customer = customer)
     serializer = ConfirmationSerializer(data = confimation, many = True)
@@ -237,6 +247,7 @@ def my_confirmation(request):
 
 def confirm_email(request, code):
     try:
+        logger.info('Confirmation for email with code ' +  code)
         confirmation = Confirmation.objects.get(code = code)
         confirmation.state = True
         confirmation.save()
@@ -264,3 +275,4 @@ def resend_sms_code(request):
     return Response(status=status.HTTP_400_BAD_REQUEST)
     
 
+        

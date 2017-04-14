@@ -18,8 +18,13 @@ from customer.permissions import IsOwnerOrReadOnly
 from .tasks import create_work as create_work_async
 from .serializers import DetailWorkSerializer, DetailWorkDTOSerializer
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 @api_view(['POST'])
 def create_work(request):
+    logger.info("creating work ...")
     serializer = WorkDTOSerializer(data = request.data)
     if request.method == 'GET':
         return Response(status = status.HTTP_400_BAD_REQUEST)
@@ -38,26 +43,31 @@ def create_work(request):
                         address = address, time = date, 
                         description = description)
             work.save()
+            logger.info('work created for customer ' + user.username)
             if(serializer.data.get('images', None) != None):
                 for image in serializer.data['images']:
                     image = Image.objects.filter(id = image).first()
                     image.work = work
                     image.save()
                 work.images = Image.objects.filter(pk__in = map(int, serializer.data['images']))
+                logger.info('added images for created work')
             else:
                 work.images = []
             serializer = DetailWorkSerializer(work)
             try:
                 create_work_async.delay(work.id)
+                logger.info('succesfully created work for customer ' + user.username)
                 return Response(serializer.data, status = status.HTTP_201_CREATED)
             except:
-                print("Queue not found")
+                logger.error('queue not found')
                 return Response(serializer.data, status = status.HTTP_201_CREATED)
         else:
             return Response(status = status.HTTP_400_BAD_REQUEST)
     except WorkType.DoesNotExist:
+        logger.error('created work for a worktype that does not exist')
         return Response(status = status.HTTP_400_BAD_REQUEST)
     except Address.DoesNotExist:
+        logger.error('created work for a non existent address')
         return Response(status = status.HTTP_400_BAD_REQUEST)
 
 class WorkDetail(APIView):
