@@ -27,13 +27,6 @@ from image.views import  ImageUploadView
 
 from work.views import create_work, get_my_works, WorkDetail
 
-# VERY IMPORTANT, development ONLY, GUNICORN should not go upfront in production, NGINX should
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-# end very important
-
-
-
-
 router = routers.DefaultRouter()
 
 urlpatterns = [
@@ -59,7 +52,3 @@ urlpatterns = [
     
     
 ]
-
-# VERY IMPORTANT, development ONLY, GUNICORN should not go upfront in production, NGINX should
-urlpatterns += staticfiles_urlpatterns()
-# end very important
