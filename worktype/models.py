@@ -9,10 +9,11 @@ class WorkType(models.Model):
      TYPE_CHOICES = (
         ('STANDARIZED', 'STANDARIZED'),
         ('NOT_STANDARIZED', 'NOT_STANDARIZED'),
+        ('UNKNOWN', 'UNKNOWN')
      )
 
      price_type = models.CharField(max_length = 40, choices = TYPE_CHOICES, default = 'ORDERED')
-     price = models.DecimalField(max_digits=6, decimal_places=2, default = -1.0)
+     price = models.DecimalField(max_digits=12, decimal_places=2, default = -1.0)
 
      def __str__(self):
          return self.name

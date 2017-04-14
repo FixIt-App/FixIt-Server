@@ -20,16 +20,6 @@ class Customer(models.Model):
     def __str__(self):
         return self.user.username
 
-
-@receiver(post_save, sender=settings.AUTH_USER_MODEL)
-def create_auth_token(sender, instance=None, created=False, **kwargs):
-    """
-        receiver that creates a token for every user
-    """
-    if created:
-        Token.objects.create(user=instance)
-
-
 class Address(models.Model):
     """
         Model that represents an address of a customer       
@@ -44,3 +34,26 @@ class Address(models.Model):
     def __str__(self):
         return self.name + "  " + self.address
 
+
+class Confirmation(models.Model):
+    
+     customer = models.ForeignKey('Customer', related_name='confirmations', on_delete=models.SET_NULL, null=True)
+     expire_date = models.DateTimeField(auto_now = True, blank = True)
+     code = models.CharField(max_length = 255)
+     state = models.BooleanField(default = False)
+
+     TYPE_CHOICES = (
+        ('MAIL', 'MAIL'),
+        ('SMS', 'SMS')
+     )
+     confirmation_type = models.CharField(max_length = 40, choices = TYPE_CHOICES, default = 'ORDERED')
+
+
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    """
+        receiver that creates a token for every user
+    """
+    if created:
+        Token.objects.create(user=instance)
