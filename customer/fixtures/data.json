@@ -1,0 +1,117 @@
+[
+{
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$30000$S1unZhx75plY$89yjLFra65z1/ST1s47My/Ulu9U0sNOHrMqw8wOyM74=",
+        "last_login": "2017-04-12T19:01:25.428Z",
+        "is_superuser": true,
+        "username": "david",
+        "first_name": "David",
+        "last_name": "Calle",
+        "email": "davidfcalle@gmail.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2017-03-29T00:40:40Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 2,
+    "fields": {
+        "password": "pbkdf2_sha256$30000$QJ7hTtuP6GEF$ZIzx4tUBUdG1s82sw0d5Z6hdPHnfSTLZ2VDjqIq85zw=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "fabian",
+        "first_name": "Fabi\u00e1n",
+        "last_name": "Merch\u00e1n",
+        "email": "merchanf@javeriana.edu.co",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2017-04-01T19:06:28Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 17,
+    "fields": {
+        "password": "pbkdf2_sha256$30000$MumTxAzZqrQ3$jW4KWOspcBSKAY4G9gp6Cs+BIZGyEzWYtRMwLXDl8GQ=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "alfredo1_00@hotmail.com",
+        "first_name": "Alfredo",
+        "last_name": "Santamaria",
+        "email": "alfredo1_00@hotmail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2017-04-05T01:48:37.267Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "customer.customer",
+    "pk": 1,
+    "fields": {
+        "user": 1,
+        "city": "Bogot\u00e1, Colombia",
+        "phone": "+573016617071"
+    }
+},
+{
+    "model": "customer.customer",
+    "pk": 9,
+    "fields": {
+        "user": 2,
+        "city": "Bogot\u00e1, Colombia",
+        "phone": "+573116714204"
+    }
+},
+{
+    "model": "customer.customer",
+    "pk": 10,
+    "fields": {
+        "user": 17,
+        "city": "Bogot\u00e1, Colombia",
+        "phone": "+573186017866"
+    }
+},
+{
+    "model": "customer.address",
+    "pk": 1,
+    "fields": {
+        "name": "Casa",
+        "address": "Carrera 2 #34-23",
+        "city": "Bogot\u00e1",
+        "country": "Colombia",
+        "customer": 1
+    }
+},
+{
+    "model": "customer.confirmation",
+    "pk": 1,
+    "fields": {
+        "customer": 1,
+        "code": "4321",
+        "state": false,
+        "confirmation_type": "SMS",
+        "expire_date": "2017-03-30T01:36:30.023Z"
+    }
+},
+{
+    "model": "customer.confirmation",
+    "pk": 2,
+    "fields": {
+        "customer": 1,
+        "code": "thi-sis-afa-ket-oke-n",
+        "state": false,
+        "confirmation_type": "EMAIL",
+        "expire_date": "2017-03-30T01:36:30.023Z"
+    }
+}
+]
+
