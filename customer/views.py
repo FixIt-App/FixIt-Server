@@ -20,6 +20,7 @@ from customer.models import Customer, Address, Confirmation
 from customer.permissions import IsOwnerOrReadOnly
 from customer.tasks import confirm_user, confirm_email as confirm_email_async
 from rest_framework import permissions
+from django.db import transaction
 
 # It seems that two class based views is the best option
 class CustomerList(APIView):
@@ -34,6 +35,7 @@ class CustomerList(APIView):
         serializer = CustomerSerializer(customers, many = True)
         return Response(serializer.data)
 
+    @transaction.atomic
     def post(self, request, format = None):
         serializer = CustomerSerializer(data = request.data)
         if serializer.is_valid():
@@ -178,6 +180,7 @@ def get_customer_authenticated(request):
     try:
         user = request.user
         customer = Customer.objects.filter(user__id__exact=user.id).first()
+        customer.confirmations = Confirmation.objects.filter(customer__id = customer.id)
     except Customer.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
         
@@ -240,4 +243,24 @@ def confirm_email(request, code):
         return HttpResponse("Ya confirmaste tu correo. Muchas gracias")
     except Confirmation.DoesNotExist:
          raise Http404("Confirmation not exist")
+
+@api_view(['GET'])
+def resend_sms_code(request):
+    try:
+        if request.user is None:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        user = request.user
+        customer = Customer.objects.filter(user__id__exact = user.id).first()
+    except Customer.DoesNotExist:
+        return Response(status=status.HTTP_403_FORBIDDEN)
+
+    confimations = Confirmation.objects.filter(customer = customer).all()
+    for confirmation in confimations:
+        if confirmation.confirmation_type == 'SMS':
+            print("Sending confirmation sms to ... " + customer.phone)
+            confirm_user.delay(customer.phone, confirmation.code)
+            return Response(status=status.HTTP_200_OK)
+
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+    
 
