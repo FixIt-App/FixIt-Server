@@ -1,6 +1,12 @@
 from django.shortcuts import render
 from django.http import Http404
 from django.contrib.auth.models import User
+from django.http import Http404, HttpResponse
+
+from random import randint
+import uuid
+
+
 
 from rest_framework import viewsets
 from rest_framework.decorators import api_view
@@ -10,9 +16,9 @@ from rest_framework import status
 
 
 from customer.serializers import CustomerSerializer, AddressSerializer
-from customer.models import Customer, Address
+from customer.models import Customer, Address, Confirmation
 from customer.permissions import IsOwnerOrReadOnly
-from customer.tasks import confirm_user
+from customer.tasks import confirm_user, confirm_email
 from rest_framework import permissions
 
 # It seems that two class based views is the best option
@@ -39,9 +45,33 @@ class CustomerList(APIView):
             user.save()
             customer = Customer(user = user, city = serializer.data['city'], phone = serializer.data['phone'])
             customer.save()
-            confirm_user.delay(serializer.data['phone'])
+            self.create_confirmations(customer)
             return Response(serializer.data, status = status.HTTP_201_CREATED)
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+    
+    def create_confirmations(self, customer):
+        # SMS confirmation
+        code = str(randint(100,999))
+        sms_confirmation = Confirmation(
+            customer = customer,
+            code = code,
+            confirmation_type = 'SMS'
+        )
+        
+        sms_confirmation.save()
+    
+        # Email confirmation
+        e_code = uuid.uuid4()
+        mail_confirmation = Confirmation(
+            customer = customer,
+            code = e_code,
+            confirmation_type = 'MAIL'
+        )
+        mail_confirmation.save()
+        print("Sending confirmation sms to ... " + customer.phone)
+        confirm_user.delay(customer.phone, code)
+        print("Sending email confirmation to " + customer.user.email)
+        confirm_email.delay(customer.user.email, e_code)
 
 
 class CustomerDetail(APIView):
@@ -168,4 +198,13 @@ def get_customer_adresses(request):
         return Response(serializer.data)
     except Customer.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+def confirm_email(request, code):
+    try:
+        confirmation = Confirmation.objects.get(code = code)
+        confirmation.state = True
+        return HttpResponse("Ya confirmaste tu correo. Muchas gracias")
+    except Confirmation.DoesNotExist:
+         raise Http404("Confirmation not exist")
 

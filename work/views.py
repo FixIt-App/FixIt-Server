@@ -44,7 +44,8 @@ def create_work(request):
                     image.work = work
                     image.save()
                 work.images = Image.objects.filter(pk__in = map(int, serializer.data['images']))
-            
+            else:
+                work.images = []
             serializer = DetailWorkSerializer(work)
             try:
                 create_work_async.delay(work.id)
