@@ -2,6 +2,12 @@ from customer.models import Customer, Address, Confirmation
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
+class ConfirmationSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Confirmation
+        fields = ('confirmation_type', 'state')
+        
 class CustomerSerializer(serializers.HyperlinkedModelSerializer):
     """
         Customer serializer class 
@@ -12,10 +18,11 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
     last_name = serializers.CharField(source = 'user.last_name')
     email = serializers.CharField(source = 'user.email')
     password = serializers.CharField(source = 'user.password')
+    confirmations = ConfirmationSerializer(many = True, required = False)
 
     class Meta:
         model = Customer
-        fields = ('id', 'username', 'first_name', 'last_name', 'email', 'city', 'password', 'phone')
+        fields = ('id', 'username', 'first_name', 'last_name', 'email', 'city', 'password', 'phone', 'confirmations')
 
 
 class AddressSerializer(serializers.ModelSerializer):
@@ -30,9 +37,3 @@ class AddressSerializer(serializers.ModelSerializer):
 class PhoneConfirmationSerializer(serializers.Serializer):
     username = serializers.CharField()
     code = serializers.CharField()
-
-class ConfirmationSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Confirmation
-        fields = ('confirmation_type', 'state')

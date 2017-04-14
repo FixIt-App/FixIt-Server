@@ -22,7 +22,7 @@ from rest_framework.authtoken import views as rest_views
 from worktype.views import WorkTypeList, CategoryList
 
 from customer.views import CustomerDetail, CustomerList, AddressList, AddressDetail, confirm_email, confirm_phone, my_confirmation
-from customer.views import get_customer_authenticated, get_customer_adresses
+from customer.views import get_customer_authenticated, get_customer_adresses, resend_sms_code
 from image.views import  ImageUploadView
 
 from work.views import create_work, get_my_works, WorkDetail
@@ -56,6 +56,7 @@ urlpatterns = [
     url(r'^api/myconfirmations/', my_confirmation),
     url(r'^api/phone/confirmations/', confirm_phone),
     url(r'^confirmations/(?P<code>[\w\-]+)/$', confirm_email),
+    url(r'^api/resend-sms-code/$', resend_sms_code),
     
     
 ]
