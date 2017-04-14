@@ -15,7 +15,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 
-from customer.serializers import CustomerSerializer, AddressSerializer
+from customer.serializers import CustomerSerializer, AddressSerializer, PhoneConfirmationSerializer, ConfirmationSerializer
 from customer.models import Customer, Address, Confirmation
 from customer.permissions import IsOwnerOrReadOnly
 from customer.tasks import confirm_user, confirm_email
@@ -199,11 +199,35 @@ def get_customer_adresses(request):
     except Customer.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+@api_view(['POST'])
+def confirm_phone(request):
+    serializer = PhoneConfirmationSerializer(data = request.data)
+    try:
+        serializer.is_valid()
+        confirmation = Confirmation.objects.get(code = serializer.data['code'], customer__user__username = serializer.data['username'])
+        confirmation.state = True
+        confirmation.save()
+        return Response(status=status.HTTP_200_OK)
+    except Confirmation.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['GET'])
+def my_confirmation(request):
+    user = request.user
+    customer = Customer.objects.filter(user__id__exact = user.id).first()
+    confimation = Confirmation.objects.filter(customer = customer)
+    serializer = ConfirmationSerializer(data = confimation, many = True)
+    serializer.is_valid()
+    return Response(serializer.data)
+
+
 
 def confirm_email(request, code):
     try:
         confirmation = Confirmation.objects.get(code = code)
         confirmation.state = True
+        confirmation.save()
         return HttpResponse("Ya confirmaste tu correo. Muchas gracias")
     except Confirmation.DoesNotExist:
          raise Http404("Confirmation not exist")

@@ -21,7 +21,7 @@ from rest_framework.authtoken import views as rest_views
 
 from worktype.views import WorkTypeList, CategoryList
 
-from customer.views import CustomerDetail, CustomerList, AddressList, AddressDetail, confirm_email
+from customer.views import CustomerDetail, CustomerList, AddressList, AddressDetail, confirm_email, confirm_phone, my_confirmation
 from customer.views import get_customer_authenticated, get_customer_adresses
 from image.views import  ImageUploadView
 
@@ -53,7 +53,9 @@ urlpatterns = [
     url(r'^api/myworks/$', get_my_works),
     url(r'^api/work/$', create_work),
     url(r'^api/work/(?P<pk>[0-9]+)/$', WorkDetail.as_view()),
-    url(r'^confirmations/(?P<string>[\w\-]+)/$', confirm_email),
+    url(r'^api/myconfirmations/', my_confirmation),
+    url(r'^api/phone/confirmations/', confirm_phone),
+    url(r'^confirmations/(?P<code>[\w\-]+)/$', confirm_email),
     
     
 ]
