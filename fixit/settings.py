@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'customer.apps.CustomerConfig',
     'worktype.apps.WorkTypeConfig',
     'work.apps.WorkConfig',
-    'image.apps.ImageConfig'
+    'image.apps.ImageConfig',
+    'worker.apps.WorkerConfig',
 ]
 
 

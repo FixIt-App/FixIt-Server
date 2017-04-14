@@ -1,3 +1,7 @@
 from django.contrib import admin
+from worker.models import Worker
 
-# Register your models here.
+class WorkerAdmin(admin.ModelAdmin):
+    pass
+
+admin.site.register(Worker, WorkerAdmin)
