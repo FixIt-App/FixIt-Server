@@ -15,7 +15,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 
-from customer.serializers import CustomerSerializer, AddressSerializer, PhoneConfirmationSerializer
+from customer.serializers import CustomerSerializer, AddressSerializer, PhoneConfirmationSerializer, ConfirmationSerializer
 from customer.models import Customer, Address, Confirmation
 from customer.permissions import IsOwnerOrReadOnly
 from customer.tasks import confirm_user, confirm_email
@@ -212,7 +212,14 @@ def confirm_phone(request):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 
-
+@api_view(['GET'])
+def my_confirmation(request):
+    user = request.user
+    customer = Customer.objects.filter(user__id__exact = user.id).first()
+    confimation = Confirmation.objects.filter(customer = customer)
+    serializer = ConfirmationSerializer(data = confimation, many = True)
+    serializer.is_valid()
+    return Response(serializer.data)
 
 
 

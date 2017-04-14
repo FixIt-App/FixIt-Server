@@ -1,4 +1,4 @@
-from customer.models import Customer, Address
+from customer.models import Customer, Address, Confirmation
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
@@ -30,3 +30,9 @@ class AddressSerializer(serializers.ModelSerializer):
 class PhoneConfirmationSerializer(serializers.Serializer):
     username = serializers.CharField()
     code = serializers.CharField()
+
+class ConfirmationSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Confirmation
+        fields = ('confirmation_type', 'state')
