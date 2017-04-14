@@ -18,7 +18,7 @@ from rest_framework import status
 from customer.serializers import CustomerSerializer, AddressSerializer, PhoneConfirmationSerializer, ConfirmationSerializer
 from customer.models import Customer, Address, Confirmation
 from customer.permissions import IsOwnerOrReadOnly
-from customer.tasks import confirm_user, confirm_email
+from customer.tasks import confirm_user, confirm_email as confirm_email_async
 from rest_framework import permissions
 
 # It seems that two class based views is the best option
@@ -71,7 +71,7 @@ class CustomerList(APIView):
         print("Sending confirmation sms to ... " + customer.phone)
         confirm_user.delay(customer.phone, code)
         print("Sending email confirmation to " + customer.user.email)
-        confirm_email.delay(customer.user.email, e_code)
+        confirm_email_async.delay(customer.user.email, e_code)
 
 
 class CustomerDetail(APIView):
@@ -201,10 +201,19 @@ def get_customer_adresses(request):
 
 @api_view(['POST'])
 def confirm_phone(request):
+    try:
+        if request.user is None:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        user = request.user
+        customer = Customer.objects.filter(user__id__exact = user.id).first()
+    except Customer.DoesNotExist:
+        return Response(status=status.HTTP_403_FORBIDDEN)
+        
+
     serializer = PhoneConfirmationSerializer(data = request.data)
     try:
         serializer.is_valid()
-        confirmation = Confirmation.objects.get(code = serializer.data['code'], customer__user__username = serializer.data['username'])
+        confirmation = Confirmation.objects.get(code = serializer.data['code'], customer = customer)
         confirmation.state = True
         confirmation.save()
         return Response(status=status.HTTP_200_OK)
