@@ -15,7 +15,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 
-from customer.serializers import CustomerSerializer, AddressSerializer
+from customer.serializers import CustomerSerializer, AddressSerializer, PhoneConfirmationSerializer
 from customer.models import Customer, Address, Confirmation
 from customer.permissions import IsOwnerOrReadOnly
 from customer.tasks import confirm_user, confirm_email
@@ -198,6 +198,22 @@ def get_customer_adresses(request):
         return Response(serializer.data)
     except Customer.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['POST'])
+def confirm_phone(request):
+    serializer = PhoneConfirmationSerializer(data = request.data)
+    try:
+        serializer.is_valid()
+        confirmation = Confirmation.objects.get(code = serializer.data['code'], customer__user__username = serializer.data['username'])
+        confirmation.state = True
+        confirmation.save()
+        return Response(status=status.HTTP_200_OK)
+    except Confirmation.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+
+
 
 
 def confirm_email(request, code):

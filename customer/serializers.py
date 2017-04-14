@@ -25,3 +25,8 @@ class AddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
         fields  = fields = ('id', 'name', 'address',  'city', 'country')
+
+
+class PhoneConfirmationSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    code = serializers.CharField()
