@@ -11,6 +11,7 @@ class Work(models.Model):
     time = models.DateTimeField(auto_now = False, blank = False)
     description = models.TextField(blank = True)
     worker = models.ForeignKey('worker.Worker', on_delete = models.CASCADE, blank = True, null = True)
+    asap = models.BooleanField(default = True)
 
     STATE_CHOICES = (
         ('ORDERED', 'ORDERED'),
