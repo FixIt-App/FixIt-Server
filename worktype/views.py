@@ -28,8 +28,9 @@ class WorkTypeList(APIView):
 
 
 class CategoryList(APIView):
+
     def get(self, request, format = None):
-        categories = Category.objects.all()
+        categories = Category.objects.order_by('-order').all()
         serializers = CategoryListSerializer(categories, many = True)
         return Response(serializers.data)
 

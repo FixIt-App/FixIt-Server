@@ -7,6 +7,8 @@ from customer.serializers import AddressSerializer
 
 from worktype.serializers import WorkTypeSerializer
 
+from worker.serializers import WorkerSerializer
+
 from image.serializers import ImageSerializer
 
 class StringListField(serializers.ListField):
@@ -28,6 +30,7 @@ class DetailWorkSerializer(serializers.Serializer):
     worktype = WorkTypeSerializer()
     address = AddressSerializer()
     state = serializers.CharField()
+    worker = WorkerSerializer(required = False)
 
 class DetailWorkDTOSerializer(serializers.Serializer):
     description = serializers.CharField()

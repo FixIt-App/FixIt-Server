@@ -50,6 +50,4 @@ urlpatterns = [
     url(r'^api/phone/confirmations/', confirm_phone),
     url(r'^confirmations/(?P<code>[\w\-]+)/$', confirm_email),
     url(r'^api/resend-sms-code/$', resend_sms_code),
-    
-    
 ]

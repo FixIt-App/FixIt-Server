@@ -8,7 +8,7 @@ class WorkTypeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = WorkType
-        fields = ('id', 'name', 'description', 'icon', 'price_type', 'price')
+        fields = ('id', 'name', 'description', 'icon', 'price_type', 'price', 'order')
 
 
 class CategoryListSerializer(serializers.HyperlinkedModelSerializer):
@@ -17,4 +17,4 @@ class CategoryListSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Category
-        fields = ('name', 'worktypes')
+        fields = ('name', 'worktypes', 'order')

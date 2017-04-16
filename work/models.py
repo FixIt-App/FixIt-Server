@@ -1,6 +1,7 @@
 from django.db import models
 from worktype.models import WorkType
 from customer.models import Customer, Address
+from worker.models import Worker
 
 
 class Work(models.Model):
@@ -9,6 +10,7 @@ class Work(models.Model):
     address = models.ForeignKey('customer.Address', on_delete = models.CASCADE)
     time = models.DateTimeField(auto_now = False, blank = False)
     description = models.TextField(blank = True)
+    worker = models.ForeignKey('worker.Worker', on_delete = models.CASCADE, blank = True, null = True)
 
     STATE_CHOICES = (
         ('ORDERED', 'ORDERED'),
