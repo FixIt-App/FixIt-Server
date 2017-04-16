@@ -117,7 +117,48 @@ class WorkTypeTestCase(TestCase):
         self.assertEqual(response.status_code, 200, 'It should return 200, ok')
         self.assertEqual(len(response.data), 1, 'It should have 1 ordered work')
 
+    def test_cancel_work(self):
 
+        factory = APIRequestFactory()
+        user = User.objects.get(pk = 1)
 
-
+        request = factory.delete('/api/work/1/', None)
+        force_authenticate(request, user = user.id, token = self.token.key)
         
+        response = WorkDetail.as_view()(request, Work.objects.get(pk = 1).id)
+
+        self.assertEqual(response.status_code, 200, 'It should have succesfully updated the service')
+        work = Work.objects.get(pk = 1)
+
+        self.assertEqual(work.state, 'CANCELED', 'It should have updated the state to canceled')
+
+    def test_cancel_work_forbidden(self):
+
+        token = Token.objects.get(user__id = 2)
+        factory = APIRequestFactory()
+        user = User.objects.get(pk = 2)
+
+        request_body = { }
+        request = factory.delete('/api/work/1/', request_body)
+        force_authenticate(request, user = user, token = token.key)
+        
+        response = WorkDetail.as_view()(request, "1")
+
+        self.assertEqual(response.status_code, 403, 'It should not be able to cancel works')
+        work = Work.objects.get(pk = 1)
+
+        self.assertEqual(work.state, 'ORDERED', 'It should not update the work state')
+
+    def test_cancel_work_not_found(self):
+
+        token = Token.objects.get(user__id = 2)
+        factory = APIRequestFactory()
+        user = User.objects.get(pk = 2)
+
+        request_body = { }
+        request = factory.delete('/api/work/112321/', request_body)
+        force_authenticate(request, user = user, token = token.key)
+        
+        response = WorkDetail.as_view()(request, '112321')
+
+        self.assertEqual(response.status_code, 404, 'It should not find the work')

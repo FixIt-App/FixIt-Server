@@ -11,8 +11,12 @@ from customer.models import Address, Customer
 from image.models import Image
 
 from work.serializers import WorkDTOSerializer, DetailWorkSerializer
-from worktype.models import WorkType
 from work.models import Work
+
+from worktype.models import WorkType
+
+from worker.models import Worker
+
 from customer.permissions import IsOwnerOrReadOnly
 
 from .tasks import create_work as create_work_async
@@ -96,6 +100,24 @@ class WorkDetail(APIView):
             work.save()
             return Response(status = status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, pk, format = None):
+        try:
+            customer = Customer.objects.filter(user = request.user).first()
+            work = Work.objects.get(pk = pk)
+            if work.customer is None:
+                return Response(status = status.HTTP_403_FORBIDDEN)
+
+            if work.customer.id == customer.id:
+                work.state = 'CANCELED'
+                work.save()
+                return Response(status = status.HTTP_200_OK)
+            else:
+                return Response(status = status.HTTP_403_FORBIDDEN)
+        except Customer.DoesNotExist:
+            return Response(status = status.HTTP_404_NOT_FOUND)
+        except Work.DoesNotExist:
+            return Response(status = status.HTTP_404_NOT_FOUND)
 
 @api_view(['GET'])
 def get_my_works(request):
@@ -108,16 +130,23 @@ def get_my_works(request):
     works = works.order_by('time', '-id').all()
     my_works = []
     for work in works:
+        #setting images to fworker
         images = Image.objects.filter(work__id__exact = work.id)
         work.images = images
+        # setting the worker to the work
+        if work.worker is not None:
+            worker = Worker.objects.get(pk = work.worker.id)
+            work.worker = worker
         my_works.append(work)
+
+
     serializer = DetailWorkSerializer(data = my_works, many = True)
     if serializer.is_valid() == False:
         return Response(serializer.data)
     else:
-        return Response(status = status.HTTP_500_INTERNAL_SERVER_ERROR) 
+        return Response(status = status.HTTP_500_INTERNAL_SERVER_ERROR)
     
 
 
 
-    
+
