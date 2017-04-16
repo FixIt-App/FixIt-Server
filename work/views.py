@@ -46,6 +46,8 @@ def create_work(request):
             work = Work(worktype = worktype, customer = customer, 
                         address = address, time = date, 
                         description = description)
+            if serializer.data.get('asap', None) != None:
+                work.asap = serializer.data['asap']
             work.save()
             logger.info('work created for customer ' + user.username)
             if(serializer.data.get('images', None) != None):
@@ -78,7 +80,7 @@ class WorkDetail(APIView):
     """
         Retrieve, update or delete a customer instance.
     """
-    permission_classes = ( IsOwnerOrReadOnly,)
+    permission_classes = ( IsOwnerOrReadOnly, )
 
     def get_object(self, pk):
         try:

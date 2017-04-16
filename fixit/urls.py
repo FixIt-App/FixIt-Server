@@ -31,7 +31,6 @@ router = routers.DefaultRouter()
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^', include(router.urls)),
     url(r'^api/customers/(?P<pk>[0-9]+)/$', CustomerDetail.as_view(), name='customer-detail'),
     url(r'^api/customers/$', CustomerList.as_view()),
     url(r'^api/customer/authenticated/$', get_customer_authenticated),
@@ -50,4 +49,5 @@ urlpatterns = [
     url(r'^api/phone/confirmations/', confirm_phone),
     url(r'^confirmations/(?P<code>[\w\-]+)/$', confirm_email),
     url(r'^api/resend-sms-code/$', resend_sms_code),
+    url(r'^api/', include(router.urls)),
 ]

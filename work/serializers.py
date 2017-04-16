@@ -20,6 +20,7 @@ class WorkDTOSerializer(serializers.Serializer):
     description = serializers.CharField(max_length = 500, required = False)
     addressid = serializers.IntegerField()
     images = StringListField(required = False)
+    asap = serializers.BooleanField(required = False)
 
 
 class DetailWorkSerializer(serializers.Serializer):
