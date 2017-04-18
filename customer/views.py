@@ -139,6 +139,13 @@ class AddressList(APIView):
                         city = serializer.data['city'],       \
                         country = serializer.data['country'], \
                         customer = customer)
+            
+            if serializer.data.get('latitude', None) != None:
+                address.latitude = serializer.data['latitude']
+
+            if serializer.data.get('longitude', None) != None:
+                address.longitude = serializer.data['longitude']
+
             address.save()
             serializer = AddressSerializer(address)
             return Response(serializer.data, status = status.HTTP_201_CREATED)
