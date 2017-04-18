@@ -100,7 +100,15 @@ class WorkDetail(APIView):
                 image.work = work
                 image.save()
             work.save()
-            return Response(status = status.HTTP_200_OK)
+
+            images = Image.objects.filter(work__id__exact = work.id)
+            work.images = images
+            # setting the worker to the work
+            if work.worker is not None:
+                worker = Worker.objects.get(pk = work.worker.id)
+                work.worker = worker
+            serializer = DetailWorkSerializer(work)
+            return Response(serializer.data, status = status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def delete(self, request, pk, format = None):
@@ -128,7 +136,8 @@ def get_my_works(request):
     works = Work.objects.filter(customer__id__exact = customer  .id)
     state = request.query_params.get('state', None)
     if state is not None: # query has state filter
-        works = works.filter(state = state)
+        statesList = state.split(',')
+        works = works.filter(state__in = statesList)
     works = works.order_by('time', '-id').all()
     my_works = []
     for work in works:

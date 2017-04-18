@@ -116,6 +116,26 @@ class WorkTypeTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200, 'It should return 200, ok')
         self.assertEqual(len(response.data), 1, 'It should have 1 ordered work')
+    
+    def test_get_my_works_multiple_filter(self):
+        """My works and its multiple filters"""
+
+        factory = APIRequestFactory()
+        user = User.objects.get(pk = 1)
+
+        request = factory.get('/api/myworks/?state=ORDERED,FINISHED')
+        force_authenticate(request, user=user, token=self.token.key)
+        
+        response = get_my_works(request)
+
+        self.assertEqual(response.status_code, 200, 'It should return 200, ok')
+        self.assertEqual(len(response.data), 2, 'Multistate filter should have 2 works')
+
+        self.assertEqual(len(list(filter(lambda work: work.get('state') == 'FINISHED', 
+            response.data))), 1, 'Multistate filter should have 1 work finished')
+
+        self.assertEqual(len(list(filter(lambda work: work.get('state') == 'ORDERED', 
+            response.data))), 1, 'Multistate filter should have 1 work ordered')
 
     def test_cancel_work(self):
 

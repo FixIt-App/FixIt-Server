@@ -29,9 +29,12 @@ class AddressSerializer(serializers.ModelSerializer):
     """
         Address serializer class
     """
+    latitude = serializers.FloatField(required = False)
+    longitude = serializers.FloatField(required = False)
+
     class Meta:
         model = Address
-        fields  = fields = ('id', 'name', 'address',  'city', 'country')
+        fields  = fields = ('id', 'name', 'address',  'city', 'country', 'latitude', 'longitude')
 
 
 class PhoneConfirmationSerializer(serializers.Serializer):
