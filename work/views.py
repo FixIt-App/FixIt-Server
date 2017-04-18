@@ -128,7 +128,8 @@ def get_my_works(request):
     works = Work.objects.filter(customer__id__exact = customer  .id)
     state = request.query_params.get('state', None)
     if state is not None: # query has state filter
-        works = works.filter(state = state)
+        statesList = state.split(',')
+        works = works.filter(state__in = statesList)
     works = works.order_by('time', '-id').all()
     my_works = []
     for work in works:
