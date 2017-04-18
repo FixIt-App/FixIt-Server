@@ -1,11 +1,7 @@
-ssh -t root@104.131.151.33
 # stop all processes
 pkill python3
 pkill celery
 pkill gunicorn
-
-docker restart postgres
-docker restart rabbitmq-instance1
 
 # TODO: save old logging files
 rm pidprofile.pid celery1.log
@@ -14,6 +10,7 @@ rm pidprofile.pid celery1.log
 cd FixIt-Server
 git pull origin develop
 
+source fixit.env
 source venv/bin/activate
 pip3 install -r requirements.txt
 python3 manage.py migrate
@@ -22,4 +19,4 @@ python3 manage.py migrate
 gunicorn -w 2 -b 0.0.0.0:8000 fixit.wsgi -D --error-logfile server.log
 
 # start celery
-celery multi start worker1 -A fixit --pidfile="../pidprofile.pid" \ --logfile="../celery1.log"
+celery multi start worker1 -A fixit --pidfile="../pidprofile.pid" --logfile="../celery1.log"
