@@ -157,7 +157,9 @@ def get_my_works(request):
     else:
         return Response(status = status.HTTP_500_INTERNAL_SERVER_ERROR)
     
-
+@api_view(['POST'])
+def assign_work(request, workid):
+    return Response(status = status.HTTP_501_NOT_IMPLEMENTED)
 
 
 
