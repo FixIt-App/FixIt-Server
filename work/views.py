@@ -157,7 +157,29 @@ def get_my_works(request):
     else:
         return Response(status = status.HTTP_500_INTERNAL_SERVER_ERROR)
     
+@api_view(['POST'])
+def assign_work(request, workid):
+    if request.user is None:
+        return Response(status = status.HTTP_403_FORBIDDEN)
 
+    worker = Worker.objects.filter(user__id__exact = request.user.id).first()
 
+    if worker is None:
+        return Response(status = status.HTTP_400_BAD_REQUEST)
 
-
+    work = Work.objects.get(pk = workid)
+    if work.worker is not None or worker.works is None:
+        logging.info("can't reassign work")
+        return Response(status = status.HTTP_403_FORBIDDEN)
+    # check if the customer can fulfill the ability requirements
+    can_work = False
+    for able in worker.works.all():
+        if able.id == work.worktype.id:
+            can_work = True
+    if can_work == False:
+        logging.info("the worker can't be assigned")
+        return Response(status = status.HTTP_422_UNPROCESSABLE_ENTITY)
+    work.worker = worker
+    work.save()
+    # notify customers
+    return Response(status = status.HTTP_200_OK)

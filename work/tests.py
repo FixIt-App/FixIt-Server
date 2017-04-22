@@ -4,7 +4,7 @@ from rest_framework.test import APIRequestFactory, force_authenticate
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 
-from work.views import create_work, WorkDetail, get_my_works
+from work.views import create_work, WorkDetail, get_my_works, assign_work
 from worktype.models import WorkType
 from customer.models import Customer, Address
 from django.contrib.auth.models import User 
@@ -182,3 +182,46 @@ class WorkTypeTestCase(TestCase):
         response = WorkDetail.as_view()(request, '112321')
 
         self.assertEqual(response.status_code, 404, 'It should not find the work')
+    
+    def test_assign_work(self):
+        token = Token.objects.get(user__id = 17)
+        factory = APIRequestFactory()
+        user = User.objects.get(pk = 17)
+
+        request_body = { }
+        request = factory.post('/api/work/1/worker/', request_body)
+        force_authenticate(request, user = user, token = token.key)
+
+        response = assign_work(request, '1')
+        self.assertEqual(response.status_code, 200, 'It should successfully assign work to a work with no worker')
+        work = Work.objects.get(pk = 1)
+        self.assertEqual(work.worker.user.id, 17, 'It should correctly update de the worker works')
+
+
+    def test_fail_to_assign_work_abbilities(self):
+        token = Token.objects.get(user__id = 18)
+        factory = APIRequestFactory()
+        user = User.objects.get(pk = 18)
+
+        request_body = { }
+        request = factory.post('/api/work/1/worker/', request_body)
+        force_authenticate(request, user = user, token = token.key)
+
+        response = assign_work(request, '1')
+        self.assertEqual(response.status_code, 422, 'It should not be able to assign work to a worker with no capabilities')
+        work = Work.objects.get(pk = 1)
+        self.assertEqual(work.worker, None, 'It shoud not have an assigned worker')
+
+    
+    def test_fail_to_assign_already_assigned(self):
+        token = Token.objects.get(user__id = 17)
+        factory = APIRequestFactory()
+        user = User.objects.get(pk = 17)
+        request_body = { }
+        request = factory.post('/api/work/50/worker/', request_body)
+        force_authenticate(request, user = user, token = token.key)
+
+        response = assign_work(request, '50')
+        self.assertEqual(response.status_code, 403, 'It should not be able to assign work work with a worker')
+
+
