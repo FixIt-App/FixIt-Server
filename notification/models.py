@@ -24,7 +24,7 @@ class NotificationToken(models.Model):
 
 class Notification(models.Model):
 
-    user = models.OneToOneField(User, on_delete = models.SET_NULL, null = True)
+    user = models.ForeignKey(User, on_delete = models.SET_NULL, null = True)
     payload = HStoreField(null = True, default = None)
     TYPE_CHOICES = (
         ('WC', 'WORK CREATED'),
@@ -42,4 +42,5 @@ class Notification(models.Model):
     state = models.CharField(max_length = 20, choices = STATE_CHOICES, null = True)
 
     def __str__(self):
-        return self.id + " " + self.state
+        return str(self.id)
+        
