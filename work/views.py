@@ -1,3 +1,6 @@
+import decimal 
+import json
+
 from django.shortcuts import render
 from django.http import Http404
 
@@ -11,7 +14,7 @@ from customer.models import Address, Customer
 from image.models import Image
 
 from work.serializers import WorkDTOSerializer, DetailWorkSerializer
-from work.models import Work
+from work.models import Work, DynamicPricing
 
 from worktype.models import WorkType
 
@@ -20,7 +23,7 @@ from worker.models import Worker
 from customer.permissions import IsOwnerOrReadOnly
 
 from .tasks import create_work as create_work_async
-from .serializers import DetailWorkSerializer, DetailWorkDTOSerializer
+from .serializers import DetailWorkSerializer, DetailWorkDTOSerializer, PriceSerializer
 
 import logging
 
@@ -133,7 +136,7 @@ class WorkDetail(APIView):
 def get_my_works(request):
     user = request.user
     customer = Customer.objects.filter(user__id__exact = user.id).first()
-    works = Work.objects.filter(customer__id__exact = customer  .id)
+    works = Work.objects.filter(customer__id__exact = customer.id)
     state = request.query_params.get('state', None)
     if state is not None: # query has state filter
         statesList = state.split(',')
@@ -176,10 +179,33 @@ def assign_work(request, workid):
     for able in worker.works.all():
         if able.id == work.worktype.id:
             can_work = True
+    
     if can_work == False:
         logging.info("the worker can't be assigned")
         return Response(status = status.HTTP_422_UNPROCESSABLE_ENTITY)
+    
     work.worker = worker
     work.save()
-    # notify customers
+    # TODO: notify customers
     return Response(status = status.HTTP_200_OK)
+
+@api_view(['GET'])
+def get_total_price(request, pk = None):
+    logging.info("getting price for work " + str(pk))
+    work = Work.objects.get(pk = pk)
+    work_date = work.time
+    if work.asap == True:
+        work.worktype.price = work.worktype.price * decimal.Decimal(1.5)
+    if work.worktype.price <= decimal.Decimal(0.0):
+        return Response(status = status.HTTP_400_BAD_REQUEST)
+    dynamic_prices = DynamicPricing.objects.all()
+    for dynamic in dynamic_prices:
+        if dynamic.start < work_date.time() < dynamic.end:
+            work.worktype.price = work.worktype.price * dynamic.multiplier
+            serializer = PriceSerializer(data = {"price": work.worktype.price})
+            serializer.is_valid()
+            return Response(serializer.data)
+    serializer = PriceSerializer(data = {"price": work.worktype.price})
+    serializer.is_valid()
+    return Response(serializer.data)
+

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from work.models import Work
+from work.models import Work, DynamicPricing
 
 class WorkAdmin(admin.ModelAdmin):
     list_display = ('id', 'state', 'get_customer', 'get_work', 'description', 'time', 'get_address')
@@ -23,6 +23,10 @@ class WorkAdmin(admin.ModelAdmin):
     get_address.admin_order_field = 'address'
     get_address.short_description = 'Address'
 
+class DynamicPricingAdmin(admin.ModelAdmin):
+    list_display = ('id', 'start', 'end', 'multiplier')
+
 admin.site.register(Work, WorkAdmin)
+admin.site.register(DynamicPricing, DynamicPricingAdmin)
 
 

@@ -27,7 +27,7 @@ class DetailWorkSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     description = serializers.CharField()
     time = serializers.DateTimeField()
-    images = ImageSerializer(many = True)
+    images = ImageSerializer(many = True, required = False)
     worktype = WorkTypeSerializer()
     address = AddressSerializer()
     state = serializers.CharField()
@@ -36,3 +36,6 @@ class DetailWorkSerializer(serializers.Serializer):
 class DetailWorkDTOSerializer(serializers.Serializer):
     description = serializers.CharField()
     images = StringListField()
+
+class PriceSerializer(serializers.Serializer):
+    price = serializers.DecimalField(max_digits=12, decimal_places=2)
