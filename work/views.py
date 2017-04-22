@@ -22,7 +22,7 @@ from worker.models import Worker
 
 from customer.permissions import IsOwnerOrReadOnly
 
-from .tasks import create_work as create_work_async
+from .tasks import create_work as create_work_async, notity_assignment as notity_assignment_async
 from .serializers import DetailWorkSerializer, DetailWorkDTOSerializer, PriceSerializer
 
 import logging
@@ -161,7 +161,7 @@ def get_my_works(request):
         return Response(status = status.HTTP_500_INTERNAL_SERVER_ERROR)
     
 @api_view(['POST'])
-def assign_work(request, workid):
+def assign_work(request, pk):
     if request.user is None:
         return Response(status = status.HTTP_403_FORBIDDEN)
 
@@ -170,7 +170,7 @@ def assign_work(request, workid):
     if worker is None:
         return Response(status = status.HTTP_400_BAD_REQUEST)
 
-    work = Work.objects.get(pk = workid)
+    work = Work.objects.get(pk = pk)
     if work.worker is not None or worker.works is None:
         logging.info("can't reassign work")
         return Response(status = status.HTTP_403_FORBIDDEN)
@@ -186,7 +186,7 @@ def assign_work(request, workid):
     
     work.worker = worker
     work.save()
-    # TODO: notify customers
+    notity_assignment_async.delay(work.id)
     return Response(status = status.HTTP_200_OK)
 
 @api_view(['GET'])

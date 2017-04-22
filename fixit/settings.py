@@ -40,15 +40,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.postgres',
     'rest_framework',
     'rest_framework.authtoken',
     'storages',
-    'quickstart.apps.QuickstartConfig',
     'customer.apps.CustomerConfig',
     'worktype.apps.WorkTypeConfig',
     'work.apps.WorkConfig',
     'image.apps.ImageConfig',
     'worker.apps.WorkerConfig',
+    'notification.apps.NotificationConfig',
 ]
 
 
