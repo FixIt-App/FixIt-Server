@@ -64,7 +64,7 @@ def notity_assignment(workid):
             "workid": work.id,
             "worktypename": work.worktype.name
         }
-        notification = BaseNotification(notification = notification_body, to = token.token, priority = 10)
+        notification = BaseNotification(notification = notification_body, to = token.token, priority = 10, notification_type = 'WA')
         saved_notification = Notification(user = user, payload = notification.export(), notification_type = 'WA')
         saved_notification.save()
         headers = {
