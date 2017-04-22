@@ -13,4 +13,4 @@ class Worker(models.Model):
     works = models.ManyToManyField(WorkType)
     
     def __str__(self):
-        return self.document_id
+        return self.document_id + " " + self.user.email
