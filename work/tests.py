@@ -4,7 +4,7 @@ from rest_framework.test import APIRequestFactory, force_authenticate
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 
-from work.views import create_work, WorkDetail, get_my_works, assign_work
+from work.views import create_work, WorkDetail, get_my_works, assign_work, get_total_price
 from worktype.models import WorkType
 from customer.models import Customer, Address
 from django.contrib.auth.models import User 
@@ -12,8 +12,7 @@ from work.models import Work
 from image.models import Image
 
 
-# Create your tests here.
-class WorkTypeTestCase(TestCase):
+class WorkTestCase(TestCase):
 
     fixtures = ['data']
 
@@ -223,5 +222,19 @@ class WorkTypeTestCase(TestCase):
 
         response = assign_work(request, '50')
         self.assertEqual(response.status_code, 403, 'It should not be able to assign work work with a worker')
+
+    def test_work_total_price(self):
+        token = Token.objects.get(user__id = 1)
+        factory = APIRequestFactory()
+        user = User.objects.get(pk = 1)
+
+        request = factory.get('/api/work/50/price/')
+        force_authenticate(request, user = user, token = token.key)
+
+        response = get_total_price(request, '50')
+
+        self.assertEqual(response.status_code, 200, 'It should return 200 status code')
+
+
 
 

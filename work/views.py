@@ -11,7 +11,7 @@ from customer.models import Address, Customer
 from image.models import Image
 
 from work.serializers import WorkDTOSerializer, DetailWorkSerializer
-from work.models import Work
+from work.models import Work, DynamicPricing
 
 from worktype.models import WorkType
 
@@ -181,5 +181,16 @@ def assign_work(request, workid):
         return Response(status = status.HTTP_422_UNPROCESSABLE_ENTITY)
     work.worker = worker
     work.save()
-    # notify customers
+    # TODO: notify customers
     return Response(status = status.HTTP_200_OK)
+
+def get_total_price(request, workid):
+    work = Work.objects.get(pk = workid)
+    work_date = work.time
+    dynamic_prices = DynamicPricing.objects.all()
+    for dynamic in dynamic_prices:
+        if dynamic.start < work_date.time < dynamic.end:
+            # price calculations
+            return Response(status = status.HTTP_200_OK)
+    return Response(status = status.HTTP_200_OK)
+

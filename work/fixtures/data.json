@@ -115,7 +115,8 @@
     "fields": {
         "name": "Carpinter\u00eda",
         "description": "Profesionales 50,000 COP/hora",
-        "icon": "images/carpinteria.png"
+        "icon": "images/carpinteria.png",
+        "price": 56000.0
     }
 },
 {
@@ -124,7 +125,8 @@
     "fields": {
         "name": "Plomer\u00eda",
         "description": "Profesionales 24,000 COP/hora",
-        "icon": "images/plomeria.png"
+        "icon": "images/plomeria.png",
+        "price": 50000.0
     }
 },
 {
@@ -133,7 +135,8 @@
     "fields": {
         "name": "Cerrajer\u00eda",
         "description": "Profesionales 42,000 COP/hora",
-        "icon": "images/cerrajeria.jpg"
+        "icon": "images/cerrajeria.jpg",
+        "price": 123000.0
     }
 },
 {
@@ -142,7 +145,8 @@
     "fields": {
         "name": "Electricista",
         "description": "Profesionales 33,000 COP/hora",
-        "icon": "images/electricista.jpg"
+        "icon": "images/electricista.jpg",
+        "price": 57000.0
     }
 },
 {

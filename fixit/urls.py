@@ -25,7 +25,7 @@ from customer.views import CustomerDetail, CustomerList, AddressList, AddressDet
 from customer.views import get_customer_authenticated, get_customer_adresses, resend_sms_code
 from image.views import  ImageUploadView
 
-from work.views import create_work, get_my_works, WorkDetail, assign_work
+from work.views import create_work, get_my_works, WorkDetail, assign_work, get_total_price
 
 router = routers.DefaultRouter()
 
@@ -44,6 +44,7 @@ urlpatterns = [
     url(r'^api/work/upload-image/$', ImageUploadView.as_view()),
     url(r'^api/myworks/$', get_my_works),
     url(r'^api/work/$', create_work),
+    url(r'^api/work/(?P<pk>[0-9]+)/price/$', get_total_price),
     url(r'^api/work/(?P<pk>[0-9]+)/worker/$', assign_work),
     url(r'^api/work/(?P<pk>[0-9]+)/$', WorkDetail.as_view()),
     url(r'^api/myconfirmations/', my_confirmation),

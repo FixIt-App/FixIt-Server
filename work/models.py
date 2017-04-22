@@ -26,4 +26,11 @@ class Work(models.Model):
     def __str__(self):
         return "Usuario: %s | Trabajo: %s | Hora: %s | Dirección: %s " % (self.customer.user.email, self.worktype.name, str(self.time), self.address.address, )
         
-        
+class DynamicPricing(models.Model):
+
+    start = models.TimeField(auto_now = False, blank = False)
+    end = models.TimeField(auto_now = False, blank = False)
+    multiplier = models.DecimalField(max_digits=12, decimal_places=2, default = 1.0)
+
+    def __str__(self):
+        return str(self.start) + " - " + str(self.end)
