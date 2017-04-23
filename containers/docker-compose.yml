@@ -1,0 +1,24 @@
+postgres:
+    build: ./postgres
+    ports:
+      - 5432:5432
+    env_file:
+      - fixit.env
+rabbitmq:
+  build: ./celery
+  ports:
+    - 4369:4369 
+    - 5671:5671 
+    - 5672:5672
+django:
+  build: ./django
+  ports:
+    - 80:8000
+  env_file:
+      - fixit.env
+celery:
+  build: ./celery
+  env_file:
+      - fixit.env
+  
+
