@@ -1,14 +1,17 @@
 # environment variables for rabbitmq server
+export RABBITMQ_HOST=
+export RABBITMQ_PORT=
 export RABBITMQ_DEFAULT_USER=
 export RABBITMQ_DEFAULT_PASS=
 export RABBITMQ_DEFAULT_VHOST=
-export BROKER_URL="amqp://$RABBITMQ_DEFAULT_USER:$RABBITMQ_DEFAULT_PASS@localhost:5672/$RABBITMQ_DEFAULT_VHOST"
+export BROKER_URL="amqp://$RABBITMQ_DEFAULT_USER:$RABBITMQ_DEFAULT_PASS@$RABBITMQ_HOST:$RABBITMQ_PORT/$RABBITMQ_DEFAULT_VHOST"
 
 
 # environment variables for postgres server
 export POSTGRES_DATABASE=
 export POSTGRES_USER=
 export POSTGRES_PASSWORD=
+export POSTGRES_HOST=
 
 # email configuration
 export EMAIL_API_KEY=

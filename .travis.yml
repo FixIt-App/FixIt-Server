@@ -11,7 +11,7 @@ before_script:
 - psql -c 'create database fixit;' -U postgres
 env:
   matrix:
-  - POSTGRES_DATABASE=fixit POSTGRES_USER=postgres PACKAGE_VERSION="1.0.*" POSTGRES_PASSWORD=
+  - POSTGRES_DATABASE=fixit POSTGRES_USER=postgres POSTGRES_HOST=localhost PACKAGE_VERSION="1.0.*" POSTGRES_PASSWORD=
 services:
 - postgres
 - rabbitmq

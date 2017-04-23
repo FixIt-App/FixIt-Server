@@ -72,9 +72,11 @@ def notity_assignment(workid):
             "Authorization": "key=%s" % os.environ.get('FIREBASE_CUSTOMER_KEY') 
         }
         r = requests.post('https://fcm.googleapis.com/fcm/send', data = json.dumps(notification.export()), headers = headers)
-        print(str(r.status_code))
-        print(r.content)
-        # send to fire base and set state based on failure or not
-
+        if r.status_code >= 200 and r.status_code <= 300:
+            saved_notification.state = 'DELIVERED'
+            saved_notification.save()
+        else:
+            saved_notification.state = 'FAILED'
+            saved_notification.save()
     
 
