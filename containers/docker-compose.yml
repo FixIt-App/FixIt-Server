@@ -1,24 +1,32 @@
-postgres:
-    build: ./postgres
-    ports:
-      - 5432:5432
-    env_file:
-      - fixit.env
 rabbitmq:
-  build: ./celery
+  build: .
+  dockerfile: Dockerfile.queue
   ports:
     - 4369:4369 
     - 5671:5671 
     - 5672:5672
-django:
-  build: ./django
+  env_file:
+    - fixit.docker.env
+postgres:
+  build: .
+  dockerfile: Dockerfile.db
   ports:
-    - 80:8000
+    - 5432:5432
   env_file:
-      - fixit.env
+    - fixit.docker.env
 celery:
-  build: ./celery
+  build: .
+  dockerfile: Dockerfile.celery 
   env_file:
-      - fixit.env
+      - fixit.docker.env
+  links:
+      - "rabbitmq:rabbitmq"
+django:
+  build: .
+  dockerfile: Dockerfile.web 
+  env_file:
+      - fixit.docker.env
+  links:
+      - "postgres:postgres"
   
 

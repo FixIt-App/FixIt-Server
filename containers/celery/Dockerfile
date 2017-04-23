@@ -6,11 +6,9 @@ MAINTAINER David Calle "davidfcalle@gmail.com"
 RUN apt-get install -y git
 
 # clone the project
-RUN git clone https://github.com/FixIt-App/FixIt-Server.git 
-
-WORKDIR FixIt-Server
+ADD . .
 
 # install python dependencies
 RUN pip install -r requirements.txt
 
-CMD CMD ["celery", "multi", "start", "worker1", "-A", "fixit", "--pidfile=\"../pidprofile.pid\"", "--logfile=\"../celery1.log\""]
+CMD ["celery", "-A", "fixit", "worker", "--loglevel=info"]

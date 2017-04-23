@@ -98,3 +98,5 @@ fixit/static/rest_framework
 
 #logs
 server.log
+
+fixit.docker.env
