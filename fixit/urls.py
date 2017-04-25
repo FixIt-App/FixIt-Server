@@ -27,7 +27,7 @@ from image.views import  ImageUploadView
 
 from work.views import create_work, get_my_works, WorkDetail, assign_work, get_total_price
 
-from notification.views import register_device
+from notification.views import register_device, remove_device_token
 
 router = routers.DefaultRouter()
 
@@ -53,6 +53,7 @@ urlpatterns = [
     url(r'^api/phone/confirmations/', confirm_phone),
     url(r'^confirmations/(?P<code>[\w\-]+)/$', confirm_email),
     url(r'^api/devicetoken/$', register_device),
+    url(r'^api/devicetoken/(?P<token>.*)/$', remove_device_token),
     url(r'^api/resend-sms-code/$', resend_sms_code),
     url(r'^api/', include(router.urls)),
 ]
