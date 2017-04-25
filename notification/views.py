@@ -28,4 +28,18 @@ def register_device(request):
         except:
             return Response(status = status.HTTP_400_BAD_REQUEST) 
 
+@api_view(['DELETE'])
+def remove_device_token(request):
+    if request.user is None:
+        return Response(status = status.HTTP_401_UNAUTHORIZED)
+    serializer = TokenSerializer(data = request.data)
+    if serializer.is_valid() == False:
+        return Response(status = status.HTTP_400_BAD_REQUEST)
+    try:
+        token = NotificationToken.objects.get(token = serializer.data['token'])
+        token.delete()
+        return Response(status = status.HTTP_200_OK) 
+    except NotificationToken.DoesNotExist:
+        return Response(status = status.HTTP_404_NOT_FOUND) 
+
 
