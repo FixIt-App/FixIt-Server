@@ -6,12 +6,12 @@ class BaseNotification():
         self.priority = priority
         self.to = to
         self.notification = notification
-        self.notification.notification_type = notification_type
-        
+        self.notification['notification_type'] = notification_type
+
     def export(self):
          return {
             "priority": self.priority,
             "to": self.to,
-            "notification": self.notification
+            "data": self.notification
          }
 

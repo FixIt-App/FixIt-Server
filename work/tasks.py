@@ -62,7 +62,9 @@ def notity_assignment(workid):
             "workerid": work.worker.id,
             "workername": work.worker.user.first_name + " " +   work.worker.user.last_name,
             "workid": work.id,
-            "worktypename": work.worktype.name
+            "worktypename": work.worktype.name,
+            "title": work.worktype.name,
+            "body": "Se ha asigando un trabajdor"
         }
         notification = BaseNotification(notification = notification_body, to = token.token, priority = 10, notification_type = 'WA')
         saved_notification = Notification(user = user, payload = notification.export(), notification_type = 'WA')
