@@ -1,11 +1,11 @@
-
-$secondary-color :#125688;
+$primary-color: #12A19B;
+$secondary-color :#12A19B;
 
 @import "node_modules/materialize-css/sass/materialize.scss";
 
 body {
   background: #fafafa;
-  color: #125688;
+  color: #12A19B;
   font-family: Montserrat
 }
 
@@ -15,6 +15,15 @@ body {
 
 .iphone {
   max-width: 100%;
+}
+
+.login-image {
+    max-height: 100%;
+    max-width: 100%;
+}
+
+.login-logo{
+    max-height: 200px;
 }
 
 .site-footer {
@@ -47,14 +56,14 @@ body {
 }
 
 .signup-form .btn.btn-fb {
-  background-color: #4090db;
+  background-color: #12A19B;
   font-size: .8em;
 }
 
 .signup-form .btn.btn-fb:hover {
-  background-color: #2d6599;
+  background-color: #12A19B;
 }
 
 .signup-form .btn.btn-signup {
-  background-color: #125688;
+  background-color: #12A19B;
 }

@@ -1,4 +1,51 @@
-<h1>Hola Mundo!</h1>
+<!DOCTYPE html>
+<html>
 
-{% load static %}
-<img src="{% static "my_app/example.jpg" %}" alt="My image"/>  
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <meta charset="utf-8" />
+    {% load static %}
+    <link rel="stylesheet" href="{% static "app.css" %}">
+</head>
+
+<body>
+    <section id="main-container">
+        <div class="container">
+            <div class="row">
+                <div class="col s10 push-s1">
+                    <div class="row">
+                        <div class="col m5 hide-on-small-only">
+                            <img class="login-image" src="{% static "kitchen.jpg" %}" alt="">
+                        </div>
+                        <div class="col s12 m7">
+                            <div class="row">
+                                <div class="signup-box">
+                                    <img src="{% static "fix-it.jpg" %}" class="login-logo" alt="">
+                                    <form action="" class="signup-form">
+                                        <h2> Ingresa tus datos para iniciar sesión </h2>
+                                        <div class="divider"></div>
+                                        <div class="section">
+                                            <input type="email" name="email" placeholder="Correo Electrónico" />
+                                            <input type="password" name="name" placeholder="Contraseña" />
+                                            <button class="btn waves-effect waves-light" type="submit"> Inicia Sesión </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="login-box">
+                                    ¿No Tienes una cuenta ? <a href="/signup">Regístrate</a>
+                                </div>
+                                <div class="login-box section">
+                                    <a class="btn btn-fb hide-on-med-and-up"> Regístrate </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>
