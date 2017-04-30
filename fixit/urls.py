@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from django.conf import settings
+from django.conf.urls.static import static
 
 from rest_framework import routers
 from rest_framework.authtoken import views as rest_views
@@ -23,7 +25,12 @@ from worktype.views import WorkTypeList, CategoryList
 
 from customer.views import CustomerDetail, CustomerList, AddressList, AddressDetail, confirm_email, confirm_phone, my_confirmation
 from customer.views import get_customer_authenticated, get_customer_adresses, resend_sms_code
+
+from customer.web import login
+
 from image.views import  ImageUploadView
+
+import os
 
 from work.views import create_work, get_my_works, WorkDetail, assign_work, get_total_price
 
@@ -32,6 +39,7 @@ from notification.views import register_device, remove_device_token
 router = routers.DefaultRouter()
 
 urlpatterns = [
+    url(r'^login/', login, name='login'),
     url(r'^admin/', admin.site.urls),
     url(r'^api/customers/(?P<pk>[0-9]+)/$', CustomerDetail.as_view(), name='customer-detail'),
     url(r'^api/customers/$', CustomerList.as_view()),
@@ -56,4 +64,6 @@ urlpatterns = [
     url(r'^api/devicetoken/(?P<token>.*)/$', remove_device_token),
     url(r'^api/resend-sms-code/$', resend_sms_code),
     url(r'^api/', include(router.urls)),
-]
+] 
+if settings.DEBUG == True:
+    urlpatterns += static(settings.STATIC_URL, document_root=os.path.join(settings.STATIC_ROOT, "public"))

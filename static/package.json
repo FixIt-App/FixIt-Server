@@ -1,0 +1,24 @@
+{
+  "name": "fixit-static",
+  "version": "1.0.0",
+  "description": "FixIt project static files",
+  "main": "index.js",
+  "author": "David Calle, Fabián Merchán, Alfredo Santamaría",
+  "license": "ISC",
+  "dependencies": {
+    "materialize-css": "^0.98.2"
+  },
+  "devDependencies": {
+    "babelify": "^7.3.0",
+    "browserify": "^14.3.0",
+    "gulp": "^3.9.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^3.1.0",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.9.0"
+  },
+   "scripts": {
+    "build": "gulp",
+    "start": "gulp watch & node server.js"
+  }
+}

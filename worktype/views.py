@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import Http404
+from django.contrib.auth import authenticate
 
 from rest_framework import viewsets
 from rest_framework.views import APIView
@@ -8,6 +9,8 @@ from rest_framework import status
 
 from worktype.models import WorkType, Category
 from worktype.serializers import WorkTypeSerializer, CategoryListSerializer
+
+from django.shortcuts import render
 
 class WorkTypeList(APIView):
     """
@@ -39,7 +42,3 @@ class CategoryList(APIView):
             Not supported yet
         """
         return Response(serializer.errors, status = status.HTTP_501_NOT_IMPLEMENTED)
-
-
-
-    
