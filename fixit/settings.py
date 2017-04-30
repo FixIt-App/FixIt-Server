@@ -95,7 +95,6 @@ WSGI_APPLICATION = 'fixit.wsgi.application'
 
 
 # Database
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -167,26 +166,26 @@ AWS_S3_HOST = 's3-sa-east-1.amazonaws.com'
 # We also use it in the next setting.
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 
-# Tell the staticfiles app to use S3Boto storage when writing the collected static files (when
-# you run `collectstatic`).
-
-STATIC_PROJECT_DIR = os.path.join(BASE_DIR, "static")
-
-STATICFILES_DIRS = [
-    os.path.join(STATIC_PROJECT_DIR, "public"),
-]
 
 MEDIA_ROOT = os.environ.get('MEDIA_ROOT')
 
 STATICFILES_LOCATION = 'static'
 
+STATIC_PROJECT_DIR = os.path.join(BASE_DIR, 'static')
+
+STATICFILES_DIRS = [
+    os.path.join(STATIC_PROJECT_DIR, 'public'),
+]
 
 # static files in development are served from the filesystem, in production th files are served by S3
 if DEBUG == True:
     STATIC_URL = "/static/"
 else:
-    STATICFILES_STORAGE = 'fixit.custom_storages.StaticStorage'       
+    # Tell the staticfiles app to use S3Boto storage when writing the collected static files (when
+    # you run `collectstatic`).
     STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, STATICFILES_LOCATION)
+    STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+    STATICFILES_STORAGE = 'fixit.custom_storages.StaticStorage'
 
 # media files are always served by S3.
 MEDIAFILES_LOCATION = 'media'
