@@ -16,8 +16,15 @@ import sendgrid
 
 from work.models import Work
 
+from work.serializers import DetailWorkSerializer
+
+from worker.models import Worker
+
 from notification.models import Notification, NotificationToken
 from notification.notifications.BaseNotification import BaseNotification
+from notification.firebase import Firebase
+
+from image.models import Image
 
 @task()
 def create_work(workid):
@@ -55,30 +62,33 @@ def send_email(from_email, to_email, subject, message):
 def notity_assignment(workid):
     work = Work.objects.get(pk = workid)
     user = work.customer.user
+
+    images = Image.objects.filter(work__id__exact = work.id).all()
+    work.images = images
+    # setting the worker to the work
+    if work.worker is not None:
+        worker = Worker.objects.get(pk = work.worker.id)
+        work.worker = worker
+
+    serializer = DetailWorkSerializer(work)
     # get all user tokens
     tokens = NotificationToken.objects.filter(token_type = 'CUSTOMER', user__id = user.id).all()
     for token in tokens:
         notification_body = {
-            "workerid": work.worker.id,
-            "workername": work.worker.user.first_name + " " +   work.worker.user.last_name,
-            "workid": work.id,
-            "worktypename": work.worktype.name,
+            "work": serializer.data,
             "title": work.worktype.name,
             "body": "Se ha asigando un trabajdor"
         }
         notification = BaseNotification(notification = notification_body, to = token.token, priority = 10, notification_type = 'WA')
         saved_notification = Notification(user = user, payload = notification.export(), notification_type = 'WA')
         saved_notification.save()
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": "key=%s" % os.environ.get('FIREBASE_CUSTOMER_KEY') 
-        }
-        r = requests.post('https://fcm.googleapis.com/fcm/send', data = json.dumps(notification.export()), headers = headers)
-        if r.status_code >= 200 and r.status_code <= 300:
+        sent = Firebase.send_notification(notification)
+        if sent is True:
             saved_notification.state = 'DELIVERED'
             saved_notification.save()
         else:
             saved_notification.state = 'FAILED'
             saved_notification.save()
+        
     
 

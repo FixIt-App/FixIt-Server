@@ -9,7 +9,7 @@ from worktype.serializers import WorkTypeSerializer
 
 from worker.serializers import WorkerSerializer
 
-from image.serializers import ImageSerializer
+from image.serializers import ImageSerializer, ImageDTOSerializer
 
 class StringListField(serializers.ListField):
     child = serializers.CharField()
@@ -27,11 +27,12 @@ class DetailWorkSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     description = serializers.CharField()
     time = serializers.DateTimeField()
-    images = ImageSerializer(many = True, required = False)
+    images = ImageDTOSerializer(many = True, required = False)
     worktype = WorkTypeSerializer()
     address = AddressSerializer()
     state = serializers.CharField()
     worker = WorkerSerializer(required = False)
+    
 
 class DetailWorkDTOSerializer(serializers.Serializer):
     description = serializers.CharField()
