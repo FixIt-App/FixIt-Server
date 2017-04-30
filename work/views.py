@@ -136,7 +136,7 @@ class WorkDetail(APIView):
 def get_my_works(request):
     user = request.user
     customer = Customer.objects.filter(user__id__exact = user.id).first()
-    works = Work.objects.filter(customer__id__exact = customer.id)
+    works = Work.objects.filter(customer__id__exact = customer.id).all()
     state = request.query_params.get('state', None)
     if state is not None: # query has state filter
         statesList = state.split(',')
@@ -145,7 +145,7 @@ def get_my_works(request):
     my_works = []
     for work in works:
         #setting images to fworker
-        images = Image.objects.filter(work__id__exact = work.id)
+        images = Image.objects.filter(work__id__exact = work.id).all()
         work.images = images
         # setting the worker to the work
         if work.worker is not None:
@@ -154,12 +154,9 @@ def get_my_works(request):
         my_works.append(work)
 
 
-    serializer = DetailWorkSerializer(data = my_works, many = True)
-    if serializer.is_valid() == False:
-        return Response(serializer.data)
-    else:
-        return Response(status = status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
+    serializer = DetailWorkSerializer(my_works, many = True)
+    return Response(serializer.data)
+        
 @api_view(['POST'])
 def assign_work(request, pk):
     if request.user is None:
