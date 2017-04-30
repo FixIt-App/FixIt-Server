@@ -181,6 +181,8 @@ MEDIA_ROOT = os.environ.get('MEDIA_ROOT')
 
 STATICFILES_LOCATION = 'static'
 
+
+# static files in development are served from the filesystem, in production th files are served by S3
 if DEBUG == True:
     STATIC_URL = "/static/"
 else:

@@ -63,4 +63,4 @@ urlpatterns = [
     url(r'^api/', include(router.urls)),
 ] 
 if settings.DEBUG == True:
-    urlpatterns += static(settings.STATIC_URL, document_root=os.path.join(settings.STATIC_PROJECT_DIR, "public"))
+    urlpatterns += static(settings.STATIC_URL, document_root=os.path.join(settings.STATIC_ROOT, "public"))
