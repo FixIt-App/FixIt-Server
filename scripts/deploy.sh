@@ -16,7 +16,7 @@ pip3 install -r requirements.txt
 python3 manage.py migrate
 
 # start gunicorn, only two workers for now
-gunicorn -w 2 -b 0.0.0.0:8000 fixit.wsgi -D --error-logfile server.log
+gunicorn -w 2 -b 0.0.0.0:8080 fixit.wsgi -D --error-logfile server.log
 
 # start celery
 celery multi start worker1 -A fixit --pidfile="../pidprofile.pid" --logfile="../celery1.log"
