@@ -9,6 +9,8 @@ from rest_framework import status
 from worktype.models import WorkType, Category
 from worktype.serializers import WorkTypeSerializer, CategoryListSerializer
 
+from django.shortcuts import render
+
 class WorkTypeList(APIView):
     """
         List all worktypes or create new worktype
@@ -42,4 +44,6 @@ class CategoryList(APIView):
 
 
 
-    
+def web_get_works(request):
+    context = {'worktypes': []}
+    return render(request, 'works.html', context)
