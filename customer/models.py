@@ -12,7 +12,7 @@ class Customer(models.Model):
         This is not a good example to use as reference for future models
         as this one has a relationship with django user        
     """
-    user = models.OneToOneField(User, on_delete=models.SET_NULL, null = True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null = True)
     city = models.CharField(max_length = 255)
     phone = models.CharField(blank = True, unique = True, max_length = 50)
 
