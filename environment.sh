@@ -25,4 +25,4 @@ export AWS_DEFAULT_REGION=
 export FIREBASE_CUSTOMER_KEY=
 
 # server conf
-export HOSTNAME=localhost
+export DNS_NAME=localhost

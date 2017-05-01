@@ -1,2 +1,1 @@
-hostip=35.166.206.134
-docker run  --name nginx --add-host=docker:$hostip -p 80:80 -d nginx
+docker run  --name nginx --add-host=docker:$DNS_NAME -p 80:80 -p 443:443 -d nginx

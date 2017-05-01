@@ -24,7 +24,7 @@ def confirm_user(phone, code):
 @task()
 def confirm_email(email, code):
     subject = 'Confirma tu correo de FixIt'
-    message = "Bienvenido a fixit, puedes entrar en http://%s:8000/confirmations/%s/" % (os.environ.get('HOSTNAME'), code )
+    message = "Bienvenido a fixit, puedes entrar en http://%s:8000/confirmations/%s/" % (os.environ.get('DNS_NAME'), code )
     print('Trying to send confirmation email')
     sg = sendgrid.SendGridAPIClient(apikey = os.environ.get('EMAIL_API_KEY'))
     from_email = Email("info@fixitgroup.co")
