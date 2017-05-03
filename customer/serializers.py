@@ -13,17 +13,32 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
         Customer serializer class 
         The base model is user for easier serialization
     """
-    username = serializers.CharField(source = 'user.username')
-    first_name = serializers.CharField(source = 'user.first_name')
-    last_name = serializers.CharField(source = 'user.last_name')
-    email = serializers.CharField(source = 'user.email')
-    password = serializers.CharField(source = 'user.password')
+    username = serializers.CharField(source = 'user.username', required = False)
+    first_name = serializers.CharField(source = 'user.first_name', required = False)
+    last_name = serializers.CharField(source = 'user.last_name', required = False)
+    email = serializers.CharField(source = 'user.email', required = False)
+    password = serializers.CharField(source = 'user.password', required = False)
     confirmations = ConfirmationSerializer(many = True, required = False)
 
     class Meta:
         model = Customer
         fields = ('id', 'username', 'first_name', 'last_name', 'email', 'city', 'password', 'phone', 'confirmations')
 
+class CustomerConfigurationSerializer(serializers.ModelSerializer):
+    """
+        Customer serializer class 
+        The base model is user for easier serialization
+    """
+    first_name = serializers.CharField(source = 'user.first_name', required = False)
+    last_name = serializers.CharField(source = 'user.last_name', required = False)
+    email = serializers.CharField(source = 'user.email', required = False)
+    password = serializers.CharField(source = 'user.password', required = False)
+    city = serializers.CharField(required = False)
+    password = serializers.CharField(required = False)
+    phone = serializers.CharField(required = False)
+    class Meta:
+        model = Customer
+        fields = ('first_name', 'last_name', 'email', 'city', 'password', 'phone')
 
 class AddressSerializer(serializers.ModelSerializer):
     """

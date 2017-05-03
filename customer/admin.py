@@ -4,7 +4,12 @@ from django.contrib import admin
 from customer.models import Customer, Address, Confirmation
 
 class CustomerAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('id', 'get_username')
+
+    def get_username(self, obj):
+        return obj.user.username
+    get_username.admin_order_field = 'username'
+    get_username.short_description = "username"
 
 admin.site.register(Customer, CustomerAdmin)
 
