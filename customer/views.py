@@ -17,7 +17,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 
-from customer.serializers import CustomerSerializer, AddressSerializer, PhoneConfirmationSerializer, ConfirmationSerializer
+from customer.serializers import CustomerSerializer, CustomerConfigurationSerializer, AddressSerializer, PhoneConfirmationSerializer, ConfirmationSerializer
 from customer.models import Customer, Address, Confirmation
 from customer.permissions import IsOwnerOrReadOnly
 from customer.tasks import confirm_user, confirm_email as confirm_email_async
@@ -102,17 +102,27 @@ class CustomerDetail(APIView):
     def put(self, request, pk, format = None):
         customer = self.get_object(pk)
         self.check_object_permissions(self.request, customer)
-        serializer = CustomerSerializer(data=request.data)
+        serializer = CustomerConfigurationSerializer(data=request.data)
         if serializer.is_valid():
             logger.info('Updating customer ' + customer.user.username)
             user = customer.user
-            user.first_name = serializer.data['first_name']
-            user.last_name = serializer.data['last_name']
-            user.email = serializer.data['email']
+            if serializer.data.get('first_name', None) != None:
+                user.first_name = serializer.data['first_name']
+            if serializer.data.get('last_name', None) != None:
+                user.last_name = serializer.data['last_name']
+            if serializer.data.get('email', None) != None:
+                if User.objects.filter(username=serializer.data['email']).count() > 0:
+                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                user.email = serializer.data['email']
+                user.username = serializer.data['email']
+            if serializer.data.get('password', None) != None:
+                user.set_password(serializer.data['password'])
             user.save()
-            customer.city = serializer.data['city']
+            if serializer.data.get('city', None) != None:
+                customer.city = serializer.data['city']
             customer.save()
-            return Response(serializer.data)
+            sendSerializer = CustomerSerializer(customer)
+            return Response(sendSerializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format = None):

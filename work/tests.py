@@ -17,7 +17,7 @@ class WorkTestCase(TestCase):
     fixtures = ['data']
 
     def setUp(self):
-        self.token = Token.objects.get(user__username='david')
+        self.token = Token.objects.get(user__username='davidfcalle@gmail.com')
 
     def test_create_work_response(self):
         """Wortypes are correctly created"""
