@@ -11,7 +11,7 @@ from customer.models import Confirmation
 
 class ConfirmationTests(TestCase):
 
-    fixtures = ['data']
+    fixtures = ['data_customer']
 
     def test_confirm_sms(self):
         """
@@ -34,7 +34,7 @@ class ConfirmationTests(TestCase):
 
 class ConfirmEmail(TestCase):
 
-    fixtures = ['data']
+    fixtures = ['data_customer']
 
     def test_confirm_email(self):
         response = self.client.get('/confirmations/thi-sis-afa-ket-oke-n/')
@@ -48,10 +48,10 @@ class ConfirmEmail(TestCase):
 
 class UpdateCustomer(TestCase):
 
-    fixtures = ['data']
+    fixtures = ['data_customer']
 
     def setUp(self):
-        self.token = Token.objects.get(user__username='david')
+        self.token = Token.objects.get(user__username='davidfcalle@gmail.com')
         self.user = User.objects.get(pk = 1)
         self.customer = Customer.objects.get(pk = 1)
 
@@ -72,5 +72,23 @@ class UpdateCustomer(TestCase):
         self.assertEqual(updatedCustomer.user.email, "test@test.test", 'Email should be modified')
 
         self.assertEqual(updatedCustomer.user.username, "test@test.test", 'Username should be modified')
+
+    def test_update_duplicate_email(self):
+        factory = APIRequestFactory()
+        other = User.objects.get(pk = 2)
+        request_body = {
+            "email": other.email,
+        }
+
+        prevEmail = self.user.email
+
+        request = factory.put('/api/customers/' + str(self.customer.id) + '/', request_body)
+        force_authenticate(request, user=self.user, token=self.token.key)
+        
+        response = CustomerDetail.as_view()(request,  self.customer.id)
+        self.assertEqual(response.status_code, 400, 'It should return 400, duplicated email')
+
+        updatedCustomer = Customer.objects.get(pk = 1)
+        self.assertEqual(updatedCustomer.user.email, prevEmail, 'Email should not change')
 
 

@@ -111,6 +111,8 @@ class CustomerDetail(APIView):
             if serializer.data.get('last_name', None) != None:
                 user.last_name = serializer.data['last_name']
             if serializer.data.get('email', None) != None:
+                if User.objects.filter(username=serializer.data['email']).count() > 0:
+                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
                 user.email = serializer.data['email']
                 user.username = serializer.data['email']
             if serializer.data.get('password', None) != None:
