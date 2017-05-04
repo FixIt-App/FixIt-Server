@@ -91,4 +91,20 @@ class UpdateCustomer(TestCase):
         updatedCustomer = Customer.objects.get(pk = 1)
         self.assertEqual(updatedCustomer.user.email, prevEmail, 'Email should not change')
 
+    def test_update_duplicate_phone(self):
+        factory = APIRequestFactory()
+        other = Customer.objects.get(pk = 9)
+        request_body = {
+            "phone": other.phone,
+        }
 
+        prevPhone = self.customer.phone
+
+        request = factory.put('/api/customers/' + str(self.customer.id) + '/', request_body)
+        force_authenticate(request, user=self.user, token=self.token.key)
+        
+        response = CustomerDetail.as_view()(request,  self.customer.id)
+        self.assertEqual(response.status_code, 400, 'It should return 400, duplicated phone')
+
+        updatedCustomer = Customer.objects.get(pk = 1)
+        self.assertEqual(updatedCustomer.phone, prevPhone, 'Phone should not change')
