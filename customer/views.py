@@ -108,13 +108,21 @@ class CustomerDetail(APIView):
             user = customer.user
             if serializer.data.get('first_name', None) != None:
                 user.first_name = serializer.data['first_name']
+
             if serializer.data.get('last_name', None) != None:
                 user.last_name = serializer.data['last_name']
+
             if serializer.data.get('email', None) != None:
                 if User.objects.filter(username=serializer.data['email']).count() > 0:
                     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
                 user.email = serializer.data['email']
                 user.username = serializer.data['email']
+
+            if serializer.data.get('phone', None) != None:
+                if Customer.objects.filter(phone=serializer.data['phone']).count() > 0:
+                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                user.phone = serializer.data['phone']
+
             if serializer.data.get('password', None) != None:
                 user.set_password(serializer.data['password'])
             user.save()
