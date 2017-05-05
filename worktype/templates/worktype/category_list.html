@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <meta charset="utf-8" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    {% load static %}
+    {% load humanize %}
+    <link rel="stylesheet" href="{% static "app.css" %}">
+    <title>FixIt - Trabajamos para ti</title>
+</head>
+
+<body>
+
+   <nav>
+    <div class="nav-wrapper">
+      <a href="#" class="brand-logo center">FixIt</a>
+    </div>
+  </nav>
+        
+    <section id="main-container">
+        <div class="container">
+            <div class="row">
+                <div class="worktypes-banner" style="background-image: url({% static "home.jpg" %})">
+                     <h2 class="center">Servicios para el hogar</h2>
+                </div>
+                <div class="col s10 push-s1">
+                         {% for category in object_list %}
+                         <div class="row">
+                            <h4>{{ category.name }}</h4>
+                            {% for worktype in category.worktypes.all %}
+                                <div class="col s12 m6 l4">
+                                    
+                                    <div class="card horizontal">
+                                        <div class="card-image">
+                                            <img src="{{worktype.icon.url}}">
+                                        </div>
+                                        <div class="card-stacked">
+                                            <div class="card-content">
+                                                <h5 class="header">{{ worktype.name }}</h5> 
+                                                {% if worktype.price_type == 'STANDARIZED' %}
+                                                    <p class="black-text">Precio: ${{worktype.price | intcomma}} </p>
+                                                {% endif %}
+                                                {% if worktype.price_type == 'NOT_STANDARIZED' %}
+                                                    <p class="black-text">Hora a: ${{worktype.price | intcomma}}</p>
+                                                {% endif %}
+                                                {% if worktype.price_type == 'UNKNOWN' %}
+                                                    <p class="black-text">No encuentras lo que necesitas? </p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            </div>
+                        {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>

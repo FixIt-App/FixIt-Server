@@ -6733,3 +6733,24 @@ body {
 
 .signup-form .btn.btn-signup, .signup-form .btn-signup.btn-large {
   background-color: #12A19B; }
+
+.card.horizontal {
+  height: 150px; }
+
+.card-image img {
+  height: 80%;
+  max-height: 80%;
+  min-height: 80%;
+  padding-top: 10%; }
+
+.card .card-content {
+  padding: 10px; }
+
+.worktypes-banner {
+  padding: 2em 0;
+  background: #000;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: bottom;
+  color: #fff;
+  height: 200px; }
