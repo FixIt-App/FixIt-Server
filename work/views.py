@@ -182,6 +182,7 @@ def assign_work(request, pk):
         return Response(status = status.HTTP_422_UNPROCESSABLE_ENTITY)
     
     work.worker = worker
+    work.state = 'SCHEDULED'
     work.save()
     notity_assignment_async.delay(work.id)
     return Response(status = status.HTTP_200_OK)
