@@ -1,11 +1,12 @@
 $primary-color: #12A19B;
 $secondary-color :#12A19B;
+$background-color :#fafafa;
 
 @import "node_modules/materialize-css/sass/materialize.scss";
 
 body {
-  background: #fafafa;
-  color: #12A19B;
+  background: $background-color;
+  color: $primary-color;
   font-family: Roboto;
 }
 
@@ -56,14 +57,14 @@ body {
 }
 
 .signup-form .btn.btn-fb {
-  background-color: #12A19B;
+  background-color: $primary-color;
   font-size: .8em;
 }
 
 .signup-form .btn.btn-fb:hover {
-  background-color: #12A19B;
+  background-color: $primary-color;
 }
 
 .signup-form .btn.btn-signup {
-  background-color: #12A19B;
+  background-color: $primary-color;
 }
