@@ -4,7 +4,7 @@ from rest_framework.test import APIRequestFactory, force_authenticate
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 
-from work.views import create_work, WorkDetail, get_my_works, assign_work, get_total_price
+from work.views import create_work, WorkDetail, get_my_works, assign_work, get_total_price, start_work
 from worktype.models import WorkType
 from customer.models import Customer, Address
 from django.contrib.auth.models import User 
@@ -95,7 +95,7 @@ class WorkTestCase(TestCase):
         response = get_my_works(request)
 
         self.assertEqual(response.status_code, 200, 'It should return 200, ok')
-        self.assertEqual(len(response.data), 2, 'It should have 2 works regardless of the state')
+        self.assertEqual(len(response.data), 3, 'It should have 3 works regardless of the state')
 
         # finished works
 
@@ -114,7 +114,7 @@ class WorkTestCase(TestCase):
         response = get_my_works(request)
 
         self.assertEqual(response.status_code, 200, 'It should return 200, ok')
-        self.assertEqual(len(response.data), 1, 'It should have 1 ordered work')
+        self.assertEqual(len(response.data), 2, 'It should have 2 ordered works')
     
     def test_get_my_works_multiple_filter(self):
         """My works and its multiple filters"""
@@ -128,13 +128,13 @@ class WorkTestCase(TestCase):
         response = get_my_works(request)
 
         self.assertEqual(response.status_code, 200, 'It should return 200, ok')
-        self.assertEqual(len(response.data), 2, 'Multistate filter should have 2 works')
+        self.assertEqual(len(response.data), 3, 'Multistate filter should have 3 works')
 
         self.assertEqual(len(list(filter(lambda work: work.get('state') == 'FINISHED', 
             response.data))), 1, 'Multistate filter should have 1 work finished')
 
         self.assertEqual(len(list(filter(lambda work: work.get('state') == 'ORDERED', 
-            response.data))), 1, 'Multistate filter should have 1 work ordered')
+            response.data))), 2, 'Multistate filter should have 2 work ordered')
 
     def test_cancel_work(self):
 
@@ -234,6 +234,46 @@ class WorkTestCase(TestCase):
         response = get_total_price(request, '50')
 
         self.assertEqual(response.status_code, 200, 'It should return 200 status code')
+
+    def test_start_work(self):
+        token = Token.objects.get(user__id = 1)
+        factory = APIRequestFactory()
+        user = User.objects.get(pk = 1)
+
+        request = factory.post('/api/worker/1/work/2/confirmation/')
+        force_authenticate(request, user = user, token = token.key)
+
+        response = start_work(request, '1', '2')
+
+        self.assertEqual(response.status_code, 200, 'It should return 200 status code')
+        work = Work.objects.get(pk = 2)
+        self.assertEqual('IN_PROGRESS', work.state)
+
+    def test_start_work_fails_not_authorized(self):
+        token = Token.objects.get(user__id = 2)
+        factory = APIRequestFactory()
+        user = User.objects.get(pk = 2)
+
+        request = factory.post('/api/worker/1/work/2/confirmation/')
+        force_authenticate(request, user = user, token = token.key)
+
+        response = start_work(request, '1', '2')
+
+        self.assertEqual(response.status_code, 403, 'It should return 403 status code')
+
+    def test_start_work_fails_unconfirmed_worker(self):
+        token = Token.objects.get(user__id = 1)
+        factory = APIRequestFactory()
+        user = User.objects.get(pk = 1)
+
+        request = factory.post('/api/worker/2/work/2/confirmation/')
+        force_authenticate(request, user = user, token = token.key)
+
+        response = start_work(request, '2', '2')
+
+        self.assertEqual(response.status_code, 409, 'It should return 409 status code')
+    
+
 
 
 

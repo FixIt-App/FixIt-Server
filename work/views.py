@@ -207,3 +207,26 @@ def get_total_price(request, pk = None):
     serializer.is_valid()
     return Response(serializer.data)
 
+@api_view(['POST'])
+def start_work(request, worker_id, work_id):
+    try:
+        work = Work.objects.get(pk = work_id)
+        worker = Worker.objects.get(pk = worker_id)
+        # only if the logged in user is the work owner it can start works
+        if request.user.id != work.customer.user.id:
+            return Response(status = status.HTTP_403_FORBIDDEN)
+        # the worker should be the same worker as the assigned one
+        if worker.id != work.worker.id:
+            return Response(status = status.HTTP_409_CONFLICT)
+        work.state = 'IN_PROGRESS'
+        work.save()
+
+        images = Image.objects.filter(work__id__exact = work.id).all()
+        work.images = images
+        serializer = DetailWorkSerializer(work, many = False)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Work.DoesNotExist:
+        return Response(status = status.HTTP_404_NOT_FOUND)
+    except Worker.DoesNotExist:
+        return Response(status = status.HTTP_404_NOT_FOUND)
+

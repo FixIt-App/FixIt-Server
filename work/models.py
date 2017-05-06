@@ -18,7 +18,8 @@ class Work(models.Model):
         ('SCHEDULED', 'SCHEDULED'),
         ('FINISHED', 'FINISHED'),
         ('FAILED', 'FAILED'),
-        ('CANCELED', 'CANCELED')
+        ('CANCELED', 'CANCELED'),
+        ('IN_PROGRESS', 'IN PROGRESS')
     )
 
     state = models.CharField(max_length = 20, choices = STATE_CHOICES, default = 'ORDERED')
