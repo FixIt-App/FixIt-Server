@@ -27,6 +27,8 @@ from worktype.web import WorkTypeList
 from customer.views import CustomerDetail, CustomerList, AddressList, AddressDetail, confirm_email, confirm_phone, my_confirmation
 from customer.views import get_customer_authenticated, get_customer_adresses, resend_sms_code
 
+from work.views import start_work
+
 from customer.web import login
 
 from image.views import  ImageUploadView
@@ -59,6 +61,7 @@ urlpatterns = [
     url(r'^api/work/(?P<pk>[0-9]+)/price/$', get_total_price),
     url(r'^api/work/(?P<pk>[0-9]+)/worker/$', assign_work),
     url(r'^api/work/(?P<pk>[0-9]+)/$', WorkDetail.as_view()),
+    url(r'^api/worker/(?P<worker_id>[0-9]+)/work/(?P<work_id>[0-9]+)/confirmation/$', start_work),
     url(r'^api/myconfirmations/', my_confirmation),
     url(r'^api/phone/confirmations/', confirm_phone),
     url(r'^confirmations/(?P<code>[\w\-]+)/$', confirm_email),
