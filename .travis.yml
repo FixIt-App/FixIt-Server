@@ -12,10 +12,12 @@ before_script:
 env:
   matrix:
   - POSTGRES_DATABASE=fixit POSTGRES_USER=postgres POSTGRES_HOST=localhost PACKAGE_VERSION="1.0.*" POSTGRES_PASSWORD=
-services:
-- rabbitmq
 addons:
   postgresql: "9.6"
+
+services:
+- rabbitmq
+- postgresql
 
 script: python3 manage.py migrate && python3 manage.py test
 
