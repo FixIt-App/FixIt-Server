@@ -3,6 +3,7 @@ python:
 - '3.5'
 install: pip install -r requirements.txt
 before_script:
+- sudo /etc/init.d/postgresql restart
 - psql -c 'create database fixit;' -U postgres
 env:
   matrix:
