@@ -3,18 +3,18 @@ python:
 - '3.5'
 install: pip install -r requirements.txt
 before_script:
-- psql template1 -c 'create extension hstore;'
-- createdb django_hstore
-- psql -U postgres -d django_hstore -c "CREATE EXTENSION postgis;"
-- psql -U postgres -d django_hstore -c "CREATE EXTENSION postgis_topology;"
-- createdb django_hstore_psycopg2
+- sudo /etc/init.d/postgresql restart
 - psql -c 'create database fixit;' -U postgres
 env:
   matrix:
   - POSTGRES_DATABASE=fixit POSTGRES_USER=postgres POSTGRES_HOST=localhost PACKAGE_VERSION="1.0.*" POSTGRES_PASSWORD=
+addons:
+  postgresql: "9.5"
+
 services:
-- postgres
 - rabbitmq
+- postgresql:9.5
+
 script: python3 manage.py migrate && python3 manage.py test
 
 export:

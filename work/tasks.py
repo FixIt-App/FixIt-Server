@@ -15,8 +15,7 @@ import sendgrid
 
 
 from work.models import Work
-
-from work.serializers import DetailWorkSerializer
+from work.converters import convert_work_to_dict as convert_work
 
 from worker.models import Worker
 
@@ -70,14 +69,14 @@ def notity_assignment(workid):
         worker = Worker.objects.get(pk = work.worker.id)
         work.worker = worker
 
-    serializer = DetailWorkSerializer(work)
+    serializer = convert_work(work)
     # get all user tokens
     tokens = NotificationToken.objects.filter(token_type = 'CUSTOMER', user__id = user.id).all()
     for token in tokens:
         notification_body = {
-            "work": serializer.data,
+            "work": serializer,
             "title": work.worktype.name,
-            "body": "Se ha asigando un trabajdor"
+            "body": "Se ha asigando un trabajador"
         }
         notification = BaseNotification(notification = notification_body, to = token.token, priority = 10, notification_type = 'WA')
         saved_notification = Notification(user = user, payload = notification.export(), notification_type = 'WA')

@@ -13,7 +13,7 @@ class WorkType(models.Model):
      )
 
      price_type = models.CharField(max_length = 40, choices = TYPE_CHOICES, default = 'ORDERED')
-     price = models.DecimalField(max_digits=12, decimal_places=2, default = -1.0)
+     price = models.IntegerField(default = -1)
      order = models.IntegerField(blank = True, null = True)
      url_name = models.CharField(max_length = 50, blank = True, null = True, unique = True)
 
