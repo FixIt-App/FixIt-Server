@@ -1,7 +1,7 @@
 from django.db import models
 
 from django.contrib.auth.models import User
-from django.contrib.postgres.fields import HStoreField
+from django.contrib.postgres.fields import JSONField
 
 
 class NotificationToken(models.Model):
@@ -25,7 +25,7 @@ class NotificationToken(models.Model):
 class Notification(models.Model):
 
     user = models.ForeignKey(User, on_delete = models.SET_NULL, null = True)
-    payload = HStoreField(null = True, default = None)
+    payload = JSONField(null = True, default = None)
     TYPE_CHOICES = (
         ('WC', 'WORK CREATED'),
         ('WA', 'WORKER ASSIGNED'),

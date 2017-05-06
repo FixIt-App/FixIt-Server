@@ -40,10 +40,10 @@
                                             <div class="card-content">
                                                 <h5 class="header">{{ worktype.name }}</h5> 
                                                 {% if worktype.price_type == 'STANDARIZED' %}
-                                                    <p class="black-text">Precio: ${{worktype.price | intcomma}} </p>
+                                                    <p class="black-text">Precio: ${{ worktype.price | intcomma  }} </p>
                                                 {% endif %}
                                                 {% if worktype.price_type == 'NOT_STANDARIZED' %}
-                                                    <p class="black-text">Hora a: ${{worktype.price | intcomma}}</p>
+                                                    <p class="black-text">Hora a: ${{ worktype.price | intcomma }}</p>
                                                 {% endif %}
                                                 {% if worktype.price_type == 'UNKNOWN' %}
                                                     <p class="black-text">No encuentras lo que necesitas? </p>

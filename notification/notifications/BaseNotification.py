@@ -11,7 +11,7 @@ class BaseNotification():
     def export(self):
          return {
             "priority": self.priority,
-            "to": self.to,
+            "to":    self.to,
             "data": self.notification
          }
 
