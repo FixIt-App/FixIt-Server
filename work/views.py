@@ -9,6 +9,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+import dateutil
+
 from customer.models import Address, Customer
 
 from image.models import Image
@@ -230,3 +232,42 @@ def start_work(request, worker_id, work_id):
     except Worker.DoesNotExist:
         return Response(status = status.HTTP_404_NOT_FOUND)
 
+
+
+def in_between(now, start, end):
+    if start <= end:
+        return start <= now < end
+    else: # over midnight e.g., 23:30-04:15
+        return start <= now or now < end
+
+@api_view(['GET'])
+def calculate_price(request):
+    worktypeid = request.query_params.get('worktypeid', None)
+    asap = request.query_params.get('asap', None)
+    date = request.query_params.get('date', None)
+    if worktypeid is None or asap is None or date is None:
+        return Response(status = status.HTTP_400_BAD_REQUEST)
+    try:
+        asap = asap.lower() in ('true', 'yes')
+        price = 0.0
+        worktype = WorkType.objects.get(pk = worktypeid)
+        price = worktype.price
+        response = {}
+        if asap is not None and asap is True:
+            # defined price for asap services
+            response['asap'] = price * decimal.Decimal(0.5)
+            price = price * decimal.Decimal(1.5)
+
+        work_date = dateutil.parser.parse(date)
+        if work_date is None:
+            return Response(status = status.HTTP_400_BAD_REQUEST)
+        dynamic_prices = DynamicPricing.objects.all()
+        for dynamic in dynamic_prices:
+            if in_between(work_date.time(), dynamic.start, dynamic.end):
+                response['time'] = price * (dynamic.multiplier - 1)
+                price = price * dynamic.multiplier
+                break
+        response['price'] = price
+        return Response(response, status = status.HTTP_200_OK)
+    except WorkType.DoesNotExist:
+        return Response(status = status.HTTP_404_NOT_FOUND)

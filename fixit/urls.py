@@ -27,7 +27,7 @@ from worktype.web import WorkTypeList
 from customer.views import CustomerDetail, CustomerList, AddressList, AddressDetail, confirm_email, confirm_phone, my_confirmation
 from customer.views import get_customer_authenticated, get_customer_adresses, resend_sms_code
 
-from work.views import start_work
+from work.views import start_work, calculate_price
 
 from customer.web import login
 
@@ -66,6 +66,7 @@ urlpatterns = [
     url(r'^api/phone/confirmations/', confirm_phone),
     url(r'^confirmations/(?P<code>[\w\-]+)/$', confirm_email),
     url(r'^api/devicetoken/$', register_device),
+    url(r'^api/dynamicprice/$', calculate_price),
     url(r'^api/devicetoken/(?P<token>.*)/$', remove_device_token),
     url(r'^api/resend-sms-code/$', resend_sms_code),
     url(r'^api/', include(router.urls)),
