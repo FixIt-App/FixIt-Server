@@ -20,3 +20,7 @@ def login(request):
             logout(request)
             context = {'error': True}
             return render(request, 'login.html', context)
+
+def sign_up(request):
+    context = {}
+    return render(request, 'signup.html', context)

@@ -29,7 +29,7 @@ from customer.views import get_customer_authenticated, get_customer_adresses, re
 
 from work.views import start_work, calculate_price
 
-from customer.web import login
+from customer.web import login, sign_up
 
 from image.views import  ImageUploadView
 
@@ -43,6 +43,7 @@ router = routers.DefaultRouter()
 
 urlpatterns = [
     url(r'^login/', login, name='login'),
+    url(r'^signup/', sign_up, name='signup'),
     url(r'^trabajos/', WorkTypeList.as_view(), name='works'),
     url(r'^admin/', admin.site.urls),
     url(r'^api/customers/(?P<pk>[0-9]+)/$', CustomerDetail.as_view(), name='customer-detail'),
