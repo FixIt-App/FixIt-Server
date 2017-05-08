@@ -34,23 +34,26 @@
                                     {% endif %}
                                     <form action="" class="signup-form" method="POST">
                                         
-                                        <h2> Ingresa tus datos para iniciar sesión </h2>
+                                        <h2> Ingresa tus datos para crear una cuenta </h2>
                                         <div class="divider"></div>
                                         {% csrf_token %}
                                         <div class="section">
+                                            <input type="text" name="first_name" placeholder="Primer Nombre" />
+                                            <input type="text" name="last_name" placeholder="Segundo Nombre" />
                                             <input type="text" name="username" placeholder="Correo Electrónico" />
                                             <input type="password" name="password" placeholder="Contraseña" />
-                                            <button class="btn waves-effect waves-light" type="submit"> Inicia Sesión </button>
+                                            <input type="text" name="phone" placeholder="Teléfono" />
+                                            <button class="btn waves-effect waves-light" type="submit"> Crear Cuenta </button>
                                         </div>
                                     </form>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="login-box">
-                                    ¿No Tienes una cuenta ? <a href="{% url 'signup' %}">Regístrate</a>
+                                    ¿Ya tienes cuenta? <a href="{% url 'login' %}">Inicia Sesión</a>
                                 </div>
                                 <div class="login-box section">
-                                    <a class="btn btn-fb hide-on-med-and-up"href="{% url 'signup' %}"> Regístrate </a>
+                                    <a class="btn btn-fb hide-on-med-and-up" href="{% url 'login' %}"> Inicia Sesión </a>
                                 </div>
                             </div>
                         </div>
