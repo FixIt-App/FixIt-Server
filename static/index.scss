@@ -102,6 +102,24 @@ body {
         position: absolute;
         top: 40%;
       }
+      .card {
+        .card-content {
+          padding: 5px;
+          .card-title {
+            font-size: 12px;
+          }
+          p {
+            font-size: 8px;
+          }
+        }
+        .card-action {
+          padding: 12px 12px;
+          a {
+            top: 20%;
+            font-size: 10px;
+          }
+        }
+      }
     }
 }
 
@@ -141,6 +159,9 @@ nav {
   }
 
   .custom-card {
+    &:hover {
+      background: #f2f2f2;
+    }
     height: 70px;
     margin: 0px;
     padding: .5em 1em;
