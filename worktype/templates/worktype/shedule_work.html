@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <meta charset="utf-8" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    {% load static %}
+    {% load humanize %}
+    <link rel="stylesheet" href="{% static "app.css" %}">
+    <title>FixIt - Trabajamos para ti</title>
+    <script src="jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
+</head>
+
+<body>
+  <nav>
+    <div class="nav-wrapper">
+        <a href="#" class="brand-logo">FixIt</a>
+    </div>
+  </nav>
+
+  <section id="main-container">
+        <div class="worktype-banner">
+          <div class="layer">
+              <div class="row">
+                  <div class="col s6 m4 l4 offset-m1 offset-l1">
+                      <div class="worktype-image" style="background-image : url(' {{worktype.icon.url}} ')"></div>
+                  </div>
+                  <div class="col s6 m4 l4">
+                    <h4>{{ worktype.name }}</h4>
+                    {% if worktype.price_type == 'STANDARIZED' %}
+                        <p>Precio: ${{ worktype.price | intcomma  }} </p>
+                    {% endif %}
+                    {% if worktype.price_type == 'NOT_STANDARIZED' %}
+                        <p>Hora a: ${{ worktype.price | intcomma }}</p>
+                    {% endif %}
+                    {% if worktype.price_type == 'UNKNOWN' %}
+                        <p>Cuentanos tu problema </p>
+                    {% endif %}
+                  </div>
+              </div>
+          </div>
+        </div>
+        
+        <form action="" class="signup-form" method="POST">
+            <div class="row">
+              <div class="col s12 m6 l6">
+                <h2> ¿Dónde enviamos tu servicio? </h2>
+                <div class="divider"></div>
+                {% csrf_token %}
+
+                <div class="input-field col s12">
+                  <select>
+                    <option value="" disabled selected>Choose your option</option>
+                    <option value="1">Option 1</option>
+                    <option value="2">Option 2</option>
+                    <option value="3">Option 3</option>
+                  </select>
+                  <label>Materialize Select</label>
+                </div>
+              </div>
+
+              <div class="col s12 m6 l6">
+                <h2> Agendar </h2>
+                <div class="divider"></div>
+                {% csrf_token %}
+                <div class="section">
+                  <div class="input-field col s12">
+                    <input type="date" class="datepicker">
+                  </div>
+                  <div class="input-field col s12">
+                    <label>Hora</label>
+                    <input type="text">
+                  </div>
+                    <button class="btn waves-effect waves-light"> Lo necesito ya </button>
+                </div>
+              </div>
+            </div>
+        </form>
+  </section>
+  <script>
+    $('.datepicker').pickadate({
+    selectMonths: true, // Creates a dropdown to control month
+    selectYears: 15 // Creates a dropdown of 15 years to control year
+  });
+        
+  </script>
+</body>

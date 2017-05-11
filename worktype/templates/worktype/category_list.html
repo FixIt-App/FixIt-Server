@@ -52,9 +52,8 @@
                             {% for worktype in category.worktypes.all %}
                                 <!--<div class="col s12 m6 l4">-->
                                     
-                                    <a href="#" class="custom-card">
+                                    <a href="/trabajos/{{worktype.url_name}}/agendar-cita/" class="custom-card">
                                         <div class="card-image" style="background-image : url(' {{worktype.icon.url}} ')">
-                                            <!--<img src="{{worktype.icon.url}}">-->
                                         </div>
                                         <div class="card-content">
                                             <h5 class="type-header">{{ worktype.name }}</h5>
