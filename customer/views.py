@@ -12,7 +12,8 @@ import logging
 logger = logging.getLogger(__name__)
 
 from rest_framework import viewsets
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -277,4 +278,26 @@ def resend_sms_code(request):
     return Response(status=status.HTTP_400_BAD_REQUEST)
     
 
-        
+@api_view(['GET'])
+@permission_classes((AllowAny, ))
+def is_email_available(request, email):
+    if not email or email == '':
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    user = User.objects.filter(email = email).all()
+    if not user:
+        return Response(True, status=status.HTTP_200_OK)
+    else:
+        return Response(False, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+@permission_classes((AllowAny, ))
+def is_phone_available(request, phone):
+    if not phone or phone == '':
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    customer = Customer.objects.filter(phone = phone).all()
+    if not customer:
+        return Response(True, status=status.HTTP_200_OK)
+    else:
+        return Response(False, status=status.HTTP_200_OK)

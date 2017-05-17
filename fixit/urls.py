@@ -25,11 +25,11 @@ from worktype.views import WorkTypeList, CategoryList
 from worktype.web import WorkTypeList, shedule_work_view
 
 from customer.views import CustomerDetail, CustomerList, AddressList, AddressDetail, confirm_email, confirm_phone, my_confirmation
-from customer.views import get_customer_authenticated, get_customer_adresses, resend_sms_code
+from customer.views import get_customer_authenticated, get_customer_adresses, resend_sms_code, is_email_available, is_phone_available
 
 from work.views import start_work, calculate_price
 
-from customer.web import login
+from customer.web import login, sign_up
 
 from image.views import  ImageUploadView
 
@@ -43,12 +43,15 @@ router = routers.DefaultRouter()
 
 urlpatterns = [
     url(r'^login/', login, name='login'),
-    url(r'^trabajos/$', WorkTypeList.as_view(), name='works'),
+    url(r'^signup/', sign_up, name='signup'),
+    url(r'^trabajos/', WorkTypeList.as_view(), name='works'),
     url(r'^trabajos/(?P<url_name>.*)/agendar-cita/$', shedule_work_view, name='shedule-work'),
     url(r'^admin/', admin.site.urls),
     url(r'^api/customers/(?P<pk>[0-9]+)/$', CustomerDetail.as_view(), name='customer-detail'),
     url(r'^api/customers/$', CustomerList.as_view()),
     url(r'^api/customer/authenticated/$', get_customer_authenticated),
+    url(r'^api/customer/email/(?P<email>.*)/available/$', is_email_available),
+    url(r'^api/customer/phone/(?P<phone>\+[0-9]+)/available/$', is_phone_available),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/token-auth/', rest_views.obtain_auth_token),
     url(r'^api/myadresses/$', get_customer_adresses),
