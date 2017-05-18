@@ -43,17 +43,19 @@
           </div>
         </div>
         
-        <form action="" method="POST">
+        <form action="/trabajos/{{worktype.url_name}}/agendar-cita/" method="POST">
+            {% csrf_token %}
+            <input type="hidden" value="{{ worktype.id }}" name="worktypeId">
+
             <div class="row">
               <div class="col s12 m4 l4 offset-m2 offset-l2">
                 <h5> ¿Dónde enviamos tu servicio? </h5>
                 <div class="divider"></div>
-                {% csrf_token %}
 
                 <div class="input-field col s12">
-                  <select>
-                    {% for b in myAddresses%}                  
-                      <option value="{{b.id}}">{{b.name}}: {{b.address}}</option>
+                  <select id="addressId" name="addressId">
+                    {% for address in myAddresses%}                  
+                      <option value="{{ address.id }}">{{ address.name }}: {{ address.address }}</option>
                     {% endfor%}
                   </select>
                 </div>
@@ -62,26 +64,38 @@
               <div class="col s12 m4 l4">
                 <h5> Agendar </h5>
                 <div class="divider"></div>
-                {% csrf_token %}
                 <div class="section">
                   <div class="input-field col s12">
-                    <input type="date" class="datepicker">
+                    fecha
+                    <input type="date" class="datepicker" id="date" name="date">
                   </div>
                   <div class="input-field col s12">
-                    <label>Hora</label>
-                    <input type="text">
+                    Hora
+                    <input type="time" class="timepicker"  id="time" name="time">
                   </div>
                     <button class="btn waves-effect waves-light"> Lo necesito ya </button>
                 </div>
               </div>
             </div>
+            <input type="submit" value="Pedir">
         </form>
   </section>
   <script>
-    console.log('estoy cargando');
-    $('.datepicker').pickadate({
-      selectMonths: true, // Creates a dropdown to control month
-      selectYears: 15 // Creates a dropdown of 15 years to control year
-    });
+    // $('.datepicker').pickadate({
+    //   selectMonths: true,
+    //   selectYears: 15,
+    //   today: 'Hoy',
+    //   clear: 'Borrar',
+    //   close: 'Listo',
+    //   monthsFull: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+    //   monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+    //   weekdaysFull: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sabado'],
+    //   weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+    //   showWeekdaysFull: false,
+      
+    // });
+    // TODO(a-santamaria): not working 
+    // https://github.com/chingyawhao/materialize-clockpicker/
+    // $('.timepicker').pickatime();
   </script>
 </body>

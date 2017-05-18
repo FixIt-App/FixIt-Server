@@ -22,7 +22,9 @@ from rest_framework import routers
 from rest_framework.authtoken import views as rest_views
 
 from worktype.views import WorkTypeList, CategoryList
-from worktype.web import WorkTypeList, shedule_work_view
+from worktype.web import WorkTypeList
+
+from work.web import schedule_work_view
 
 from customer.views import CustomerDetail, CustomerList, AddressList, AddressDetail, confirm_email, confirm_phone, my_confirmation
 from customer.views import get_customer_authenticated, get_customer_adresses, resend_sms_code, is_email_available, is_phone_available
@@ -45,7 +47,7 @@ urlpatterns = [
     url(r'^login/', login, name='login'),
     url(r'^signup/', sign_up, name='signup'),
     url(r'^trabajos/$', WorkTypeList.as_view(), name='works'),
-    url(r'^trabajos/(?P<url_name>.*)/agendar-cita/$', shedule_work_view, name='shedule-work'),
+    url(r'^trabajos/(?P<url_name>.*)/agendar-cita/$', schedule_work_view, name='schedule-work'),
     url(r'^admin/', admin.site.urls),
     url(r'^api/customers/(?P<pk>[0-9]+)/$', CustomerDetail.as_view(), name='customer-detail'),
     url(r'^api/customers/$', CustomerList.as_view()),

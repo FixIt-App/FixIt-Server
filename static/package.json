@@ -6,6 +6,7 @@
   "author": "David Calle, Fabián Merchán, Alfredo Santamaría",
   "license": "ISC",
   "dependencies": {
+    "materialize-clockpicker": "^1.0.1",
     "materialize-css": "^0.98.2"
   },
   "devDependencies": {
@@ -17,7 +18,7 @@
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.9.0"
   },
-   "scripts": {
+  "scripts": {
     "build": "gulp",
     "start": "gulp watch & node server.js"
   }
