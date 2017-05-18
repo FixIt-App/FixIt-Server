@@ -6,6 +6,7 @@ from customer.models import Customer, Address
 from work.forms import WorkForm
 from work.models import Work
 from worktype.models import WorkType
+from work.business_logic import create_work_and_enqueue
 
 def schedule_work_view(request, url_name):
     if request.method == 'GET':
@@ -41,10 +42,10 @@ def schedule_work_view(request, url_name):
         address = Address.objects.filter(id = addressId).first()
 
         print(dateTime)
-        work = Work(worktype = worktype, customer = customer, 
-                    address = address, time = dateTime)
-        work.save()
-        return render(request, 'confirmation.html', {'form': form, 'work': work })
+        createdWork = create_work_and_enqueue(worktype = worktype, customer = customer, 
+                                            address = address, time = dateTime,
+                                            description = '', asap = False, images = [])
+        return render(request, 'confirmation.html', {'work': createdWork })
       else:
         addresses = Address.objects.filter(customer__id__exact = customer.id)
         return render(request, 'schedule_work.html', { 'worktype' : worktype, 'myAddresses': addresses, })
