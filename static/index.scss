@@ -102,7 +102,13 @@ body {
       background-color: rgba(53, 90, 99, 0.56);
       position: relative;
       .card {
-        background-color: rgba(84, 110, 122, 0.8) !important;
+        background-color: #eeebed;
+        color: $korn;
+        .card-action {
+          a {
+            color: $deff-leppard !important;
+          }
+        }
       }
     }
 }
@@ -193,4 +199,8 @@ nav {
       border: 1px solid #dddddc;
     }
   }
+}
+
+select {
+  display: block;
 }

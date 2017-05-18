@@ -44,7 +44,7 @@ router = routers.DefaultRouter()
 urlpatterns = [
     url(r'^login/', login, name='login'),
     url(r'^signup/', sign_up, name='signup'),
-    url(r'^trabajos/', WorkTypeList.as_view(), name='works'),
+    url(r'^trabajos/$', WorkTypeList.as_view(), name='works'),
     url(r'^trabajos/(?P<url_name>.*)/agendar-cita/$', shedule_work_view, name='shedule-work'),
     url(r'^admin/', admin.site.urls),
     url(r'^api/customers/(?P<pk>[0-9]+)/$', CustomerDetail.as_view(), name='customer-detail'),

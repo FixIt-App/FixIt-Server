@@ -9,14 +9,14 @@
     {% load humanize %}
     <link rel="stylesheet" href="{% static "app.css" %}">
     <title>FixIt - Trabajamos para ti</title>
-    <script src="jquery-3.2.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
 </head>
 
 <body>
   <nav>
     <div class="nav-wrapper">
-        <a href="#" class="brand-logo">FixIt</a>
+        <a href="/" class="brand-logo">FixIt</a>
     </div>
   </nav>
 
@@ -43,26 +43,24 @@
           </div>
         </div>
         
-        <form action="" class="signup-form" method="POST">
+        <form action="" method="POST">
             <div class="row">
-              <div class="col s12 m6 l6">
-                <h2> ¿Dónde enviamos tu servicio? </h2>
+              <div class="col s12 m4 l4 offset-m2 offset-l2">
+                <h5> ¿Dónde enviamos tu servicio? </h5>
                 <div class="divider"></div>
                 {% csrf_token %}
 
                 <div class="input-field col s12">
                   <select>
-                    <option value="" disabled selected>Choose your option</option>
-                    <option value="1">Option 1</option>
-                    <option value="2">Option 2</option>
-                    <option value="3">Option 3</option>
+                    {% for b in myAddresses%}                  
+                      <option value="{{b.id}}">{{b.name}}: {{b.address}}</option>
+                    {% endfor%}
                   </select>
-                  <label>Materialize Select</label>
                 </div>
               </div>
 
-              <div class="col s12 m6 l6">
-                <h2> Agendar </h2>
+              <div class="col s12 m4 l4">
+                <h5> Agendar </h5>
                 <div class="divider"></div>
                 {% csrf_token %}
                 <div class="section">
@@ -80,10 +78,10 @@
         </form>
   </section>
   <script>
+    console.log('estoy cargando');
     $('.datepicker').pickadate({
-    selectMonths: true, // Creates a dropdown to control month
-    selectYears: 15 // Creates a dropdown of 15 years to control year
-  });
-        
+      selectMonths: true, // Creates a dropdown to control month
+      selectYears: 15 // Creates a dropdown of 15 years to control year
+    });
   </script>
 </body>
