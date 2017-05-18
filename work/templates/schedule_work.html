@@ -38,17 +38,18 @@
                     {% if worktype.price_type == 'UNKNOWN' %}
                         <p>Cuentanos tu problema </p>
                     {% endif %}
+                    <button id="buttonSubmit" class="btn waves-effect waves-light"> Pedir Trabajo <i class="material-icons right">send</i> </button>
                   </div>
               </div>
           </div>
         </div>
         
-        <form action="/trabajos/{{worktype.url_name}}/agendar-cita/" method="POST">
+        <form id="newWorkForm" action="/trabajos/{{worktype.url_name}}/agendar-cita/" method="POST">
             {% csrf_token %}
             <input type="hidden" value="{{ worktype.id }}" name="worktypeId">
 
             <div class="row">
-              <div class="col s12 m4 l4 offset-m2 offset-l2">
+              <div class="col s12 m4 l4 offset-m1 offset-l1">
                 <h5> ¿Dónde enviamos tu servicio? </h5>
                 <div class="divider"></div>
 
@@ -59,28 +60,71 @@
                     {% endfor%}
                   </select>
                 </div>
+                <div class="input-field col s12">
+                  <!--<button type="button" id="asap" class="btn waves-effect waves-light"> Agregar dirección <i class="material-icons right">add</i> </button>-->
+                  <a class="modal-trigger waves-effect waves-light btn" data-target="modalNewAddress">Agregar dirección <i class="material-icons right">add</i></a>
+                </div>
               </div>
 
-              <div class="col s12 m4 l4">
+              <div class="col s12 m4 l4 offset-m1 offset-l1">
                 <h5> Agendar </h5>
                 <div class="divider"></div>
                 <div class="section">
-                  <div class="input-field col s12">
+                  <div class="input-field col s12 m6 l6">
                     fecha
                     <input type="date" class="datepicker" id="date" name="date">
                   </div>
-                  <div class="input-field col s12">
+                  <div class="input-field col s12 m6 l6">
                     Hora
                     <input type="time" class="timepicker"  id="time" name="time">
                   </div>
-                    <button class="btn waves-effect waves-light"> Lo necesito ya </button>
+                    <button type="button" id="asap" class="btn waves-effect waves-light"> Lo necesito ya </button>
                 </div>
               </div>
             </div>
-            <input type="submit" value="Pedir">
         </form>
+
+        <!-- Modal Structure -->
+        <div id="modalNewAddress" class="modal modal-fixed-footer">
+          <div class="modal-content">
+            <h4>Nueva Dirección</h4>
+            <form id="newAddressForm" action="/api/addresses/" method="POST">
+              {% csrf_token %}
+              <label>Dirección</label>
+              <input type="text" id="address" name="address">
+              <label>Nombre</label>
+              <input type="text" id="name" name="name">
+              <label>Ciudad</label>
+              <input type="text" id="city" name="city" value="Bogotá">
+              <label>Pais</label>
+              <input type="text" id="country" name="country" value="Colombia">
+            </form>
+          </div>
+          <div class="modal-footer">
+            <a id="addNewAddress" class="modal-action waves-effect waves-green btn-flat ">Agregar</a>
+            <a class="modal-action modal-close waves-effect waves-green btn-flat ">Cerrar</a>
+          </div>
+        </div>
+  </div>
   </section>
   <script>
+    $(document).ready(function () {
+      $("#buttonSubmit").click(function () {
+        $("#newWorkForm").submit();
+      });
+    });
+     $(document).ready(function () {
+      $("#asap").click(function () {
+        console.log('asap');
+      });
+    });
+     $( document ).ready(function() {
+      $('.modal').modal();
+      $('#addNewAddress').on('click', function() {
+        console.log('entre');
+        $("#newAddressForm").submit();
+      });
+    });
     // $('.datepicker').pickadate({
     //   selectMonths: true,
     //   selectYears: 15,
