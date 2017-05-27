@@ -1,6 +1,10 @@
 from django.shortcuts import render
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
 from django.contrib.auth import authenticate, login as django_login, logout
+from rest_framework import status
+from customer.forms import AddressForm
+from customer.serializers import AddressSerializer
+from customer.models import Customer, Address
 
 def login(request):
     if request.user is not None:
@@ -22,5 +26,22 @@ def login(request):
             return render(request, 'login.html', context)
 
 def sign_up(request):
+    context = {}
+    return render(request, 'signup.html', context)
+
+def add_adderss(request):
+    if request.method == 'POST':
+         form = AddressForm(request.POST)
+         if form.is_valid():
+            customer = Customer.objects.filter(user__id__exact=request.user.id).first()
+            address = Address(name = form.cleaned_data['name'], \
+                        address = form.cleaned_data['address'], \
+                        city = form.cleaned_data['city'],       \
+                        country = form.cleaned_data['country'], \
+                        customer = customer)
+            address.save()
+            serializer = AddressSerializer(address)
+            context = {}
+            return render(request, 'login.html', context)
     context = {}
     return render(request, 'signup.html', context)

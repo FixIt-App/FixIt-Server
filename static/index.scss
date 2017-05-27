@@ -2,16 +2,35 @@ $primary-color: #12A19B;
 $secondary-color :#12A19B;
 $background-color :#fafafa;
 
+$slipknot:     #2F3333;
+$korn:         #42464C;
+$cinderella:   #5D5D5D;
+$metallica:    #277467;
+$deff-leppard: #23A299;
+$guns-n-roses: #5FA9A0;
+$iron-maiden:  #5EA099;
+$ac-dc:        #7EB6B1;
+$kiss:         #F5F9E8;
+$aerosmith:    #9AA52D;
+$pearl-jam:    #AAB24A;
+$cranberries:  #A2BD31;
+$oasis:        #C6D36B;
+$black-sabbath:#222;
+$radiohead:    #526B76;
+$the-strokes:  #DFDFDF;
+$nirvana:      #8C9FA9;
+$blur:         #CDD5D9;
+$whitesnake:   #f4f4f4;
+
 @import "node_modules/materialize-css/sass/materialize.scss";
 
 body {
   background: $background-color;
-  color: $primary-color;
-  font-family: Roboto;
+  font-family: Lato,sans-serif;
 }
 
 #main-container {
-  margin: 30px auto;
+  padding-top: 40px;
 }
 
 .iphone {
@@ -69,27 +88,120 @@ body {
   background-color: $primary-color;
 }
 
-.card.horizontal {
-  height: 150px;
-}
-
-.card-image img {
-  height: 80%;
-  max-height: 80%;
-  min-height: 80%; 
-  padding-top:10%;
-}
-
-.card .card-content {
-  padding: 10px;
-}
+// category_list
 
 .worktypes-banner {
-    padding: 2em 0;
+    position: relative;
     background: #000;
     background-repeat: no-repeat;
     background-size: cover;
-    background-position: bottom;
+    background-position-y: -50px;
     color: #fff;
-    height: 200px;
+    .layer {
+      padding: .5em 0;
+      background-color: rgba(53, 90, 99, 0.56);
+      position: relative;
+      .card {
+        background-color: #eeebed;
+        color: $korn;
+        .card-action {
+          a {
+            color: $deff-leppard !important;
+          }
+        }
+      }
+    }
+}
+
+nav {
+  box-shadow: none;
+  z-index: 4;
+  background-color: $metallica;
+  height: 40px;
+  position: fixed;
+  line-height: 40px;
+  .brand-logo {
+    font-size: 20px;
+    left: 0px;
+    padding: 0px 15px;
+    transform: none;
+  }
+}
+.category-list {
+  margin: 3em 0;
+}
+.category {
+  overflow: hidden;
+  padding: 8px, 8px;
+  border-radius: 10px;
+  margin-bottom: 1em;
+  background: #fff;
+  border: 1px solid #dddddc;
+  .category-header {
+    h5 {
+      margin: 0px;
+      padding: .5em 1em;
+    }
+    background-color: $primary-color;
+    color: #fff;
+    font-family: Lato,sans-serif;
+    text-shadow: 1px 1px 1px rgba(0,0,0,.4);
+  }
+
+  .custom-card {
+    &:hover {
+      background: #f2f2f2;
+    }
+    height: 100px;
+    margin: 0px;
+    padding: .5em 1em;
+    border-top: 1px solid #dddddc;
+    display: flex;
+    .card-image {
+      float: left;
+      width: 30%;
+      height: 100%;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: 50% 50%;
+      border-radius: 20px;
+      border: 1px solid #dddddc;
+    }
+    .card-content {
+      margin-top: auto;
+      margin-bottom: auto;
+      margin-left: .5em;
+      h5 {
+        margin: 0px;
+        color: $metallica;
+      }
+      p {
+        margin: 0px;
+        color: #686868;
+      }
+    }
+  }
+}
+
+// schedule work
+
+.worktype-banner {
+  background-color: $metallica;
+  .layer {
+     padding: .5em 0;
+     color: #fff;
+    .worktype-image {
+      width: 100%;
+      height: 250px;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: 50% 50%;
+      border-radius: 20px;
+      border: 1px solid #dddddc;
+    }
+  }
+}
+
+select {
+  display: block;
 }
