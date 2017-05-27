@@ -11,6 +11,9 @@
     <title>FixIt - Trabajamos para ti</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
+    <script src="{% static "jquery.datetimepicker.full.min.js" %}"></script>
+    <link rel="stylesheet" href="{% static "jquery.datetimepicker.min.css" %}">
+    
 </head>
 
 <body>
@@ -71,12 +74,8 @@
                 <div class="divider"></div>
                 <div class="section">
                   <div class="input-field col s12 m6 l6">
-                    fecha
-                    <input type="date" class="datepicker" id="date" name="date">
-                  </div>
-                  <div class="input-field col s12 m6 l6">
-                    Hora
-                    <input type="time" class="timepicker"  id="time" name="time">
+                    fecha y hora
+                    <input id="datetimepicker" type="text" name="date">
                   </div>
                     <button type="button" id="asap" class="btn waves-effect waves-light"> Lo necesito ya </button>
                 </div>
@@ -90,6 +89,9 @@
             <h4>Nueva Dirección</h4>
             <form id="newAddressForm" action="/agregar/direccion/" method="POST">
               {% csrf_token %}
+
+              <input type="hidden" name="url_name" value="{{worktype.url_name}}">
+
               <label>Dirección</label>
               <input type="text" id="address" name="address">
               <label>Nombre</label>
@@ -121,25 +123,9 @@
      $( document ).ready(function() {
       $('.modal').modal();
       $('#addNewAddress').on('click', function() {
-        console.log('entre');
         $("#newAddressForm").submit();
       });
     });
-    // $('.datepicker').pickadate({
-    //   selectMonths: true,
-    //   selectYears: 15,
-    //   today: 'Hoy',
-    //   clear: 'Borrar',
-    //   close: 'Listo',
-    //   monthsFull: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-    //   monthsShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-    //   weekdaysFull: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sabado'],
-    //   weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
-    //   showWeekdaysFull: false,
-      
-    // });
-    // TODO(a-santamaria): not working 
-    // https://github.com/chingyawhao/materialize-clockpicker/
-    // $('.timepicker').pickatime();
+    jQuery('#datetimepicker').datetimepicker();
   </script>
 </body>

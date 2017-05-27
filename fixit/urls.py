@@ -31,7 +31,7 @@ from customer.views import get_customer_authenticated, get_customer_adresses, re
 
 from work.views import start_work, calculate_price
 
-from customer.web import login, sign_up, add_adderss
+from customer.web import login, sign_up, add_address
 
 from image.views import  ImageUploadView
 
@@ -59,7 +59,7 @@ urlpatterns = [
     url(r'^api/myadresses/$', get_customer_adresses),
     url(r'^api/addresses/(?P<pk>[0-9]+)/$', AddressDetail.as_view()),
     url(r'^api/addresses/$', AddressList.as_view()),
-    url(r'^agregar/direccion/$', add_adderss, name='add_address'),
+    url(r'^agregar/direccion/$', add_address, name='add_address'),
     url(r'^api/categories/$', CategoryList.as_view()),
     url(r'^api/worktypes/$', WorkTypeList.as_view()),
     url(r'^api/work/upload-image/$', ImageUploadView.as_view()),

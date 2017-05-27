@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import Http404, HttpResponseRedirect
 from django.contrib.auth import authenticate, login as django_login, logout
 from rest_framework import status
@@ -19,7 +19,7 @@ def login(request):
         if user is not None:
             django_login(request, user)
             context = {}
-            return render(request, 'login.html', context)
+            return redirect('works')
         else:
             logout(request)
             context = {'error': True}
@@ -29,7 +29,7 @@ def sign_up(request):
     context = {}
     return render(request, 'signup.html', context)
 
-def add_adderss(request):
+def add_address(request):
     if request.method == 'POST':
          form = AddressForm(request.POST)
          if form.is_valid():
@@ -42,6 +42,7 @@ def add_adderss(request):
             address.save()
             serializer = AddressSerializer(address)
             context = {}
-            return render(request, 'login.html', context)
+            url_name = request.POST.get('url_name')
+            return redirect('schedule-work', url_name = url_name)
     context = {}
     return render(request, 'signup.html', context)

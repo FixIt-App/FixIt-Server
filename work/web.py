@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import Http404, HttpResponseRedirect
 from datetime import datetime
 
@@ -36,12 +36,9 @@ def schedule_work_view(request, url_name):
       if form.is_valid():
         addressId = form.cleaned_data['addressId']
         date = form.cleaned_data['date']
-        time = form.cleaned_data['time']
-        
-        dateTime = datetime.combine(date, time)
+        # TODO(a-santamaria): utc -5
+        dateTime = datetime.strptime(date, "%Y/%m/%d %H:%M")
         address = Address.objects.filter(id = addressId).first()
-
-        print(dateTime)
         createdWork = create_work_and_enqueue(worktype = worktype, customer = customer, 
                                             address = address, time = dateTime,
                                             description = '', asap = False, images = [])
