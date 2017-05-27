@@ -88,7 +88,7 @@
         <div id="modalNewAddress" class="modal modal-fixed-footer">
           <div class="modal-content">
             <h4>Nueva Dirección</h4>
-            <form id="newAddressForm" action="/api/addresses/" method="POST">
+            <form id="newAddressForm" action="/agregar/direccion/" method="POST">
               {% csrf_token %}
               <label>Dirección</label>
               <input type="text" id="address" name="address">
