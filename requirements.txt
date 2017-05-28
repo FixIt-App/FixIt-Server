@@ -3,7 +3,6 @@ anyjson==0.3.3
 appdirs==1.4.0
 billiard==3.5.0.2
 boto3==1.4.4
-botocore==1.5.35
 celery==4.0.2
 coverage==4.3.4
 Django==1.11
