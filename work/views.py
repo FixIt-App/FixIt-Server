@@ -247,14 +247,24 @@ def calculate_price(request):
         return Response(status = status.HTTP_400_BAD_REQUEST)
     try:
         asap = asap.lower() in ('true', 'yes')
-        price = 0.0
         worktype = WorkType.objects.get(pk = worktypeid)
-        price = worktype.price
+        basePrice = worktype.price
+        total = basePrice
         response = {}
+        response['breakdown'] = []
+
+        service = {}
+        service['name'] = "Servicio"
+        service['price'] = basePrice
+        response['breakdown'].append(service)
+
         if asap is not None and asap is True:
             # defined price for asap services
-            response['asap'] = price * decimal.Decimal(0.5)
-            price = price * decimal.Decimal(1.5)
+            chargeAsap = {}
+            chargeAsap['name'] = "Lo necesito ahora mismo"
+            chargeAsap['price'] = basePrice * decimal.Decimal(0.5)
+            response['breakdown'].append(chargeAsap) 
+            total += basePrice * decimal.Decimal(0.5)
 
         work_date = dateutil.parser.parse(date)
         if work_date is None:
@@ -262,10 +272,19 @@ def calculate_price(request):
         dynamic_prices = DynamicPricing.objects.all()
         for dynamic in dynamic_prices:
             if in_between(work_date.time(), dynamic.start, dynamic.end):
-                response['time'] = price * (dynamic.multiplier - 1)
-                price = price * dynamic.multiplier
+                chargeOverNight = {}
+                chargeOverNight['name'] = "Recargo nocturno"
+                chargeOverNight['price'] = basePrice * (dynamic.multiplier - 1)
+                response['breakdown'].append(chargeOverNight)
+                total += basePrice * (dynamic.multiplier - 1)
                 break
-        response['price'] = price
+
+        taxIva = {}
+        taxIva['name'] = "IVA (19%)"
+        taxIva['price'] = total * decimal.Decimal(0.19)
+        response['breakdown'].append(taxIva)
+
+        response['total'] = total * decimal.Decimal(1.19)
         return Response(response, status = status.HTTP_200_OK)
     except WorkType.DoesNotExist:
         return Response(status = status.HTTP_404_NOT_FOUND)
