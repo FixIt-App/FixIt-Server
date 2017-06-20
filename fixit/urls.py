@@ -37,7 +37,7 @@ from image.views import  ImageUploadView
 
 import os
 
-from work.views import create_work, get_my_works, WorkDetail, assign_work, get_total_price
+from work.views import create_work, get_my_works, WorkDetail, assign_work, get_total_price, get_ordered_works
 
 from notification.views import register_device, remove_device_token
 
@@ -64,6 +64,7 @@ urlpatterns = [
     url(r'^api/worktypes/$', WorkTypeList.as_view()),
     url(r'^api/work/upload-image/$', ImageUploadView.as_view()),
     url(r'^api/myworks/$', get_my_works),
+    url(r'^api/work/ordered/$', get_ordered_works),
     url(r'^api/work/$', create_work),
     url(r'^api/work/(?P<pk>[0-9]+)/price/$', get_total_price),
     url(r'^api/work/(?P<pk>[0-9]+)/worker/$', assign_work),
