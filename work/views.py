@@ -288,3 +288,27 @@ def calculate_price(request):
         return Response(response, status = status.HTTP_200_OK)
     except WorkType.DoesNotExist:
         return Response(status = status.HTTP_404_NOT_FOUND)
+
+@api_view(['GET'])
+def get_ordered_works(request):
+    user = request.user
+    worker = Worker.objects.filter(user__id__exact = user.id).first()
+
+    workerWorkTypes = worker.works.all()
+    works = Work.objects.filter(worktype__in = workerWorkTypes).filter(state = 'ORDERED').all()
+    state = request.query_params.get('state', None)
+
+    my_works = []
+    for work in works:
+        #setting images to fworker
+        images = Image.objects.filter(work__id__exact = work.id).all()
+        work.images = images
+        # setting the worker to the work
+        if work.worker is not None:
+            worker = Worker.objects.get(pk = work.worker.id)
+            work.worker = worker
+        my_works.append(work)
+
+
+    serializer = DetailWorkSerializer(my_works, many = True)
+    return Response(serializer.data)
