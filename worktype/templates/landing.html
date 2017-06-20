@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <meta charset="utf-8" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    {% load static %}
+    {% load humanize %}
+    <link rel="stylesheet" href="{% static "app.css" %}">
+    <title>FixIt - Trabajamos para ti</title>
+</head>
+<body>
+  <nav role="navigation">
+    <div class="nav-wrapper container">
+      <a id="logo-container" href="#" class="brand-logo">FixIt</a>
+      <ul class="right hide-on-med-and-down">
+        <li><a href="/login">Crea una cuenta</a></li>
+      </ul>
+
+      <ul id="nav-mobile" class="side-nav">
+        <li><a href="/login">Crea una cuenta</a></li>
+      </ul>
+      <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+    </div>
+  </nav>
+
+  <div id="index-banner" class="parallax-container">
+    <div class="section no-pad-bot">
+      <div class="container">
+        <br><br>
+        <h1 class="header center teal-text text-lighten-2">FixIt</h1>
+        <div class="row center">
+          <h5 class="header col s12 light">Lo que necesitas para tu hogar</h5>
+        </div>
+        <div class="row center">
+          <a href="http://materializecss.com/getting-started.html" id="download-button" class="btn-large waves-effect waves-light teal lighten-1"> Descarga la aplicación </a>
+        </div>
+        <br><br>
+
+      </div>
+    </div>
+    <div class="parallax"><img src="{% static "kitchen.jpg" %}"  alt="Unsplashed background img 1"></div>
+  </div>
+
+
+  <div class="container">
+    <div class="section">
+
+      <!--   Icon Section   -->
+      <div class="row">
+        <div class="col s12 m4">
+          <div class="icon-block">
+            <h2 class="center brown-text"><i class="material-icons">flash_on</i></h2>
+            <h5 class="center">Cuando lo necesitas</h5>
+
+            <p class="light">Te encontramos un trabajador en tiempo record</p>
+          </div>
+        </div>
+
+        <div class="col s12 m4">
+          <div class="icon-block">
+            <h2 class="center brown-text"><i class="material-icons">group</i></h2>
+            <h5 class="center">Precio Garantizado</h5>
+
+            <p class="light">Tenemos precios estandarizados, lo que garantiza que vas a pagar solamente lo justo.</p>
+          </div>
+        </div>
+
+        <div class="col s12 m4">
+          <div class="icon-block">
+            <h2 class="center brown-text"><i class="material-icons">settings</i></h2>
+            <h5 class="center">Calidad Garantizada</h5>
+
+            <p class="light">Nuestros trabajadores están capacitados y listos para empezar a trabajar.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="section">
+
+      <div class="row">
+        <div class="col s12 center">
+          <h3><i class="mdi-content-send brown-text"></i></h3>
+          <h4>Contáctanos</h4>
+          <p class="left-align light">Somos una empresa colombiana info@fix-it.com.co</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <footer class="page-footer teal">
+    <div class="container">
+      <div class="row">
+        <div class="col l6 s12">
+          <h5 class="white-text">FixIt</h5>
+          <p class="grey-text text-lighten-4">Trabajamos para ti, no se que poner en esta mierda solo quiero llenar para que se vea algo</p>
+      </div>
+    </div>
+    <div class="footer-copyright">
+      <div class="container">
+      Made by <a class="brown-text text-lighten-3" href="http://materializecss.com">Materialize</a>
+      </div>
+    </div>
+  </footer>
+
+
+  <!--  Scripts-->
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
+  <script>
+    (function($){
+  $(function(){
+        $('.button-collapse').sideNav();
+        $('.parallax').parallax();
+
+    }); // end of document ready
+    })(jQuery); // end of jQuery name space
+  </script>
+  </body>
+</html>

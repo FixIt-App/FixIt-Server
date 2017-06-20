@@ -6,6 +6,10 @@ logger = logging.getLogger(__name__)
 from customer.models import Confirmation
 from customer.tasks import confirm_user, confirm_email as confirm_email_async
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 def create_confirmations(customer):
     # SMS confirmation
     code = str(randint(100,999))
