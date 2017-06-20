@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <meta charset="utf-8" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    {% load static %}
+    {% load humanize %}
+    <link rel="stylesheet" href="{% static "app.css" %}">
+    <title>FixIt - Trabajamos para ti</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
+    <script src="{% static "jquery.datetimepicker.full.min.js" %}"></script>
+    <link rel="stylesheet" href="{% static "jquery.datetimepicker.min.css" %}">
+    
+</head>
+
+<body>
+  <nav>
+    <div class="nav-wrapper">
+        <a href="/" class="brand-logo">FixIt</a>
+    </div>
+  </nav>
+
+  <section id="main-container">
+        <div class="worktype-banner">
+          <div class="layer">
+              <div class="row">
+                  <div class="col s6 m4 l4 offset-m1 offset-l1">
+                      <div class="worktype-image" style="background-image : url(' {{worktype.icon.url}} ')"></div>
+                  </div>
+                  <div class="col s6 m4 l4">
+                    <h4>{{ worktype.name }}</h4>
+                    {% if worktype.price_type == 'STANDARIZED' %}
+                        <p>Precio: ${{ worktype.price | intcomma  }} </p>
+                    {% endif %}
+                    {% if worktype.price_type == 'NOT_STANDARIZED' %}
+                        <p>Hora a: ${{ worktype.price | intcomma }}</p>
+                    {% endif %}
+                    {% if worktype.price_type == 'UNKNOWN' %}
+                        <p>Cuentanos tu problema </p>
+                    {% endif %}
+                    <button id="buttonSubmit" class="btn waves-effect waves-light"> Pedir Trabajo <i class="material-icons right">send</i> </button>
+                  </div>
+              </div>
+          </div>
+        </div>
+        
+        <form id="newWorkForm" action="/trabajos/{{worktype.url_name}}/agendar-cita/" method="POST">
+            {% csrf_token %}
+            <input type="hidden" value="{{ worktype.id }}" name="worktypeId">
+
+            <div class="row">
+              <div class="col s12 m4 l4 offset-m1 offset-l1">
+                <h5> ¿Dónde enviamos tu servicio? </h5>
+                <div class="divider"></div>
+
+                <div class="input-field col s12">
+                  <select id="addressId" name="addressId">
+                    {% for address in myAddresses%}                  
+                      <option value="{{ address.id }}">{{ address.name }}: {{ address.address }}</option>
+                    {% endfor%}
+                  </select>
+                </div>
+                <div class="input-field col s12">
+                  <!--<button type="button" id="asap" class="btn waves-effect waves-light"> Agregar dirección <i class="material-icons right">add</i> </button>-->
+                  <a class="modal-trigger waves-effect waves-light btn" data-target="modalNewAddress">Agregar dirección <i class="material-icons right">add</i></a>
+                </div>
+              </div>
+
+              <div class="col s12 m4 l4 offset-m1 offset-l1">
+                <h5> Agendar </h5>
+                <div class="divider"></div>
+                <div class="section">
+                  <div class="input-field col s12 m6 l6">
+                    fecha y hora
+                    <input id="datetimepicker" type="text" name="date">
+                  </div>
+                    <button type="button" id="asap" class="btn waves-effect waves-light"> Lo necesito ya </button>
+                </div>
+              </div>
+            </div>
+        </form>
+
+        <!-- Modal Structure -->
+        <div id="modalNewAddress" class="modal modal-fixed-footer">
+          <div class="modal-content">
+            <h4>Nueva Dirección</h4>
+            <form id="newAddressForm" action="/agregar/direccion/" method="POST">
+              {% csrf_token %}
+
+              <input type="hidden" name="url_name" value="{{worktype.url_name}}">
+
+              <label>Dirección</label>
+              <input type="text" id="address" name="address">
+              <label>Nombre</label>
+              <input type="text" id="name" name="name">
+              <label>Ciudad</label>
+              <input type="text" id="city" name="city" value="Bogotá">
+              <label>Pais</label>
+              <input type="text" id="country" name="country" value="Colombia">
+            </form>
+          </div>
+          <div class="modal-footer">
+            <a id="addNewAddress" class="modal-action waves-effect waves-green btn-flat ">Agregar</a>
+            <a class="modal-action modal-close waves-effect waves-green btn-flat ">Cerrar</a>
+          </div>
+        </div>
+  </div>
+  </section>
+  <script>
+    $(document).ready(function () {
+      $("#buttonSubmit").click(function () {
+        $("#newWorkForm").submit();
+      });
+    });
+     $(document).ready(function () {
+      $("#asap").click(function () {
+        console.log('asap');
+      });
+    });
+     $( document ).ready(function() {
+      $('.modal').modal();
+      $('#addNewAddress').on('click', function() {
+        $("#newAddressForm").submit();
+      });
+    });
+    jQuery('#datetimepicker').datetimepicker();
+  </script>
+</body>

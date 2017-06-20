@@ -1,5 +1,7 @@
 from random import randint
 import uuid
+import logging
+logger = logging.getLogger(__name__)
 
 from customer.models import Confirmation
 from customer.tasks import confirm_user, confirm_email as confirm_email_async

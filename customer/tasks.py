@@ -17,7 +17,7 @@ def confirm_user(phone, code):
     print("Text message to " + phone)
     result = sns.publish(
         PhoneNumber = phone,
-        Message = 'Bienvenido a FixIt, tu código es: %s.' % code,
+        Message = 'Bienvenido a FixIt, tu codigo es: %s.' % code,
     )
     print(result)
 

@@ -24,8 +24,10 @@ from worker.models import Worker
 
 from customer.permissions import IsOwnerOrReadOnly
 
-from .tasks import create_work as create_work_async, notity_assignment as notity_assignment_async
+from .tasks import notity_assignment as notity_assignment_async
 from .serializers import DetailWorkSerializer, DetailWorkDTOSerializer, PriceSerializer
+
+from .business_logic import create_work_and_enqueue
 
 import logging
 
@@ -41,37 +43,33 @@ def create_work(request):
         if serializer.is_valid():
             worktype = WorkType.objects.filter(id = serializer.data['worktypeid']).first()
             date = serializer.data['date']
-            if(serializer.data.get('description', None) != None):
-                description = serializer.data['description']
-            else:
-                description = ''
             address = Address.objects.filter(id = serializer.data['addressid']).first()
             user = request.user
             customer = Customer.objects.filter(user__id__exact = user.id).first()
-            work = Work(worktype = worktype, customer = customer, 
-                        address = address, time = date, 
-                        description = description)
+
+            description = ''
+            if(serializer.data.get('description', None) != None):
+                description = serializer.data['description']
+
+            asap = False
             if serializer.data.get('asap', None) != None:
-                work.asap = serializer.data['asap']
-            work.save()
-            logger.info('work created for customer ' + user.username)
+                asap = serializer.data['asap']
+
+            images = []
             if(serializer.data.get('images', None) != None):
                 for image in serializer.data['images']:
                     image = Image.objects.filter(id = image).first()
                     image.work = work
                     image.save()
-                work.images = Image.objects.filter(pk__in = map(int, serializer.data['images']))
+                images = Image.objects.filter(pk__in = map(int, serializer.data['images']))
                 logger.info('added images for created work')
-            else:
-                work.images = []
+            
+            work = create_work_and_enqueue(worktype = worktype, customer = customer, 
+                                    address = address, time = date, asap = asap, 
+                                    description = description, images = images)
+            
             serializer = DetailWorkSerializer(work)
-            try:
-                create_work_async.delay(work.id)
-                logger.info('succesfully created work for customer ' + user.username)
-                return Response(serializer.data, status = status.HTTP_201_CREATED)
-            except:
-                logger.error('queue not found')
-                return Response(serializer.data, status = status.HTTP_201_CREATED)
+            return Response(serializer.data, status = status.HTTP_201_CREATED)
         else:
             return Response(status = status.HTTP_400_BAD_REQUEST)
     except WorkType.DoesNotExist:
@@ -249,14 +247,24 @@ def calculate_price(request):
         return Response(status = status.HTTP_400_BAD_REQUEST)
     try:
         asap = asap.lower() in ('true', 'yes')
-        price = 0.0
         worktype = WorkType.objects.get(pk = worktypeid)
-        price = worktype.price
+        basePrice = worktype.price
+        total = basePrice
         response = {}
+        response['breakdown'] = []
+
+        service = {}
+        service['name'] = "Servicio"
+        service['price'] = basePrice
+        response['breakdown'].append(service)
+
         if asap is not None and asap is True:
             # defined price for asap services
-            response['asap'] = price * decimal.Decimal(0.5)
-            price = price * decimal.Decimal(1.5)
+            chargeAsap = {}
+            chargeAsap['name'] = "Lo necesito ahora mismo"
+            chargeAsap['price'] = basePrice * decimal.Decimal(0.5)
+            response['breakdown'].append(chargeAsap) 
+            total += basePrice * decimal.Decimal(0.5)
 
         work_date = dateutil.parser.parse(date)
         if work_date is None:
@@ -264,10 +272,19 @@ def calculate_price(request):
         dynamic_prices = DynamicPricing.objects.all()
         for dynamic in dynamic_prices:
             if in_between(work_date.time(), dynamic.start, dynamic.end):
-                response['time'] = price * (dynamic.multiplier - 1)
-                price = price * dynamic.multiplier
+                chargeOverNight = {}
+                chargeOverNight['name'] = "Recargo nocturno"
+                chargeOverNight['price'] = basePrice * (dynamic.multiplier - 1)
+                response['breakdown'].append(chargeOverNight)
+                total += basePrice * (dynamic.multiplier - 1)
                 break
-        response['price'] = price
+
+        taxIva = {}
+        taxIva['name'] = "IVA (19%)"
+        taxIva['price'] = total * decimal.Decimal(0.19)
+        response['breakdown'].append(taxIva)
+
+        response['total'] = total * decimal.Decimal(1.19)
         return Response(response, status = status.HTTP_200_OK)
     except WorkType.DoesNotExist:
         return Response(status = status.HTTP_404_NOT_FOUND)
