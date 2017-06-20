@@ -36,12 +36,14 @@ from image.views import  ImageUploadView
 import os
 
 from work.views import create_work, get_my_works, WorkDetail, assign_work, get_total_price
+from worktype.web import landing
 
 from notification.views import register_device, remove_device_token
 
 router = routers.DefaultRouter()
 
 urlpatterns = [
+     url(r'^$', landing, name='landing'),
     url(r'^login/', login, name='login'),
     url(r'^signup/', sign_up, name='signup'),
     url(r'^trabajos/', WorkTypeList.as_view(), name='works'),
