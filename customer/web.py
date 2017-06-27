@@ -3,6 +3,8 @@ from django.shortcuts import render, redirect
 from django.http import Http404, HttpResponseRedirect
 from django.contrib.auth import authenticate, login as django_login, logout
 from django.contrib.auth.models import User
+from django.contrib import messages
+
 
 from rest_framework import status
 from customer.forms import AddressForm
@@ -14,8 +16,6 @@ import logging
 
 logger = logging.getLogger(__name__)
 def login(request):
-    if request.user is not None:
-        print("usuario"  + request.user.username)
     if request.method == 'GET':
         context = {'error': None}
         return render(request, 'login.html', context)

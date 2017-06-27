@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import Http404, HttpResponseRedirect
+from django.contrib import messages
+
 from datetime import datetime
 
 from customer.models import Customer, Address
@@ -11,6 +13,9 @@ from work.business_logic import create_work_and_enqueue
 def schedule_work_view(request, url_name):
     if request.method == 'GET':
       try:
+          if request.user.id is None:
+              messages.warning(request, 'Por favor inicia sesión antes de pedir un trabajo.')
+              return redirect('login')
           workType = WorkType.objects.get(url_name = url_name)
       except WorkType.DoesNotExist:
           raise Http404("WorkType does not exist")
@@ -25,10 +30,9 @@ def schedule_work_view(request, url_name):
       )
     elif request.method == 'POST':
       if request.user is None:
-        # TODO (): do login first
         return Response(status = status.HTTP_403_FORBIDDEN)
 
-      worktypeId = request.POST.get('worktypeId');
+      worktypeId = request.POST.get('worktypeId')
       worktype = WorkType.objects.filter(id = worktypeId).first()
       customer = Customer.objects.filter(user__id__exact = request.user.id).first()
 

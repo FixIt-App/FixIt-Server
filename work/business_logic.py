@@ -8,7 +8,8 @@ logger = logging.getLogger(__name__)
 def create_work_and_enqueue(worktype, customer , address, time, description, asap, images):
     work = Work(worktype = worktype, customer = customer, 
                 address = address, time = time, 
-                description = description)
+                description = description,
+                asap = asap)
     work.save()
     logger.info('work created for customer ' + customer.user.username + ', work id: ' + str(work.id))
     work.images = images
