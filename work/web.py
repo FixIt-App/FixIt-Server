@@ -3,6 +3,10 @@ from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.contrib import messages
 
 from reportlab.pdfgen import canvas
+from reportlab.platypus import SimpleDocTemplate
+from reportlab.platypus.tables import Table
+from reportlab.platypus.paragraph import Paragraph
+from  reportlab.lib.styles import ParagraphStyle as PS
 
 from datetime import datetime
 
@@ -12,31 +16,11 @@ from work.models import Work
 from worktype.models import WorkType
 from work.business_logic import create_work_and_enqueue
 
+
 def generate_invoice(request, pk):
     try:
         work = Work.objects.get(pk = pk)
-        response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename="invoice.pdf"'
-        p = canvas.Canvas(response)
-        p.setLineWidth(.3)
-        p.setFont('Helvetica', 12)
-        
-        p.drawString(30,750,'Recibo de Pago')
-        p.drawString(30,735,'FixIt Group S.A.S')
-        p.drawString(500,750, work.time.strftime("%Y-%m-%d"))
-        p.line(480,747,580,747)
-        
-        p.drawString(275,725,'Costo total:')
-        p.drawString(500,725,"$1,000.00")
-        p.line(378,723,580,723)
-        
-        p.drawString(30,703,'Recibo a:')
-        p.line(120,700,580,700)
-        p.drawString(120,703,work.customer.user.get_full_name())
-
-        p.showPage()
-        p.save()
-        return response
+        return render(request, 'reports/invoice.html', {'work': work})
     except Work.DoesNotExist:
         return Http404('Work does not exist')
 
