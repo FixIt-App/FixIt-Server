@@ -13,14 +13,32 @@ from worktype.models import WorkType
 from work.business_logic import create_work_and_enqueue
 
 def generate_invoice(request, pk):
-    print('Entra')
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="invoice.pdf"'
-    p = canvas.Canvas(response)
-    p.drawString(0, 0, "Recibo de Pago FixIt.")
-    p.showPage()
-    p.save()
-    return response
+    try:
+        work = Work.objects.get(pk = pk)
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="invoice.pdf"'
+        p = canvas.Canvas(response)
+        p.setLineWidth(.3)
+        p.setFont('Helvetica', 12)
+        
+        p.drawString(30,750,'Recibo de Pago')
+        p.drawString(30,735,'FixIt Group S.A.S')
+        p.drawString(500,750, work.time.strftime("%Y-%m-%d"))
+        p.line(480,747,580,747)
+        
+        p.drawString(275,725,'Costo total:')
+        p.drawString(500,725,"$1,000.00")
+        p.line(378,723,580,723)
+        
+        p.drawString(30,703,'Recibo a:')
+        p.line(120,700,580,700)
+        p.drawString(120,703,work.customer.user.get_full_name())
+
+        p.showPage()
+        p.save()
+        return response
+    except Work.DoesNotExist:
+        return Http404('Work does not exist')
 
 def schedule_work_view(request, url_name):
     if request.method == 'GET':
