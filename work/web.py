@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.contrib import messages
+
+from reportlab.pdfgen import canvas
 
 from datetime import datetime
 
@@ -9,6 +11,16 @@ from work.forms import WorkForm
 from work.models import Work
 from worktype.models import WorkType
 from work.business_logic import create_work_and_enqueue
+
+def generate_invoice(request, pk):
+    print('Entra')
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="invoice.pdf"'
+    p = canvas.Canvas(response)
+    p.drawString(0, 0, "Recibo de Pago FixIt.")
+    p.showPage()
+    p.save()
+    return response
 
 def schedule_work_view(request, url_name):
     if request.method == 'GET':
