@@ -100,3 +100,4 @@ fixit/static/rest_framework
 server.log
 
 fixit.docker.env
+*.env

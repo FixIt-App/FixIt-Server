@@ -29,7 +29,7 @@ def create_confirmations(customer):
         confirmation_type = 'MAIL'
     )
     mail_confirmation.save()
-    logger.info("Sending confirmation sms to ... " + customer.phone)
+    print("Sending confirmation sms to ... " + customer.phone)
     confirm_user.delay(customer.phone, code)
-    logger.info("Sending email confirmation to " + customer.user.email)
+    print("Sending email confirmation to " + customer.user.email)
     confirm_email_async.delay(customer.user.email, e_code)
