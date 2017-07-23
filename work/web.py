@@ -1,6 +1,12 @@
 from django.shortcuts import render, redirect
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.contrib import messages
+
+from reportlab.pdfgen import canvas
+from reportlab.platypus import SimpleDocTemplate
+from reportlab.platypus.tables import Table
+from reportlab.platypus.paragraph import Paragraph
+from  reportlab.lib.styles import ParagraphStyle as PS
 
 from datetime import datetime
 
@@ -9,6 +15,20 @@ from work.forms import WorkForm
 from work.models import Work
 from worktype.models import WorkType
 from work.business_logic import create_work_and_enqueue
+from work.services import calculate_price
+
+
+def generate_invoice(request, pk):
+    try:
+        work = Work.objects.get(pk = pk)
+        asap = 'false'
+        if work.asap is True:
+            asap = 'true'
+        pricing = calculate_price(work.worktype.id, asap, work.time)
+        print(str(pricing))
+        return render(request, 'emails/invoice.html', {'work': work, 'pricing': pricing})
+    except Work.DoesNotExist:
+        return Http404('Work does not exist')
 
 def schedule_work_view(request, url_name):
     if request.method == 'GET':

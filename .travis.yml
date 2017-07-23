@@ -20,7 +20,7 @@ addons:
 services:
 - rabbitmq
 - postgresql:9.5
-script: python3 manage.py migrate && python3 manage.py test
+script: python3 manage.py migrate && coverage run --source='.' manage.py test fixit && coverage report --omit="*venv*"
 notifications:
   slack:
     secure: nK/i8AFPNCjyk8jy4bVvocPuEZgEZ7fvApXkPPVrdk8+cWp48OUJUJ7VZkp0Tt6ulG0PBgTBuFYAeYWADzHjE9Iu+nfCcyFlxccD5VwTvh+pqJOp6sAAfPWKX8t0QFWpUMQ0lZs7ouJn5tUNM/rX275zqEmxVtJwNI5ezf6NK6L0JgfSuYf2qjv52bNHi8ayP0mybh5l/QtkdmSGQ/RzThAtAAD6yZr1VcTGktr63megCZgkyYhPpTWnjW4CxLW3lVFkSpSb0U+jh1eoS5gbSlA3E5/6V2UikqsP9ctjZwjE22H4cA5u4OxHUad/Pr6nlnBQeIf6KHtr+LYaerO95ROBuPnp07SDdobPmkglZWn81RDEjKinE/GimYCl2Iktkn6K7UoA4+yqruW6hTMN7cRck9kWvthiO1FS3VahvgIsIyl9b3EvQXBzRsQMsaPE22S+ktlVWPh6YN/+Tp0JEdkDmowQFKBT+OMHDNuK9BOP128c++wKoJd83kOGjTBA5XlGT3k+QE2uow6V3LIZ8+7cXgV9Q/uYLPXI6vxEe0p8TilRc8zgHCioFm9owOhE1/E08WdYSEGbfx6YmI3/Y7KlibNR8Doy1xP9Rhb4fVBVzUWbLm8t+pFoVLCT04aTasv9Gah+WW5U3rxjZOHEkmfNfiQMEwNWMCEZKQJN9VQ=

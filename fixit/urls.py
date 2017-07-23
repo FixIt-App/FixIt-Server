@@ -24,7 +24,7 @@ from rest_framework.authtoken import views as rest_views
 from worktype.views import WorkTypeList, CategoryList
 from worktype.web import WorkTypeList
 
-from work.web import schedule_work_view
+from work.web import schedule_work_view, generate_invoice
 
 from customer.views import CustomerDetail, CustomerList, AddressList, AddressDetail, confirm_email, confirm_phone, my_confirmation
 from customer.views import get_customer_authenticated, get_customer_adresses, resend_sms_code, is_email_available, is_phone_available
@@ -46,7 +46,7 @@ from notification.views import register_device, remove_device_token
 router = routers.DefaultRouter()
 
 urlpatterns = [
-     url(r'^$', landing, name='landing'),
+    url(r'^$', landing, name='landing'),
     url(r'^login/', login, name='login'),
     url(r'^signup/', sign_up, name='signup'),
     url(r'^trabajos/$', WorkTypeList.as_view(), name='works'),
@@ -69,6 +69,7 @@ urlpatterns = [
     url(r'^api/myworks/$', get_my_works),
     url(r'^api/work/ordered/$', get_ordered_works),
     url(r'^api/work/$', create_work),
+    url(r'^api/work/(?P<pk>[0-9]+)/invoice/$', generate_invoice),
     url(r'^api/work/(?P<pk>[0-9]+)/price/$', get_total_price),
     url(r'^api/work/(?P<pk>[0-9]+)/worker/$', assign_work),
     url(r'^api/work/(?P<pk>[0-9]+)/$', WorkDetail.as_view()),

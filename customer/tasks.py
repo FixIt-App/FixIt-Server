@@ -9,6 +9,9 @@ from sendgrid.helpers.mail import *
 import os
 import boto3
 
+from django.template.loader import get_template
+from django.template import Context
+
 
 
 @task()
@@ -23,13 +26,17 @@ def confirm_user(phone, code):
 
 @task()
 def confirm_email(email, code):
-    subject = 'Confirma tu correo de FixIt'
-    message = "Bienvenido a fixit, puedes entrar en http://%s/confirmations/%s/" % (os.environ.get('DNS_NAME'), code )
     print('Trying to send confirmation email')
+    print('hola hola')
+    template =  get_template('emails/confirmation.html')
+    url = 'http://%s/confirmations/%s/' % (os.environ.get('DNS_NAME'), code )
+    context = {'url': url}
+    subject = 'Confirma tu correo de FixIt'
+    message = template.render(context)
     sg = sendgrid.SendGridAPIClient(apikey = os.environ.get('EMAIL_API_KEY'))
     from_email = Email("info@fixitgroup.co")
     to_email = Email(email)
-    content = Content("text/plain", message)
+    content = Content("text/html", message)
     mail = Mail(from_email, subject, to_email, content)
     response = sg.client.mail.send.post(request_body=mail.get())
     

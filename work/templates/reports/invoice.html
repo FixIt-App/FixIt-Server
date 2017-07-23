@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+   <meta charset="utf-8" /> {% load static %}
+   <link rel="stylesheet" href="{% static "app.css" %}">
+</head>
+
+<body>
+   <section id="main-container">
+      <div class="container">
+         <div class="row">
+            <div class="col s10 push-s1">
+               <div class="row">
+                  <div class="col s12">
+                     <div class="row">
+                        <div class="signup-box">
+                           <div class="row">
+                              <div class="col push-s1 s3">
+                                 <img src="{% static "fix-it.jpg" %}" class="login-logo" alt="">
+                              </div>
+                              <div class="col s8">
+                                 <h4> Recibo de Pago</h4>
+                                 <h5> FixIt Group S.A.S NIT: 1233213</h5>
+                                 <h6> Recibo a: David Francisco Calle Restrepo </h6>
+                                 <h6> Recibo #: 55465 </h6>
+
+                              </div>
+                           </div>
+                           
+                           <div class="signup-form">
+                              <h2> Detalles Sobre el trabajo</h2>
+                              <table>
+                              <thead>
+                                 <tr>
+                                    <th>Nombre</th>
+                                    <th>Costo</th>
+                                 </tr>
+                              </thead>
+
+                              <tbody>
+                                 <tr>
+                                    <td>Sellar Tubo</td>
+                                    <td>$150000</td>
+                                 </tr>
+                                 <tr>
+                                    <td>Recargo Nocturno</td>
+                                    <td>$20000</td>
+                                 </tr>
+                                 <tr>
+                                    <td>Recargo lo necesito para ya</td>
+                                    <td>$17000</td>
+                                 </tr>
+
+
+                                  <tr class="invoice-table-total" style="border-top: 1px solid black"> 
+                                    <td><b>Total</b></td>
+                                    <td>$52000</td>
+                                 </tr>
+                              </tbody>
+                              </table>
+                          </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </section>
+</body>
+
+</html>
