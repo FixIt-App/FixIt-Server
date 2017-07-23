@@ -15,12 +15,18 @@ from work.forms import WorkForm
 from work.models import Work
 from worktype.models import WorkType
 from work.business_logic import create_work_and_enqueue
+from work.services import calculate_price
 
 
 def generate_invoice(request, pk):
     try:
         work = Work.objects.get(pk = pk)
-        return render(request, 'reports/invoice.html', {'work': work})
+        asap = 'false'
+        if work.asap is True:
+            asap = 'true'
+        pricing = calculate_price(work.worktype.id, asap, work.time)
+        print(str(pricing))
+        return render(request, 'emails/invoice.html', {'work': work, 'pricing': pricing})
     except Work.DoesNotExist:
         return Http404('Work does not exist')
 
