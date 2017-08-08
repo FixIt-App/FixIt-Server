@@ -1,124 +1,125 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="">
+<!--<![endif]-->
+
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-    <meta charset="utf-8" />
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    {% load static %}
-    {% load humanize %}
-    <link rel="stylesheet" href="{% static "app.css" %}">
-    <title>FixIt - Trabajamos para ti</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>FixIt</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static "stylesheet.css">
+
+    <!--For Plugins external css-->
+    <link rel="stylesheet" href="{% static "plugins.css" />
+
+    <!--Theme custom css -->
+    <link rel="stylesheet" href="{% static "style.css">
+
+    <link rel="stylesheet" href="{% static "index.css" />
 </head>
+
 <body>
-  <nav role="navigation">
-    <div class="nav-wrapper container">
-      <a id="logo-container" href="#" class="brand-logo">FixIt</a>
-      <ul class="right hide-on-med-and-down">
-        <li><a href="/login">Crea una cuenta</a></li>
-      </ul>
+    <!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
 
-      <ul id="nav-mobile" class="side-nav">
-        <li><a href="/login">Crea una cuenta</a></li>
-      </ul>
-      <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
-    </div>
-  </nav>
+    <figure class="main_area">
 
-  <div id="index-banner" class="parallax-container">
-    <div class="section no-pad-bot">
-      <div class="container">
-        <br><br>
-        <h1 class="header center teal-text text-lighten-2">FixIt</h1>
-        <div class="row center">
-          <h5 class="header col s12 light">Lo que necesitas para tu hogar</h5>
+        <div id="home" class="home home-main-content">
+            <div class="home-overlay-fluid">
+                <div class="container">
+                    <div class="row">
+                        <div id="download-buttons" class="main_home_content text-center wow fadeInUp" data-wow-duration="1.5s">
+                            <div class="logo_img">
+                                <a href=""><img src="{% static "logo.png" %}" alt="" /></a>
+                            </div>
+                            <p>Deja que los expertos lo hagan por ti</p>
+                            <div class="separator"></div>
+                            <a class="download-button" href="" class="btn btn-lg"><img src="{% static "android.png" %}">Pruébalo en tu teléfono android</a>
+                            <a class="download-button" class="btn btn-lg"><img src="{% static "apple.png" %}">Pruébalo en tu teléfono  para IOS</a>
+                            <a class="download-button" class="btn btn-lg"><img src="{% static "desktop.png" %}">O continúa en nuestra aplicación web </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="row center">
-          <a href="http://materializecss.com/getting-started.html" id="download-button" class="btn-large waves-effect waves-light teal lighten-1"> Descarga la aplicación </a>
-        </div>
-        <br><br>
+        <!-- End of Banner Section -->
 
-      </div>
+
+        <section id="about" class="about">
+            <div class="about_overlay">
+                <div class="container chikobiko">
+
+                    <div id="services">
+                        <div class="card">
+                            <img src="{% static "flash.png" %}" alt="flash">
+                            <p>Nuestros trabajadores están preparados para cuando los necesites.</p>
+                        </div>
+                        <div class="card">
+                            <img src="{% static "coin.png" %}" alt="coin">
+                            <p>No te volverás a preocupar por costos que no tenías previstos.</p>
+                        </div>
+                        <div class="card">
+                            <img src="{% static "checkmark.png" %}" alt="checkmark">
+                            <p>Todo nuestro personal está altamente calificado. Trabajos 100% Garantizados.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+        <!-- End of Features Section -->
+
+        <section id="contact" class="contact">
+            <div class="about_overlay ">
+                <div class="container bangbang">
+                    <h2>Escríbenos</h2>
+                    <div id="contact-us">
+                        <img src="{% static "email.png" %}" alt="email">
+                        <a id="email" href="mailto:joinus@fixitgroup.co?Subject=Quiero%20hacer%20parte%20de%20FixIt">
+                            <p id="user">joinus</p>
+                            <p id="domain">@fixitgroup.co</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- End of contact With Map Section -->
+
+        <footer id="footer" class="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="main_footer text-center wow fadeInUp" data-wow-duration="2s">
+                        <p>Hecho con <i class="fa fa-heart"></i> por FixIt. FixIt es una marca registrada de Fixit group S.A.S.</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+    </figure>
+
+
+    <!-- STRAT SCROLL TO TOP -->
+
+    <div class="scrollup">
+        <a href="#"><i class="fa fa-chevron-up"></i></a>
     </div>
-    <div class="parallax"><img src="{% static "kitchen.jpg" %}"  alt="Unsplashed background img 1"></div>
-  </div>
 
+    <script srsc="https://code.jquery.com/jquery-1.11.2.min.js" integrity="sha256-Ls0pXSlb7AYs7evhd+VLnWsZ/AqEHcXBeMZUycz/CcA="
+        crossorigin="anonymous">
 
-  <div class="container">
-    <div class="section">
+        </script>
 
-      <!--   Icon Section   -->
-      <div class="row">
-        <div class="col s12 m4">
-          <div class="icon-block">
-            <h2 class="center brown-text"><i class="material-icons">flash_on</i></h2>
-            <h5 class="center">Cuando lo necesitas</h5>
+</body>
 
-            <p class="light">Te encontramos un trabajador en tiempo record</p>
-          </div>
-        </div>
-
-        <div class="col s12 m4">
-          <div class="icon-block">
-            <h2 class="center brown-text"><i class="material-icons">group</i></h2>
-            <h5 class="center">Precio Garantizado</h5>
-
-            <p class="light">Tenemos precios estandarizados, lo que garantiza que vas a pagar solamente lo justo.</p>
-          </div>
-        </div>
-
-        <div class="col s12 m4">
-          <div class="icon-block">
-            <h2 class="center brown-text"><i class="material-icons">settings</i></h2>
-            <h5 class="center">Calidad Garantizada</h5>
-
-            <p class="light">Nuestros trabajadores están capacitados y listos para empezar a trabajar.</p>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="container">
-    <div class="section">
-
-      <div class="row">
-        <div class="col s12 center">
-          <h3><i class="mdi-content-send brown-text"></i></h3>
-          <h4>Contáctanos</h4>
-          <p class="left-align light">Somos una empresa colombiana info@fix-it.com.co</p>
-        </div>
-      </div>
-
-    </div>
-  </div>
-  <footer class="page-footer teal">
-    <div class="container">
-      <div class="row">
-        <div class="col l6 s12">
-          <h5 class="white-text">FixIt</h5>
-          <p class="grey-text text-lighten-4">Trabajamos para ti, no se que poner en esta mierda solo quiero llenar para que se vea algo</p>
-      </div>
-    </div>
-    <div class="footer-copyright">
-      <div class="container">
-      Made by <a class="brown-text text-lighten-3" href="http://materializecss.com">Materialize</a>
-      </div>
-    </div>
-  </footer>
-
-
-  <!--  Scripts-->
-  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
-  <script>
-    (function($){
-  $(function(){
-        $('.button-collapse').sideNav();
-        $('.parallax').parallax();
-
-    }); // end of document ready
-    })(jQuery); // end of jQuery name space
-  </script>
-  </body>
 </html>
