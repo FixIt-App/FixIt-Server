@@ -17,15 +17,16 @@
         crossorigin="anonymous">
 
     {% load staticfiles %}
-    <link rel="stylesheet" href="{% static "stylesheet.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static "stylesheet.css"%}">
 
     <!--For Plugins external css-->
-    <link rel="stylesheet" href="{% static "plugins.css" />
+    <link rel="stylesheet" href="{% static "plugins.css"%}" />
 
     <!--Theme custom css -->
-    <link rel="stylesheet" href="{% static "style.css">
+    <link rel="stylesheet" href="{% static "style.css"%}">
 
-    <link rel="stylesheet" href="{% static "index.css" />
+    <link rel="stylesheet" href="{% static "index.css"%}"/>
 </head>
 
 <body>
