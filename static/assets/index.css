@@ -1,0 +1,146 @@
+#download-buttons{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+#download-buttons .download-button{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 54px;
+	background: rgba(198, 211, 107, 0.20);
+	color: #FFF;
+	padding-left: 34px;
+	padding-right: 34px;
+	margin: 5px;
+}
+
+.separator{
+	margin-bottom: 34px;
+}
+
+#download-buttons .download-button img{
+	width: 34px;
+	height: auto;
+	margin-right: 34px;
+}
+
+#download-buttons .logo_img img{
+	width: 200px;
+}
+
+.logo_img_footer img{
+	width: 200px;
+}
+
+.btn-lg{
+	width: auto;
+}
+
+#about .about_overlay{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	Background-color: rgba(256, 256, 256, 0.6);
+}
+
+.chikobiko{
+	width: 100vw;
+	padding-left: 5vw;
+	padding-right: 5vw;
+}
+
+#services{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: row;
+	margin: 10vh 0 15vh 0;
+	padding-left: 0;
+	padding-right: 0;
+}
+
+#services .card{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+
+#services .card img{
+	width: auto;
+	height: 30vmin;
+	margin-bottom: 10vmin;
+}
+
+#services .card p{
+	color: rgba(34,34,34,1);
+	font-size: 1.5em;
+	text-align: center;
+}	
+
+section#contact .about_overlay{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	Background-color: rgba(256, 256, 256, 0.7);
+	height: 80vh;
+}
+
+#contact .bangbang{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	
+}
+
+#contact h2{
+	font-family: 'open_sanslight';
+	color:  rgba(34,34,34,1);
+}
+
+#contact-us{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: row;
+	height: 100%;
+}
+
+#contact-us img{
+	height: 5vmin;
+	width: auto;
+	margin-right: 3vw;
+}
+
+#contact-us #email{
+	width: inherit;
+	display: flex;
+	flex-direction: row;
+}
+
+#contact-us #email #user{
+	color: rgba(34,34,34,1);;
+	font-size: 5vmin;
+}
+
+#contact-us #email #domain{
+	color: #1EA29A;
+	font-size: 5vmin;
+}
+
+@media only screen and (max-width: 992px) {
+    #services{
+		flex-direction: column;
+	}
+
+	#services .card{
+		margin-top: 5vmin;
+		margin-bottom: 5vmin;
+	}
+}
