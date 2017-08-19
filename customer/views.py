@@ -19,6 +19,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
 
+from payments.tpaga import create_customer as create_customer_tpaga
+
 from customer.serializers import CustomerSerializer, CustomerConfigurationSerializer, AddressSerializer, PhoneConfirmationSerializer, ConfirmationSerializer
 from customer.models import Customer, Address, Confirmation
 from customer.permissions import IsOwnerOrReadOnly
@@ -54,6 +56,7 @@ class CustomerList(APIView):
             customer = Customer(user = user, city = serializer.data['city'], phone = serializer.data['phone'])
             customer.save()
             create_confirmations(customer)
+            create_customer_tpaga(user.email, user.first_name, user.last_name, customer.id, customer.phone)
             return Response(serializer.data, status = status.HTTP_201_CREATED)
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
