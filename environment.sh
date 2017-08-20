@@ -1,3 +1,6 @@
+# Python config
+export PYTHONENCODING=utf-8
+
 # environment variables for rabbitmq server
 export RABBITMQ_HOST=
 export RABBITMQ_PORT=
@@ -26,3 +29,7 @@ export FIREBASE_CUSTOMER_KEY=
 
 # server conf
 export DNS_NAME=localhost
+
+# tpaga host
+export TPAGA_HOST=https://sandbox.tpaga.co
+export TPAGA_KEY=

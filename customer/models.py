@@ -20,6 +20,15 @@ class Customer(models.Model):
     def __str__(self):
         return self.user.username
 
+class TPagaCustomer(models.Model):
+    """
+        Model that saves de Tpago customer information
+    """
+    customer = models.OneToOneField(Customer, on_delete = models.CASCADE, null = False)
+    tpaga_id = models.CharField(max_length = 300, blank = False)
+    token = models.CharField(max_length = 300, blank = True, unique = True)
+    credit_card_id = models.CharField(max_length = 300, blank = True, unique = True)
+
 class Address(models.Model):
     """
         Model that represents an address of a customer       
