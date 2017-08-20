@@ -321,12 +321,30 @@ def save_payment_method_tpaga(request):
         return Response(status = status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET'])
-def get_payment_data(request):
-    try:
-        user = request.user
-        customer = Customer.objects.filter(user__id__exact = user.id).first()
-        tpagaCustomer = TPagaCustomer.objects.filter(customer__id__exact = customer.id).first()
-        return Response(get_credit_card_data(tpagaCustomer.tpaga_id, tpagaCustomer.credit_card_id), status = status.HTTP_200_OK)
-    except (Customer.DoesNotExist, TPagaCustomer.DoesNotExist):
-        return Response(status = status.HTTP_404_NOT_FOUND)
+class TPagaPaymentDetail(APIView):
+    """
+        Retrieve, update or delete TPAGA data.
+    """
+    def get(self, request, format = None):
+        try:
+            user = request.user
+            customer = Customer.objects.filter(user__id__exact = user.id).first()
+            tpagaCustomer = TPagaCustomer.objects.filter(customer__id__exact = customer.id).first()
+            if tpagaCustomer is None:
+                return Response(status = status.HTTP_404_NOT_FOUND)
+            return Response(get_credit_card_data(tpagaCustomer.tpaga_id, tpagaCustomer.credit_card_id), status = status.HTTP_200_OK)
+        except (Customer.DoesNotExist, TPagaCustomer.DoesNotExist):
+            return Response(status = status.HTTP_404_NOT_FOUND)
+
+    def delete(self, request, format = None):
+        try:
+            user = request.user
+            customer = Customer.objects.filter(user__id__exact = user.id).first()
+            tpagaCustomer = TPagaCustomer.objects.filter(customer__id__exact = customer.id).first()
+            if tpagaCustomer is None:
+                return Response(status = status.HTTP_404_NOT_FOUND)
+            tpagaCustomer.delete()
+            return Response(status = status.HTTP_200_OK)
+        except (Customer.DoesNotExist, TPagaCustomer.DoesNotExist):
+            return Response(status = status.HTTP_404_NOT_FOUND)
+

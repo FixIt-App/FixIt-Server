@@ -311,4 +311,4 @@ def get_ordered_works(request):
 
 
     serializer = DetailWorkSerializer(my_works, many = True)
-    return Response(serializer.data)
+    return Response(serializer.data)    
