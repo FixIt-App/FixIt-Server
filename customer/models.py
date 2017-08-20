@@ -27,6 +27,7 @@ class TPagaCustomer(models.Model):
     customer = models.OneToOneField(Customer, on_delete = models.CASCADE, null = False)
     tpaga_id = models.CharField(max_length = 300, blank = False)
     token = models.CharField(max_length = 300, blank = True, unique = True)
+    credit_card_id = models.CharField(max_length = 300, blank = True, unique = True)
 
 class Address(models.Model):
     """

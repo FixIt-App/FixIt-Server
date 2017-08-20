@@ -19,10 +19,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
 
-from payments.tpaga import create_customer as create_customer_tpaga
+from payments.tpaga import create_customer as create_customer_tpaga, associate_credit_card, get_credit_card_data
 
-from customer.serializers import CustomerSerializer, CustomerConfigurationSerializer, AddressSerializer, PhoneConfirmationSerializer, ConfirmationSerializer
-from customer.models import Customer, Address, Confirmation
+from customer.serializers import CustomerSerializer, CustomerConfigurationSerializer, AddressSerializer, PhoneConfirmationSerializer, ConfirmationSerializer, TPagaTokenSerializer
+from customer.models import Customer, Address, Confirmation, TPagaCustomer
 from customer.permissions import IsOwnerOrReadOnly
 from customer.tasks import confirm_user, confirm_email as confirm_email_async
 from customer.services import create_confirmations
@@ -304,3 +304,29 @@ def is_phone_available(request, phone):
         return Response(True, status=status.HTTP_200_OK)
     else:
         return Response(False, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+def save_payment_method_tpaga(request):
+    serializer = TPagaTokenSerializer(data = request.data)
+    if serializer.is_valid():
+        user = request.user
+        customer = Customer.objects.filter(user__id__exact = user.id).first()
+        print(customer.id)
+        tpagaCustomer = TPagaCustomer.objects.filter(customer__id__exact = customer.id).first()
+        tpagaCustomer.token = serializer.data['token']
+        tpagaCustomer.save()
+        associate_credit_card(tpagaCustomer.tpaga_id, tpagaCustomer.token, tpagaCustomer)
+        return Response(status = status.HTTP_201_CREATED )
+    else:
+        return Response(status = status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def get_payment_data(request):
+    try:
+        user = request.user
+        customer = Customer.objects.filter(user__id__exact = user.id).first()
+        tpagaCustomer = TPagaCustomer.objects.filter(customer__id__exact = customer.id).first()
+        return Response(get_credit_card_data(tpagaCustomer.tpaga_id, tpagaCustomer.credit_card_id), status = status.HTTP_200_OK)
+    except (Customer.DoesNotExist, TPagaCustomer.DoesNotExist):
+        return Response(status = status.HTTP_404_NOT_FOUND)

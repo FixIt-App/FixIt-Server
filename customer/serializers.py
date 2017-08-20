@@ -55,3 +55,6 @@ class AddressSerializer(serializers.ModelSerializer):
 class PhoneConfirmationSerializer(serializers.Serializer):
     username = serializers.CharField()
     code = serializers.CharField()
+
+class TPagaTokenSerializer(serializers.Serializer):
+    token = serializers.CharField()
