@@ -30,6 +30,7 @@ from customer.views import CustomerDetail, CustomerList, AddressList, AddressDet
 from customer.views import get_customer_authenticated, get_customer_adresses, resend_sms_code, is_email_available, is_phone_available
 from customer.views import save_payment_method_tpaga, TPagaPaymentDetail
 
+
 from work.views import start_work, calculate_price
 
 from customer.web import login, sign_up, add_address
