@@ -28,7 +28,8 @@ from work.web import schedule_work_view, generate_invoice
 
 from customer.views import CustomerDetail, CustomerList, AddressList, AddressDetail, confirm_email, confirm_phone, my_confirmation
 from customer.views import get_customer_authenticated, get_customer_adresses, resend_sms_code, is_email_available, is_phone_available
-from customer.views import save_payment_method_tpaga, get_payment_data
+from customer.views import save_payment_method_tpaga, TPagaPaymentDetail
+
 
 from work.views import start_work, calculate_price
 
@@ -83,7 +84,7 @@ urlpatterns = [
     url(r'^api/devicetoken/(?P<token>.*)/$', remove_device_token),
     url(r'^api/resend-sms-code/$', resend_sms_code),
     url(r'^api/tpago/token/$', save_payment_method_tpaga),
-    url(r'^api/customer/tpago/payment/$', get_payment_data),
+    url(r'^api/customer/tpago/payment/$', TPagaPaymentDetail.as_view()),
     url(r'^api/', include(router.urls)),
 ] 
 if settings.DEBUG == True:
