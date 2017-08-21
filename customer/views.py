@@ -330,7 +330,7 @@ class TPagaPaymentDetail(APIView):
             user = request.user
             customer = Customer.objects.filter(user__id__exact = user.id).first()
             tpagaCustomer = TPagaCustomer.objects.filter(customer__id__exact = customer.id).first()
-            if tpagaCustomer is None:
+            if tpagaCustomer is None or tpagaCustomer.credit_card_id is None:
                 return Response(status = status.HTTP_404_NOT_FOUND)
             return Response(get_credit_card_data(tpagaCustomer.tpaga_id, tpagaCustomer.credit_card_id), status = status.HTTP_200_OK)
         except (Customer.DoesNotExist, TPagaCustomer.DoesNotExist):
@@ -343,7 +343,9 @@ class TPagaPaymentDetail(APIView):
             tpagaCustomer = TPagaCustomer.objects.filter(customer__id__exact = customer.id).first()
             if tpagaCustomer is None:
                 return Response(status = status.HTTP_404_NOT_FOUND)
-            tpagaCustomer.delete()
+            tpagaCustomer.token = None;
+            tpagaCustomer.credit_card_id = None;
+            tpagaCustomer.save()
             return Response(status = status.HTTP_200_OK)
         except (Customer.DoesNotExist, TPagaCustomer.DoesNotExist):
             return Response(status = status.HTTP_404_NOT_FOUND)
