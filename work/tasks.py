@@ -45,6 +45,11 @@ def create_work(workid):
         send_email("desarrollo@fixitgroup.co", user.email, "FixIt - Se ha creado un trabajo!", complete_message)
     print("Finished work... email sent")
 
+@task
+def send_email_async(from_email, to_email, subject, message):
+    send_email(from_email, to_email, subject, message)
+
+
 def send_email(from_email, to_email, subject, message):
     sent_to = to_email
     sg = sendgrid.SendGridAPIClient(apikey = os.environ.get('EMAIL_API_KEY'))

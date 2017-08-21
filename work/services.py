@@ -1,6 +1,11 @@
 import dateutil
 import decimal
 
+import os
+
+from sendgrid.helpers.mail import *
+import sendgrid
+
 from worktype.models import WorkType
 from work.models import DynamicPricing
 
@@ -57,3 +62,16 @@ def in_between(now, start, end):
         return start <= now < end
     else: # over midnight e.g., 23:30-04:15
         return start <= now or now < end
+
+
+def send_email(from_email, to_email, subject, message):
+    sent_to = to_email
+    sg = sendgrid.SendGridAPIClient(apikey = os.environ.get('EMAIL_API_KEY'))
+    from_email = Email(from_email)
+    to_email = Email(to_email)
+    content = Content("text/plain", message)
+    mail = Mail(from_email, subject, to_email, content)
+    response = sg.client.mail.send.post(request_body=mail.get())
+    print("se envio un correo a " + sent_to)
+    print(response.status_code)
+    print(response.body)
