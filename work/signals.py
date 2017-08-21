@@ -11,9 +11,13 @@ from django.contrib.auth import get_user_model
 
 @receiver(pre_save, sender=Work)
 def save_profile(sender, instance, **kwargs):
-    previous = Work.objects.get(pk = instance.id)
-    validate_work_was_canceled(previous, instance)
-    validate_work_has_finished(previous, instance)
+    try:
+        previous = Work.objects.get(pk = instance.id)
+        validate_work_was_canceled(previous, instance)
+        validate_work_has_finished(previous, instance)
+    except Work.DoesNotExist:
+        print('Work does not exist')
+        pass
 
 def validate_work_was_canceled(previous, current):
     if previous.state != current.state and current.state == 'CANCELED':
