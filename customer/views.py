@@ -57,6 +57,7 @@ class CustomerList(APIView):
             customer.save()
             create_confirmations(customer)
             create_customer_tpaga(user.email, user.first_name, user.last_name, customer.id, customer.phone)
+            serializer = CustomerSerializer(customer)
             return Response(serializer.data, status = status.HTTP_201_CREATED)
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
@@ -87,28 +88,33 @@ class CustomerDetail(APIView):
         if serializer.is_valid():
             logger.info('Updating customer ' + customer.user.username)
             user = customer.user
-            if serializer.data.get('first_name', None) != None:
+            if serializer.data.get('first_name', None) != None and user.first_name != serializer.data['first_name']:
                 user.first_name = serializer.data['first_name']
 
-            if serializer.data.get('last_name', None) != None:
+            if serializer.data.get('last_name', None) != None and user.last_name != serializer.data['last_name']:
                 user.last_name = serializer.data['last_name']
 
-            if serializer.data.get('email', None) != None:
+            if serializer.data.get('email', None) != None and user.email != serializer.data['email']:
                 if User.objects.filter(username=serializer.data['email']).count() > 0:
                     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
                 user.email = serializer.data['email']
                 user.username = serializer.data['email']
+                # TODO: send confirm to new email
 
-            if serializer.data.get('phone', None) != None:
+            if serializer.data.get('phone', None) != None and customer.phone != serializer.data['phone']:
                 if Customer.objects.filter(phone=serializer.data['phone']).count() > 0:
                     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-                user.phone = serializer.data['phone']
+                customer.phone = serializer.data['phone']
+                # TODO: send confirm to new phone
 
             if serializer.data.get('password', None) != None:
                 user.set_password(serializer.data['password'])
+
             user.save()
-            if serializer.data.get('city', None) != None:
+
+            if serializer.data.get('city', None) != None and customer.city != serializer.data['city']:
                 customer.city = serializer.data['city']
+
             customer.save()
             sendSerializer = CustomerSerializer(customer)
             return Response(sendSerializer.data)
@@ -291,7 +297,10 @@ def is_email_available(request, email):
     if not user:
         return Response(True, status=status.HTTP_200_OK)
     else:
-        return Response(False, status=status.HTTP_200_OK)
+        if request.user and request.user == user.first():
+            return Response(True, status=status.HTTP_200_OK)
+        else:
+            return Response(False, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
@@ -299,11 +308,14 @@ def is_phone_available(request, phone):
     if not phone or phone == '':
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
-    customer = Customer.objects.filter(phone = phone).all()
+    customer = Customer.objects.filter(phone = phone).first()
     if not customer:
         return Response(True, status=status.HTTP_200_OK)
     else:
-        return Response(False, status=status.HTTP_200_OK)
+        if request.user and request.user == customer.user:
+            return Response(True, status=status.HTTP_200_OK)
+        else:
+            return Response(False, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 def save_payment_method_tpaga(request):
