@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 def create_confirmations(customer):
     # SMS confirmation
-    code = str(randint(100,999))
+    code = str(randint(1000,9999))
     sms_confirmation = Confirmation(
         customer = customer,
         code = code,

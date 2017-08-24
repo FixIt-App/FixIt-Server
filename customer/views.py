@@ -57,6 +57,7 @@ class CustomerList(APIView):
             customer.save()
             create_confirmations(customer)
             create_customer_tpaga(user.email, user.first_name, user.last_name, customer.id, customer.phone)
+            serializer = CustomerSerializer(customer)
             return Response(serializer.data, status = status.HTTP_201_CREATED)
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
@@ -87,29 +88,43 @@ class CustomerDetail(APIView):
         if serializer.is_valid():
             logger.info('Updating customer ' + customer.user.username)
             user = customer.user
-            if serializer.data.get('first_name', None) != None:
+            if serializer.data.get('first_name', None) != None and user.first_name != serializer.data['first_name']:
                 user.first_name = serializer.data['first_name']
+                user.save()
 
-            if serializer.data.get('last_name', None) != None:
+            if serializer.data.get('last_name', None) != None and user.last_name != serializer.data['last_name']:
                 user.last_name = serializer.data['last_name']
+                user.save()
 
-            if serializer.data.get('email', None) != None:
+            if serializer.data.get('email', None) != None and user.email != serializer.data['email']:
                 if User.objects.filter(username=serializer.data['email']).count() > 0:
                     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
                 user.email = serializer.data['email']
                 user.username = serializer.data['email']
+                customer = Customer.objects.filter(user = user).first()
+                confirmation = Confirmation.objects.filter(customer = customer, confirmation_type = 'MAIL').first()
+                customer.save()
+                print("Sending email confirmation to " + user.email)
+                confirm_email_async.delay(user.email, confirmation.code)
 
-            if serializer.data.get('phone', None) != None:
+            if serializer.data.get('phone', None) != None and customer.phone != serializer.data['phone']:
                 if Customer.objects.filter(phone=serializer.data['phone']).count() > 0:
                     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-                user.phone = serializer.data['phone']
+                customer.phone = serializer.data['phone']
+                confirmation = Confirmation.objects.filter(customer = customer, confirmation_type = 'SMS').first()
+                customer.save()
+                print("Sending confirmation sms to " + customer.phone)
+                confirm_user.delay(customer.phone, confirmation.code)
 
             if serializer.data.get('password', None) != None:
                 user.set_password(serializer.data['password'])
-            user.save()
-            if serializer.data.get('city', None) != None:
+                user.save()
+
+            if serializer.data.get('city', None) != None and customer.city != serializer.data['city']:
                 customer.city = serializer.data['city']
-            customer.save()
+                customer.save()
+
+            
             sendSerializer = CustomerSerializer(customer)
             return Response(sendSerializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -279,7 +294,25 @@ def resend_sms_code(request):
             return Response(status=status.HTTP_200_OK)
 
     return Response(status=status.HTTP_400_BAD_REQUEST)
-    
+
+@api_view(['GET'])
+def resend_verification_email(request):
+    try:
+        if request.user is None:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        user = request.user
+        customer = Customer.objects.filter(user__id__exact = user.id).first()
+    except Customer.DoesNotExist:
+        return Response(status=status.HTTP_403_FORBIDDEN)
+
+    confimations = Confirmation.objects.filter(customer = customer).all()
+    for confirmation in confimations:
+        if confirmation.confirmation_type == 'MAIL':
+            print("Sending confirmation email to ... " + customer.user.email)
+            confirm_email_async.delay(customer.user.email, confirmation.code)
+            return Response(status=status.HTTP_200_OK)
+
+    return Response(status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
@@ -291,7 +324,10 @@ def is_email_available(request, email):
     if not user:
         return Response(True, status=status.HTTP_200_OK)
     else:
-        return Response(False, status=status.HTTP_200_OK)
+        if request.user and request.user == user.first():
+            return Response(True, status=status.HTTP_200_OK)
+        else:
+            return Response(False, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
@@ -299,11 +335,14 @@ def is_phone_available(request, phone):
     if not phone or phone == '':
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
-    customer = Customer.objects.filter(phone = phone).all()
+    customer = Customer.objects.filter(phone = phone).first()
     if not customer:
         return Response(True, status=status.HTTP_200_OK)
     else:
-        return Response(False, status=status.HTTP_200_OK)
+        if request.user and request.user == customer.user:
+            return Response(True, status=status.HTTP_200_OK)
+        else:
+            return Response(False, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 def save_payment_method_tpaga(request):
