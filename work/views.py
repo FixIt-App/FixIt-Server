@@ -48,25 +48,27 @@ def create_work(request):
             customer = Customer.objects.filter(user__id__exact = user.id).first()
 
             description = ''
-            if(serializer.data.get('description', None) != None):
+            if serializer.data.get('description', None) != None:
                 description = serializer.data['description']
 
             asap = False
             if serializer.data.get('asap', None) != None:
                 asap = serializer.data['asap']
 
+            work = create_work_and_enqueue(worktype = worktype, customer = customer, 
+                                    address = address, time = date, asap = asap, 
+                                    description = description)
             images = []
-            if(serializer.data.get('images', None) != None):
+            if serializer.data.get('images', None) != None:
                 for image in serializer.data['images']:
                     image = Image.objects.filter(id = image).first()
                     image.work = work
                     image.save()
                 images = Image.objects.filter(pk__in = map(int, serializer.data['images']))
+                work.images = images
+                work.save()
                 logger.info('added images for created work')
-            
-            work = create_work_and_enqueue(worktype = worktype, customer = customer, 
-                                    address = address, time = date, asap = asap, 
-                                    description = description, images = images)
+
             
             serializer = DetailWorkSerializer(work)
             return Response(serializer.data, status = status.HTTP_201_CREATED)

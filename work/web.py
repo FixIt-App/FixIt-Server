@@ -65,7 +65,7 @@ def schedule_work_view(request, url_name):
         address = Address.objects.filter(id = addressId).first()
         createdWork = create_work_and_enqueue(worktype = worktype, customer = customer, 
                                             address = address, time = dateTime,
-                                            description = '', asap = False, images = [])
+                                            description = '', asap = False)
         return render(request, 'confirmation.html', {'work': createdWork })
       else:
         addresses = Address.objects.filter(customer__id__exact = customer.id)
