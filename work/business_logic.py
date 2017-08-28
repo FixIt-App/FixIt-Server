@@ -5,14 +5,13 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-def create_work_and_enqueue(worktype, customer , address, time, description, asap, images):
+def create_work_and_enqueue(worktype, customer , address, time, description, asap):
     work = Work(worktype = worktype, customer = customer, 
                 address = address, time = time, 
                 description = description,
                 asap = asap)
     work.save()
     logger.info('work created for customer ' + customer.user.username + ', work id: ' + str(work.id))
-    work.images = images
     try:
         create_work_async.delay(work.id)
         logger.info('succesfully created work for customer ' + customer.user.username)

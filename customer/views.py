@@ -101,9 +101,9 @@ class CustomerDetail(APIView):
                     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
                 user.email = serializer.data['email']
                 user.username = serializer.data['email']
+                user.save()
                 customer = Customer.objects.filter(user = user).first()
                 confirmation = Confirmation.objects.filter(customer = customer, confirmation_type = 'MAIL').first()
-                customer.save()
                 print("Sending email confirmation to " + user.email)
                 confirm_email_async.delay(user.email, confirmation.code)
 
