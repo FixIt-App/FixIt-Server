@@ -29,6 +29,7 @@ class Notification(models.Model):
     TYPE_CHOICES = (
         ('WC', 'WORK CREATED'),
         ('WA', 'WORKER ASSIGNED'),
+        ('WF', 'WORK FINISHED'),
         ('PR', 'PROMOTIONAL')
     )
     
