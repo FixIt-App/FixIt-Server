@@ -39,7 +39,7 @@ from image.views import  ImageUploadView
 
 import os
 
-from work.views import create_work, get_my_works, WorkDetail, assign_work, get_total_price, get_ordered_works
+from work.views import create_work, get_my_works, WorkDetail, assign_work, get_total_price, get_ordered_works, RatingList
 
 from worktype.web import landing
 
@@ -76,6 +76,7 @@ urlpatterns = [
     url(r'^api/work/(?P<pk>[0-9]+)/worker/$', assign_work),
     url(r'^api/work/(?P<pk>[0-9]+)/$', WorkDetail.as_view()),
     url(r'^api/worker/(?P<worker_id>[0-9]+)/work/(?P<work_id>[0-9]+)/confirmation/$', start_work),
+    url(r'^api/work/rating/$', RatingList.as_view()),
     url(r'^api/myconfirmations/', my_confirmation),
     url(r'^api/phone/confirmations/', confirm_phone),
     url(r'^confirmations/(?P<code>[\w\-]+)/$', confirm_email),
