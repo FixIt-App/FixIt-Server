@@ -40,3 +40,8 @@ class DetailWorkDTOSerializer(serializers.Serializer):
 
 class PriceSerializer(serializers.Serializer):
     price = serializers.DecimalField(max_digits=12, decimal_places=2)
+
+class RatingDTOSerializer(serializers.Serializer):
+    work_id = serializers.IntegerField()
+    score = serializers.IntegerField()
+    comment = serializers.CharField(max_length = 500, required = False)

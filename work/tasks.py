@@ -79,6 +79,7 @@ def notity_assignment(workid):
     tokens = NotificationToken.objects.filter(token_type = 'CUSTOMER', user__id = user.id).all()
     for token in tokens:
         notification_body = {
+            "type": 'WORKER ASSIGNED',
             "work": serializer,
             "title": work.worktype.name,
             "body": "Se ha asigando un trabajador"
@@ -94,5 +95,35 @@ def notity_assignment(workid):
             saved_notification.state = 'FAILED'
             saved_notification.save()
         
-    
+@task()
+def notity_work_finished(workid):
+    work = Work.objects.get(pk = workid)
+    user = work.customer.user
 
+    images = Image.objects.filter(work__id__exact = work.id).all()
+    work.images = images
+    # setting the worker to the work
+    if work.worker is not None:
+        worker = Worker.objects.get(pk = work.worker.id)
+        work.worker = worker
+
+    serializer = convert_work(work)
+    # get all user tokens
+    tokens = NotificationToken.objects.filter(token_type = 'CUSTOMER', user__id = user.id).all()
+    for token in tokens:
+        notification_body = {
+            "type": 'WORK FINISHED',
+            "work": serializer,
+            "title": work.worktype.name,
+            "body": "Trabajo terminado. Calificalo."
+        }
+        notification = BaseNotification(notification = notification_body, to = token.token, priority = 10, notification_type = 'WF')
+        saved_notification = Notification(user = user, payload = notification.export(), notification_type = 'WF')
+        saved_notification.save()
+        sent = Firebase.send_notification(notification)
+        if sent is True:
+            saved_notification.state = 'DELIVERED'
+            saved_notification.save()
+        else:
+            saved_notification.state = 'FAILED'
+            saved_notification.save()

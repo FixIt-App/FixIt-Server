@@ -4,6 +4,7 @@ import os
 
 from work.models import Work
 from work.tasks import send_email_async as send_email
+from work.tasks import notity_work_finished
 
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
@@ -31,6 +32,7 @@ def validate_work_has_finished(previous, current):
     if previous.state != current.state and current.state == 'FINISHED':
         print('El usuario ha terminado su trabajo exitosamente, ahora hay que integrar el pago')
         print('El usuario ha terminado exitosamente un trabajo')
+        notity_work_finished(current.id)
         message = 'Un usuario ha terminado el trabajo con id ' + str(current.id)
         users = get_user_model().objects.filter(is_superuser =  True)
         for user in users:

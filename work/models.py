@@ -3,6 +3,12 @@ from worktype.models import WorkType
 from customer.models import Customer, Address
 from worker.models import Worker
 
+class Rating(models.Model):
+    score = models.IntegerField(blank = False)
+    comment = models.TextField(blank = True, null = True)
+
+    def __str__(self):
+        return str(self.score)
 
 class Work(models.Model):
     worktype = models.ForeignKey('worktype.WorkType', on_delete = models.CASCADE)
@@ -12,6 +18,7 @@ class Work(models.Model):
     description = models.TextField(blank = True)
     worker = models.ForeignKey('worker.Worker', on_delete = models.CASCADE, blank = True, null = True)
     asap = models.BooleanField(default = True)
+    rating = models.OneToOneField(Rating, on_delete=models.CASCADE, blank = True, null = True)
 
     STATE_CHOICES = (
         ('ORDERED', 'ORDERED'),
