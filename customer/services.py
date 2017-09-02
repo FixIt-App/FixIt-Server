@@ -30,10 +30,13 @@ def create_password_change_token(email):
         send_passsword_token.delay(email, token)
         return token
 
-def confirm_password_token(user_id, token):
+def confirm_password_token(token, new_password):
     try:
-        password = UserChangePassword.objects.get(user__id = user_id, chpwd_token = token)
+        password = UserChangePassword.objects.get(chpwd_token = token)
         password.delete()
+        user = password.user
+        user.set_password(new_password)
+        user.save()
         return True
     except UserChangePassword.DoesNotExist:
         return False

@@ -22,7 +22,7 @@ class Customer(models.Model):
 
 class UserChangePassword(models.Model):
     user = models.OneToOneField(User, on_delete = models.CASCADE)
-    chpwd_token = models.CharField(blank = True, null = True, max_length = 100)
+    chpwd_token = models.CharField(blank = True, null = True, max_length = 100, unique = True)
 
 class TPagaCustomer(models.Model):
     """

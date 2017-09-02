@@ -73,6 +73,4 @@ def add_address(request):
 def reset_password(request, token):
     if request.method == 'GET':
         context = { 'token': token }
-        return render(request, 'password/reset_password.html', context) 
-    if request.method == 'POST':
-        pass
+        return render(request, 'recover_password.html', context)

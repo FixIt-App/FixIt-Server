@@ -21,11 +21,12 @@ from rest_framework import permissions
 
 from payments.tpaga import create_customer as create_customer_tpaga, associate_credit_card, get_credit_card_data
 
-from customer.serializers import CustomerSerializer, CustomerConfigurationSerializer, AddressSerializer, PhoneConfirmationSerializer, ConfirmationSerializer, TPagaTokenSerializer
+from customer.serializers import CustomerSerializer, CustomerConfigurationSerializer, AddressSerializer, PhoneConfirmationSerializer
+from customer.serializers import ConfirmationSerializer, TPagaTokenSerializer, ResetPasswordSerializer
 from customer.models import Customer, Address, Confirmation, TPagaCustomer
 from customer.permissions import IsOwnerOrReadOnly
 from customer.tasks import confirm_user, confirm_email as confirm_email_async
-from customer.services import create_confirmations, create_password_change_token
+from customer.services import create_confirmations, create_password_change_token, confirm_password_token
 
 
 # It seems that two class based views is the best option
@@ -344,6 +345,14 @@ def is_phone_available(request, phone):
         else:
             return Response(False, status=status.HTTP_200_OK)
 
+@api_view(['POST'])
+@permission_classes((AllowAny, ))
+def reset_password(request):
+    serializer = ResetPasswordSerializer(data = request.data)
+    serializer.is_valid()
+    result = confirm_password_token(serializer.data['token'], serializer.data['password'])
+    return Response(status=status.HTTP_200_OK)
+    
 @api_view(['POST'])
 def save_payment_method_tpaga(request):
     serializer = TPagaTokenSerializer(data = request.data)

@@ -47,7 +47,7 @@ def confirm_email(email, code):
 def send_passsword_token(email, token):
     user = User.objects.get(email = email)
     template =  get_template('emails/reset_password.html')
-    url = 'http://%s/resetear-contrasena/%s/' % (os.environ.get('DNS_NAME'), token)
+    url = 'http://%s/restablecer-contrasena/%s/' % (os.environ.get('DNS_NAME'), token)
     context = {'url': url}
     message = template.render(context)
     send_fixit_email('Recupera tu Contraseña', email, 'text/html', message)

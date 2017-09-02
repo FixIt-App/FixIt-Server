@@ -29,7 +29,7 @@ from work.web import schedule_work_view, generate_invoice
 from customer.views import CustomerDetail, CustomerList, AddressList, AddressDetail, confirm_email, confirm_phone, my_confirmation
 from customer.views import get_customer_authenticated, get_customer_adresses, resend_sms_code, resend_verification_email, is_email_available, is_phone_available
 from customer.views import save_payment_method_tpaga, TPagaPaymentDetail, create_password_token
-
+from customer.views import reset_password as api_reset_password
 
 from work.views import start_work, calculate_price
 
@@ -52,7 +52,7 @@ urlpatterns = [
     url(r'^$', landing, name='landing'),
     url(r'^login/', login, name='login'),
     url(r'^signup/', sign_up, name='signup'),
-    url(r'^resetear-contrasena/(?P<token>.*)/$', reset_password, name = 'reset-password'),
+    url(r'^restablecer-contrasena/(?P<token>.*)/$', reset_password, name = 'reset-password'),
     url(r'^trabajos/$', WorkTypeList.as_view(), name='works'),
     url(r'^trabajos/(?P<url_name>.*)/agendar-cita/$', schedule_work_view, name='schedule-work'),
     url(r'^admin/', admin.site.urls),
@@ -89,6 +89,7 @@ urlpatterns = [
     url(r'^api/resend-confirmation-email/$', resend_verification_email),
     url(r'^api/tpago/token/$', save_payment_method_tpaga),
     url(r'^api/customer/tpago/payment/$', TPagaPaymentDetail.as_view()),
+    url(r'^api/reset-password/$', api_reset_password),
     url(r'^api/', include(router.urls)),
 ] 
 if settings.DEBUG == True:

@@ -58,3 +58,7 @@ class PhoneConfirmationSerializer(serializers.Serializer):
 
 class TPagaTokenSerializer(serializers.Serializer):
     token = serializers.CharField()
+
+class ResetPasswordSerializer(serializers.Serializer):
+    token = serializers.CharField()
+    password = serializers.CharField()
