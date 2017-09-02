@@ -25,7 +25,7 @@ from customer.serializers import CustomerSerializer, CustomerConfigurationSerial
 from customer.models import Customer, Address, Confirmation, TPagaCustomer
 from customer.permissions import IsOwnerOrReadOnly
 from customer.tasks import confirm_user, confirm_email as confirm_email_async
-from customer.services import create_confirmations
+from customer.services import create_confirmations, create_password_change_token
 
 
 # It seems that two class based views is the best option
@@ -355,8 +355,20 @@ def save_payment_method_tpaga(request):
         tpagaCustomer.token = serializer.data['token']
         tpagaCustomer.save()
         associate_credit_card(tpagaCustomer.tpaga_id, tpagaCustomer.token, tpagaCustomer)
-        return Response(status = status.HTTP_201_CREATED )
+        return Response(status = status.HTTP_201_CREATED)
     else:
+        return Response(status = status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+@permission_classes((AllowAny, ))
+def create_password_token(request, email):
+    try:
+        print('getting new password token')
+        create_password_change_token(email)
+        return Response(status = status.HTTP_201_CREATED)
+    except Exception as e:
+        print(e)
         return Response(status = status.HTTP_400_BAD_REQUEST)
 
 

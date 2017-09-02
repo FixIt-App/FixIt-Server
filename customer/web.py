@@ -15,6 +15,7 @@ from customer.views import create_confirmations
 import logging
 
 logger = logging.getLogger(__name__)
+
 def login(request):
     if request.method == 'GET':
         context = {'error': None}
@@ -68,3 +69,10 @@ def add_address(request):
             return redirect('schedule-work', url_name = url_name)
     context = {}
     return render(request, 'signup.html', context)
+
+def reset_password(request, token):
+    if request.method == 'GET':
+        context = { 'token': token }
+        return render(request, 'password/reset_password.html', context) 
+    if request.method == 'POST':
+        pass

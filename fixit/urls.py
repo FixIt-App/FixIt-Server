@@ -28,7 +28,7 @@ from work.web import schedule_work_view, generate_invoice
 
 from customer.views import CustomerDetail, CustomerList, AddressList, AddressDetail, confirm_email, confirm_phone, my_confirmation
 from customer.views import get_customer_authenticated, get_customer_adresses, resend_sms_code, resend_verification_email, is_email_available, is_phone_available
-from customer.views import save_payment_method_tpaga, TPagaPaymentDetail
+from customer.views import save_payment_method_tpaga, TPagaPaymentDetail, create_password_token
 
 
 from work.views import start_work, calculate_price
@@ -40,6 +40,7 @@ from image.views import  ImageUploadView
 import os
 
 from work.views import create_work, get_my_works, WorkDetail, assign_work, get_total_price, get_ordered_works
+from customer.web import reset_password
 
 from worktype.web import landing
 
@@ -51,6 +52,7 @@ urlpatterns = [
     url(r'^$', landing, name='landing'),
     url(r'^login/', login, name='login'),
     url(r'^signup/', sign_up, name='signup'),
+    url(r'^resetear-contrasena/(?P<token>.*)/$', reset_password, name = 'reset-password'),
     url(r'^trabajos/$', WorkTypeList.as_view(), name='works'),
     url(r'^trabajos/(?P<url_name>.*)/agendar-cita/$', schedule_work_view, name='schedule-work'),
     url(r'^admin/', admin.site.urls),
@@ -82,6 +84,7 @@ urlpatterns = [
     url(r'^api/devicetoken/$', register_device),
     url(r'^api/dynamicprice/$', calculate_price),
     url(r'^api/devicetoken/(?P<token>.*)/$', remove_device_token),
+    url(r'^api/user/(?P<email>.*)/password/token/$', create_password_token),
     url(r'^api/resend-sms-code/$', resend_sms_code),
     url(r'^api/resend-confirmation-email/$', resend_verification_email),
     url(r'^api/tpago/token/$', save_payment_method_tpaga),

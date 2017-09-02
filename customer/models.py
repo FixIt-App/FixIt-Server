@@ -20,6 +20,10 @@ class Customer(models.Model):
     def __str__(self):
         return self.user.username
 
+class UserChangePassword(models.Model):
+    user = models.OneToOneField(User, on_delete = models.CASCADE)
+    chpwd_token = models.CharField(blank = True, null = True, max_length = 100)
+
 class TPagaCustomer(models.Model):
     """
         Model that saves de Tpago customer information

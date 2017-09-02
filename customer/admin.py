@@ -1,12 +1,16 @@
 from django.contrib import admin
 
 # Register your models here.
-from customer.models import Customer, Address, Confirmation, TPagaCustomer
+from customer.models import Customer, Address, Confirmation, TPagaCustomer, UserChangePassword
 
 class TPagaCustomerAdmin(admin.ModelAdmin):
     pass
 
 admin.site.register(TPagaCustomer, TPagaCustomerAdmin)
+
+class PasswordUpdateTokenAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(UserChangePassword, PasswordUpdateTokenAdmin)
 
 class CustomerAdmin(admin.ModelAdmin):
     list_display = ('id', 'get_username')
