@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from work.models import Work, DynamicPricing
+from work.models import Work, DynamicPricing, Rating
 
 class WorkAdmin(admin.ModelAdmin):
     list_display = ('id', 'state', 'get_customer', 'get_work', 'description', 'time', 'get_address')
@@ -26,7 +26,11 @@ class WorkAdmin(admin.ModelAdmin):
 class DynamicPricingAdmin(admin.ModelAdmin):
     list_display = ('id', 'start', 'end', 'multiplier')
 
+class RatingAdmin(admin.ModelAdmin):
+    list_display = ('id', 'score', 'work')
+
 admin.site.register(Work, WorkAdmin)
 admin.site.register(DynamicPricing, DynamicPricingAdmin)
+admin.site.register(Rating, RatingAdmin)
 
 

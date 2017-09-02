@@ -12,21 +12,15 @@ from rest_framework.views import APIView
 import dateutil
 
 from customer.models import Address, Customer
-
-from image.models import Image
-
-from work.serializers import WorkDTOSerializer, DetailWorkSerializer
-from work.models import Work, DynamicPricing
-
-from worktype.models import WorkType
-
-from worker.models import Worker
-
 from customer.permissions import IsOwnerOrReadOnly
-
+from image.models import Image
+from work.serializers import WorkDTOSerializer, DetailWorkSerializer
+from work.models import Work, DynamicPricing, Rating
+from worktype.models import WorkType
+from worker.models import Worker
+from customer.permissions import IsOwnerOrReadOnly
 from .tasks import notity_assignment as notity_assignment_async
-from .serializers import DetailWorkSerializer, DetailWorkDTOSerializer, PriceSerializer
-
+from .serializers import DetailWorkSerializer, DetailWorkDTOSerializer, PriceSerializer, RatingDTOSerializer
 from .business_logic import create_work_and_enqueue
 
 import logging
@@ -48,25 +42,27 @@ def create_work(request):
             customer = Customer.objects.filter(user__id__exact = user.id).first()
 
             description = ''
-            if(serializer.data.get('description', None) != None):
+            if serializer.data.get('description', None) != None:
                 description = serializer.data['description']
 
             asap = False
             if serializer.data.get('asap', None) != None:
                 asap = serializer.data['asap']
 
+            work = create_work_and_enqueue(worktype = worktype, customer = customer, 
+                                    address = address, time = date, asap = asap, 
+                                    description = description)
             images = []
-            if(serializer.data.get('images', None) != None):
+            if serializer.data.get('images', None) != None:
                 for image in serializer.data['images']:
                     image = Image.objects.filter(id = image).first()
                     image.work = work
                     image.save()
                 images = Image.objects.filter(pk__in = map(int, serializer.data['images']))
+                work.images = images
+                work.save()
                 logger.info('added images for created work')
-            
-            work = create_work_and_enqueue(worktype = worktype, customer = customer, 
-                                    address = address, time = date, asap = asap, 
-                                    description = description, images = images)
+
             
             serializer = DetailWorkSerializer(work)
             return Response(serializer.data, status = status.HTTP_201_CREATED)
@@ -312,3 +308,33 @@ def get_ordered_works(request):
 
     serializer = DetailWorkSerializer(my_works, many = True)
     return Response(serializer.data)    
+
+class RatingList(APIView):
+    permission_classes = ( IsOwnerOrReadOnly,)
+
+    def post(self, request, format = None):
+        logger.info("creating work rating ...")
+        serializer = RatingDTOSerializer(data = request.data)
+        try:
+            if serializer.is_valid():
+                work = Work.objects.filter(id = serializer.data['work_id']).first()
+                self.check_object_permissions(self.request, work)
+                score = serializer.data['score']
+                comment = ''
+                if serializer.data.get('comment', None) != None:
+                    comment = serializer.data['comment']
+
+                if work.rating is not None:
+                    logging.info("can't reassign work")
+                    return Response(status = status.HTTP_403_FORBIDDEN)
+
+                rating = Rating(score = score, comment = comment)
+                rating.save()
+                work.rating = rating
+                work.save()
+                return Response(status = status.HTTP_201_CREATED)
+            else:
+                return Response(status = status.HTTP_400_BAD_REQUEST)
+        except Work.DoesNotExist:
+            logger.error('created rating for a work that does not exist id: ' + serializer.data['work_id'])
+            return Response(status = status.HTTP_400_BAD_REQUEST)
