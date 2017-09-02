@@ -82,7 +82,7 @@ def notity_assignment(workid):
             "type": 'WORKER ASSIGNED',
             "work": serializer,
             "title": work.worktype.name,
-            "body": "Se ha asigando un trabajador"
+            "body": "Se ha asignado un trabajador"
         }
         notification = BaseNotification(notification = notification_body, to = token.token, priority = 10, notification_type = 'WA')
         saved_notification = Notification(user = user, payload = notification.export(), notification_type = 'WA')

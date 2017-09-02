@@ -9,9 +9,11 @@ from sendgrid.helpers.mail import *
 import os
 import boto3
 
+from django.contrib.auth.models import User
 from django.template.loader import get_template
 from django.template import Context
 
+from util.mail import send_fixit_email
 
 
 @task()
@@ -39,6 +41,16 @@ def confirm_email(email, code):
     content = Content("text/html", message)
     mail = Mail(from_email, subject, to_email, content)
     response = sg.client.mail.send.post(request_body=mail.get())
+
+
+@task()
+def send_passsword_token(email, token):
+    user = User.objects.get(email = email)
+    template =  get_template('emails/reset_password.html')
+    url = 'http://%s/restablecer-contrasena/%s/' % (os.environ.get('DNS_NAME'), token)
+    context = {'url': url}
+    message = template.render(context)
+    send_fixit_email('Recupera tu Contraseña', email, 'text/html', message)
     
 
 

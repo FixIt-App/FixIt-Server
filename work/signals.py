@@ -4,11 +4,13 @@ import os
 
 from work.models import Work
 from work.tasks import send_email_async as send_email
-from work.tasks import notity_work_finished
+
+from work.tasks import notity_assignment, notity_work_finished
 
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.contrib.auth import get_user_model
+
 
 @receiver(pre_save, sender=Work)
 def save_profile(sender, instance, **kwargs):
@@ -16,8 +18,17 @@ def save_profile(sender, instance, **kwargs):
         previous = Work.objects.get(pk = instance.id)
         validate_work_was_canceled(previous, instance)
         validate_work_has_finished(previous, instance)
+        validate_worker_changed(previous, instance)
     except Work.DoesNotExist:
         pass
+
+def validate_worker_changed(previous, current):
+    if (previous is not None and previous.id is not None and previous.worker is None and current.worker is not None):
+        notity_assignment.delay(previous.id)
+    elif previous.worker is not None and current.worker is not None:
+        if previous.worker.id != current.worker.id:
+            notity_assignment.delay(previous.id)
+
 
 def validate_work_was_canceled(previous, current):
     if previous.state != current.state and current.state == 'CANCELED':
