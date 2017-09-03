@@ -129,6 +129,20 @@ class WorkDetail(APIView):
             return Response(status = status.HTTP_404_NOT_FOUND)
 
 @api_view(['GET'])
+def get_unassigned_works(request):
+    user = request.user
+    works = Work.objects.filter(state__in = ['ORDERED']).all()
+    state = request.query_params.get('state', None)
+    works = works.order_by('time', '-id').all()
+    my_works = []
+    for work in works:
+        images = Image.objects.filter(work__id__exact = work.id).all()
+        work.images = images
+        my_works.append(work)
+    serializer = DetailWorkSerializer(my_works, many = True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
 def get_my_works(request):
     user = request.user
     customer = Customer.objects.filter(user__id__exact = user.id).first()
