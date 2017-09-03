@@ -288,13 +288,7 @@ def calculate_price(request):
                 response['breakdown'].append(chargeOverNight)
                 total += basePrice * (dynamic.multiplier - 1)
                 break
-
-        taxIva = {}
-        taxIva['name'] = "IVA (19%)"
-        taxIva['price'] = total * decimal.Decimal(0.19)
-        response['breakdown'].append(taxIva)
-
-        response['total'] = total * decimal.Decimal(1.19)
+        response['total'] = total
         return Response(response, status = status.HTTP_200_OK)
     except WorkType.DoesNotExist:
         return Response(status = status.HTTP_404_NOT_FOUND)
