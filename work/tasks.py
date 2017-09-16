@@ -115,7 +115,9 @@ def notity_work_finished(workid):
             "type": 'WORK FINISHED',
             "work": serializer,
             "title": work.worktype.name,
-            "body": "Trabajo terminado. Calificalo."
+            "body": "Trabajo terminado. Califícalo.",
+            "icon": "fixit_push_image",
+            "color": "#12A19B",
         }
         notification = BaseNotification(notification = notification_body, to = token.token, priority = 10, notification_type = 'WF')
         saved_notification = Notification(user = user, payload = notification.export(), notification_type = 'WF')
