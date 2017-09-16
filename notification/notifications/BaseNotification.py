@@ -7,7 +7,8 @@ class BaseNotification():
         self.to = to
         self.notification = notification
         self.notification['notification_type'] = notification_type
-        self.notification['icon'] 
+        self.notification['icon'] = "fixit_push_image"
+        self.notification['color'] = "#12A19B"
 
     def export(self):
          return {
