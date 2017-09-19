@@ -1,4 +1,4 @@
-from customer.models import Customer, Address, Confirmation
+from customer.models import Customer, Address, Confirmation, CreditCard
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
@@ -51,6 +51,13 @@ class AddressSerializer(serializers.ModelSerializer):
         model = Address
         fields  = fields = ('id', 'name', 'address',  'city', 'country', 'latitude', 'longitude')
 
+class CreditCardSerializer(serializers.ModelSerializer):
+    """
+        Address serializer class
+    """
+    class Meta:
+        model = CreditCard
+        fields  = fields = ('id', 'credit_card_id', 'card_holder_name',  'last_four', 'type')
 
 class PhoneConfirmationSerializer(serializers.Serializer):
     username = serializers.CharField()

@@ -4,7 +4,7 @@ import os
 import sys
 
 
-from customer.models import TPagaCustomer, Customer
+from customer.models import TPagaCustomer, Customer, CreditCard
 
 
 def get_credit_card_data(customer_id, credit_card_id):
@@ -48,7 +48,7 @@ def get_credit_card_data(customer_id, credit_card_id):
         print(r.status_code)
         return False
 
-def associate_credit_card(customer_id, credit_card_token, tpaga):
+def associate_credit_card(credit_card_token, tpagaCust):
     """
         Method that associates a credit card to a customer
     """
@@ -61,15 +61,21 @@ def associate_credit_card(customer_id, credit_card_token, tpaga):
         "skipLegalIdCheck": False,
         "token": credit_card_token
     }
-    uri = os.environ.get('TPAGA_HOST') + '/api/customer/%s/credit_card_token' % customer_id
+    uri = os.environ.get('TPAGA_HOST') + '/api/customer/%s/credit_card_token' % tpagaCust.tpaga_id
     print('Making a request tu uri %s' % uri)
     r = requests.post(uri, data = json.dumps(body), headers = headers)
     if r.status_code >= 200 and r.status_code <= 300:
         print('Saved customer data in TPAGO database')
         response = json.loads(r.text)
-        tpaga.credit_card_id =  response['id']
-        tpaga.save()
-        return True
+        print(response)
+        credit_card = CreditCard(
+            credit_card_id = response['id'], 
+            card_holder_name = response['cardHolderName'], 
+            last_four = response['lastFour'], 
+            type = response['type'], 
+            tpagaCustomer = tpagaCust)
+        credit_card.save()
+        return credit_card
     else:
         print('Error saving the customer in TPaga')
         print(r.status_code)

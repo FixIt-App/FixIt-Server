@@ -22,8 +22,8 @@ from rest_framework import permissions
 from payments.tpaga import create_customer as create_customer_tpaga, associate_credit_card, get_credit_card_data
 
 from customer.serializers import CustomerSerializer, CustomerConfigurationSerializer, AddressSerializer, PhoneConfirmationSerializer
-from customer.serializers import ConfirmationSerializer, TPagaTokenSerializer, ResetPasswordSerializer
-from customer.models import Customer, Address, Confirmation, TPagaCustomer
+from customer.serializers import ConfirmationSerializer, TPagaTokenSerializer, ResetPasswordSerializer, CreditCardSerializer
+from customer.models import Customer, Address, Confirmation, TPagaCustomer, CreditCard
 from customer.permissions import IsOwnerOrReadOnly
 from customer.tasks import confirm_user, confirm_email as confirm_email_async
 from customer.services import create_confirmations, create_password_change_token, confirm_password_token
@@ -363,8 +363,12 @@ def save_payment_method_tpaga(request):
         tpagaCustomer = TPagaCustomer.objects.filter(customer__id__exact = customer.id).first()
         tpagaCustomer.token = serializer.data['token']
         tpagaCustomer.save()
-        associate_credit_card(tpagaCustomer.tpaga_id, tpagaCustomer.token, tpagaCustomer)
-        return Response(status = status.HTTP_201_CREATED)
+        creditCard = associate_credit_card(tpagaCustomer.token, tpagaCustomer)
+        if creditCard:
+            serializer = CreditCardSerializer(creditCard)
+            return Response(serializer.data, status = status.HTTP_201_CREATED)
+        else:
+            return Response(status = status.HTTP_400_BAD_REQUEST)
     else:
         return Response(status = status.HTTP_400_BAD_REQUEST)
 
@@ -390,9 +394,15 @@ class TPagaPaymentDetail(APIView):
             user = request.user
             customer = Customer.objects.filter(user__id__exact = user.id).first()
             tpagaCustomer = TPagaCustomer.objects.filter(customer__id__exact = customer.id).first()
-            if tpagaCustomer is None or tpagaCustomer.credit_card_id is None:
+            if tpagaCustomer is None:
                 return Response(status = status.HTTP_404_NOT_FOUND)
-            return Response(get_credit_card_data(tpagaCustomer.tpaga_id, tpagaCustomer.credit_card_id), status = status.HTTP_200_OK)
+
+            creditCards = CreditCard.objects.filter(tpagaCustomer = tpagaCustomer)
+            if creditCards is None:
+                return Response(status = status.HTTP_404_NOT_FOUND)
+
+            serializer = CreditCardSerializer(creditCards, many = True)
+            return Response(serializer.data, status = status.HTTP_200_OK)
         except (Customer.DoesNotExist, TPagaCustomer.DoesNotExist):
             return Response(status = status.HTTP_404_NOT_FOUND)
 
@@ -404,7 +414,9 @@ class TPagaPaymentDetail(APIView):
             if tpagaCustomer is None:
                 return Response(status = status.HTTP_404_NOT_FOUND)
             tpagaCustomer.token = None;
-            tpagaCustomer.credit_card_id = None;
+            creditCard = tpagaCustomer.creditcard_set.first()
+            if creditCard is not None:
+                creditCard.delete()
             tpagaCustomer.save()
             return Response(status = status.HTTP_200_OK)
         except (Customer.DoesNotExist, TPagaCustomer.DoesNotExist):
