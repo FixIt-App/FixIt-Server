@@ -1,12 +1,17 @@
 from django.contrib import admin
 
 # Register your models here.
-from customer.models import Customer, Address, Confirmation, TPagaCustomer, UserChangePassword
+from customer.models import Customer, Address, Confirmation, TPagaCustomer, UserChangePassword, CreditCard
 
 class TPagaCustomerAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('id', 'customer')
 
 admin.site.register(TPagaCustomer, TPagaCustomerAdmin)
+
+class CreditCardAdmin(admin.ModelAdmin):
+    list_display = ('id', 'credit_card_id', 'card_holder_name', 'last_four', 'type')
+
+admin.site.register(CreditCard, CreditCardAdmin)
 
 class PasswordUpdateTokenAdmin(admin.ModelAdmin):
     pass

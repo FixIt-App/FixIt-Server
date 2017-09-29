@@ -20,7 +20,7 @@ class NotificationToken(models.Model):
     platform_type = models.CharField(max_length = 20, choices = PLATFORM_CHOICES, null = True)
 
     def __str__(self):
-        return self.token
+        return str(self.id) + " " + self.token_type + " " + self.platform_type + " " +  str(self.user)
 
 class Notification(models.Model):
 

@@ -31,7 +31,17 @@ class TPagaCustomer(models.Model):
     customer = models.OneToOneField(Customer, on_delete = models.CASCADE, null = False)
     tpaga_id = models.CharField(max_length = 300, blank = False)
     token = models.CharField(max_length = 300, blank = True, null = True, unique = True)
+
+class CreditCard(models.Model):
     credit_card_id = models.CharField(max_length = 300, blank = True, null = True, unique = True)
+    card_holder_name = models.CharField(max_length = 300, blank = True, null = True)
+    last_four = models.IntegerField()
+    TYPE_CHOICES = ( ('VISA', 'VISA'), ('MASTERCARD', 'MASTERCARD'), ('AMEX', 'AMEX'), ('DINERS', 'DINERS') )
+    type = models.CharField(max_length = 20, choices = TYPE_CHOICES, default = 'ORDERED')
+    tpagaCustomer = models.ForeignKey(TPagaCustomer, on_delete=models.CASCADE)
+
+    def __str__(self):
+         return self.credit_card_id + " " + self.type + " " + str(self.last_four)
 
 class Address(models.Model):
     """
