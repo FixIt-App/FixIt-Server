@@ -12,7 +12,7 @@ from datetime import datetime
 
 from customer.models import Customer, Address
 from work.forms import WorkForm
-from work.models import Work
+from work.models import Work, Transaction, TransactionItem
 from worktype.models import WorkType
 from work.business_logic import create_work_and_enqueue
 from work.services import calculate_price
@@ -25,10 +25,19 @@ def generate_invoice(request, pk):
         if work.asap is True:
             asap = 'true'
         pricing = calculate_price(work.worktype.id, asap, work.time)
-        print(str(pricing))
-        return render(request, 'emails/invoice.html', {'work': work, 'pricing': pricing})
+        transaction = Transaction.objects.get(work__id = pk)
+        items = TransactionItem .objects.filter(trx__id = transaction.id).all()
+        return render(request, 'emails/invoice.html', 
+            {
+            'work': work, 
+            'pricing': pricing,
+            'trx': transaction,
+            'items': items,
+            })
     except Work.DoesNotExist:
-        return Http404('Work does not exist')
+        raise Http404('Work does not exist')
+    except Transaction.DoesNotExist:
+        raise Http404('No Transactions for this work')
 
 def schedule_work_view(request, url_name):
     if request.method == 'GET':

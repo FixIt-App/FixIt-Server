@@ -2,8 +2,9 @@ from sendgrid.helpers.mail import *
 import sendgrid
 import os
 
-from work.models import Work
+from work.models import Work, Transaction
 from work.tasks import send_email_async as send_email
+from payments.tpaga import charge_credit_card as charge_tpaga
 
 from work.tasks import notity_assignment, notity_work_finished
 
@@ -21,6 +22,12 @@ def save_profile(sender, instance, **kwargs):
         validate_worker_changed(previous, instance)
     except Work.DoesNotExist:
         pass
+
+@receiver(pre_save, sender=Transaction)
+def charge_credit_card(sender, instance, **kwargs):
+    previous = Work.objects.get(pk = instance.id)
+    if previous is not None and instance.state == 'CHARGE':
+        charge_tpaga(instance.id)
 
 def validate_worker_changed(previous, current):
     if (previous is not None and previous.id is not None and previous.worker is None and current.worker is not None):
