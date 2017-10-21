@@ -9,6 +9,27 @@ from customer.models import TPagaCustomer, Customer, CreditCard
 from work.models import Transaction, TransactionItem, Work
 
 
+
+def rollback_tpaga(transaction_id):
+    transaction = Transaction.objects.get(pk = transaction_id)
+    headers = {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Basic %s" % (os.environ.get('TPAGA_KEY')) 
+    }
+    content = {
+        'id': transaction.third_party_id
+    }
+    uri = os.environ.get('TPAGA_HOST')  + '/api/refund/credit_card'
+    r = requests.post(uri, data = json.dumps(content), headers = headers)
+    if r.status_code >= 200 and r.status_code < 300:
+        print('Transaction %s rollbacked succesfully' % str(transaction.id))
+        transaction.state = 'REFUNDED'
+        transaction.save()
+    else:
+        raise Exception("Error fatal al hacer rollback")
+
+
 def charge_credit_card(transaction_id):
     """
         Method that charges to a credit card
@@ -51,9 +72,10 @@ def charge_credit_card(transaction_id):
         }
         uri = os.environ.get('TPAGA_HOST')  + '/api/charge/credit_card'
         r = requests.post(uri, data = json.dumps(content), headers = headers)
-        if r.status_code >= 200 and r.status_code <= 300:
+        if r.status_code >= 200 and r.status_code < 300:
             print('Transaction %s finshed succesfully' % str(transaction.id))
             response = json.loads(r.text)
+            transaction.third_party_id = response['id']
             transaction.timestamp = datetime.now()
             transaction.third_party_response = r.text
             transaction.credit_card = credit_card
@@ -104,7 +126,7 @@ def get_credit_card_data(customer_id, credit_card_id):
     uri = os.environ.get('TPAGA_HOST')  + '/api/customer/%s/credit_card/%s' % (customer_id, credit_card_id)
     print('making request to uri %s' % uri)
     r = requests.get(uri, headers = headers)
-    if r.status_code >= 200 and r.status_code <= 300:
+    if r.status_code >= 200 and r.status_code < 300:
         print('getting card from tpaga database')
         response = json.loads(r.text)
         return response

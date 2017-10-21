@@ -4,7 +4,7 @@ import os
 
 from work.models import Work, Transaction
 from work.tasks import send_email_async as send_email
-from payments.tpaga import charge_credit_card as charge_tpaga
+from payments.tpaga import charge_credit_card as charge_tpaga, rollback_tpaga
 
 from work.tasks import notity_assignment, notity_work_finished
 
@@ -29,6 +29,8 @@ def charge_credit_card(sender, instance, **kwargs):
         previous = Transaction.objects.get(pk = instance.id)
         if previous is not None and instance.state == 'CHARGE':
             charge_tpaga(instance.id)
+        if previous is not None and instance.state == 'ROLLBACK':
+            rollback_tpaga(instance.id)
     except Transaction.DoesNotExist:
         pass
 

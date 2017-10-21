@@ -45,12 +45,14 @@ class Transaction(models.Model):
     STATE_CHOICES = (
         ('CREATING', 'CREATING'),
         ('CHARGE', 'CHARGE'),
-        ('ROLLBACKED', 'ROLLBACKED'),
+        ('ROLLBACK', 'ROLLBACK'),
         ('PAYED', 'PAYED'),
+        ('REFUNDED', 'REFUNDED'),
     )
     state =  models.CharField(max_length = 20, choices = STATE_CHOICES, default = 'CREATING')
     third_party_response = JSONField(null = True, default = None, blank = True)
-
+    third_party_id = models.CharField(max_length = 255, null = True, blank = True)
+    
     def __str__(self):
         return str(self.receipt_number)
 
