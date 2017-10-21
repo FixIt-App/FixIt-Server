@@ -8,7 +8,7 @@ from payments.tpaga import charge_credit_card as charge_tpaga
 
 from work.tasks import notity_assignment, notity_work_finished
 
-from django.db.models.signals import pre_save
+from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.contrib.auth import get_user_model
 
@@ -23,11 +23,14 @@ def save_profile(sender, instance, **kwargs):
     except Work.DoesNotExist:
         pass
 
-@receiver(pre_save, sender=Transaction)
+@receiver(post_save, sender=Transaction)
 def charge_credit_card(sender, instance, **kwargs):
-    previous = Work.objects.get(pk = instance.id)
-    if previous is not None and instance.state == 'CHARGE':
-        charge_tpaga(instance.id)
+    try:
+        previous = Transaction.objects.get(pk = instance.id)
+        if previous is not None and instance.state == 'CHARGE':
+            charge_tpaga(instance.id)
+    except Transaction.DoesNotExist:
+        pass
 
 def validate_worker_changed(previous, current):
     if (previous is not None and previous.id is not None and previous.worker is None and current.worker is not None):

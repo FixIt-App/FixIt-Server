@@ -25,7 +25,7 @@ class NotificationToken(models.Model):
 class Notification(models.Model):
 
     user = models.ForeignKey(User, on_delete = models.SET_NULL, null = True)
-    payload = JSONField(null = True, default = None)
+    payload = JSONField(null = True, default = None, blank = True)
     TYPE_CHOICES = (
         ('WC', 'WORK CREATED'),
         ('WA', 'WORKER ASSIGNED'),

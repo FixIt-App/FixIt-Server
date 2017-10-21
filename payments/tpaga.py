@@ -27,8 +27,8 @@ def charge_credit_card(transaction_id):
     """
     try: 
         transaction = Transaction.objects.get(pk = transaction_id)
-        sub_total = TransactionItem.objects.get(transaction__id = transaction.id, item_type = 'SUB_TOTAL')
-        taxes = TransactionItem.objects.get(transaction__id = transaction.id, item_type = 'IVA')
+        sub_total = TransactionItem.objects.get(trx__id = transaction.id, item_type = 'SUBTOTAL')
+        taxes = TransactionItem.objects.get(trx__id = transaction.id, item_type = 'IVA')
         work = Work.objects.get(pk = transaction.work.id)
         tpaga_customer = TPagaCustomer.objects.get(customer__id = work.customer.id)
         credit_card = CreditCard.objects.get(tpagaCustomer__id = tpaga_customer.id)
@@ -50,24 +50,27 @@ def charge_credit_card(transaction_id):
             "Authorization": "Basic %s" % (os.environ.get('TPAGA_KEY')) 
         }
         uri = os.environ.get('TPAGA_HOST')  + '/api/charge/credit_card'
+        r = requests.post(uri, data = json.dumps(content), headers = headers)
         if r.status_code >= 200 and r.status_code <= 300:
             print('Transaction %s finshed succesfully' % str(transaction.id))
             response = json.loads(r.text)
             transaction.timestamp = datetime.now()
             transaction.third_party_response = r.text
+            transaction.credit_card = credit_card
+            transaction.state = 'PAYED'
             transaction.save()
         else:
             raise Exception("Error fatal al procesar el pago D:")
     except Transaction.DoesNotExist:
-        pass
+        raise Exception("Transaction not found")
     except TransactionItem.DoesNotExist:
-        pass
+        raise Exception("TransactionItem not found")
     except Work.DoesNotExist:
-        pass
+        raise Exception("Work not found")
     except TPagaCustomer.DoesNotExist:
-        pass
+        raise Exception("tpaga customer not found")
     except CreditCard.DoesNotExist:
-        pass
+        raise Exception("Credit card not found")
 
 def get_credit_card_data(customer_id, credit_card_id):
     """

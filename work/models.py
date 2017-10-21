@@ -34,7 +34,7 @@ class Work(models.Model):
     state = models.CharField(max_length = 20, choices = STATE_CHOICES, default = 'ORDERED')
 
     def __str__(self):
-        return "Id %s  Usuario: %s | Trabajo: %s | Hora: %s | Dirección: %s " % (str(self.id), self.customer.user.email, self.worktype.name, str(self.time), self.address.address, )
+        return "Id %s  Usuario: %s - %s | Trabajo: %s | Hora: %s | Dirección: %s " % (str(self.id), self.customer.user.username, self.customer.user.id, self.worktype.name, str(self.time), self.address.address, )
 
 class Transaction(models.Model):
     timestamp = models.TimeField(auto_now = True, blank = False)
@@ -46,9 +46,10 @@ class Transaction(models.Model):
         ('CREATING', 'CREATING'),
         ('CHARGE', 'CHARGE'),
         ('ROLLBACKED', 'ROLLBACKED'),
+        ('PAYED', 'PAYED'),
     )
     state =  models.CharField(max_length = 20, choices = STATE_CHOICES, default = 'CREATING')
-    third_party_response = JSONField(null = True, default = None)
+    third_party_response = JSONField(null = True, default = None, blank = True)
 
     def __str__(self):
         return str(self.receipt_number)
