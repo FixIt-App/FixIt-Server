@@ -2,12 +2,13 @@ from sendgrid.helpers.mail import *
 import sendgrid
 import os
 
-from work.models import Work
+from work.models import Work, Transaction
 from work.tasks import send_email_async as send_email
+from payments.tpaga import charge_credit_card as charge_tpaga, rollback_tpaga
 
 from work.tasks import notity_assignment, notity_work_finished
 
-from django.db.models.signals import pre_save
+from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.contrib.auth import get_user_model
 
@@ -20,6 +21,17 @@ def save_profile(sender, instance, **kwargs):
         validate_work_has_finished(previous, instance)
         validate_worker_changed(previous, instance)
     except Work.DoesNotExist:
+        pass
+
+@receiver(post_save, sender=Transaction)
+def charge_credit_card(sender, instance, **kwargs):
+    try:
+        previous = Transaction.objects.get(pk = instance.id)
+        if previous is not None and instance.state == 'CHARGE':
+            charge_tpaga(instance.id)
+        if previous is not None and instance.state == 'ROLLBACK':
+            rollback_tpaga(instance.id)
+    except Transaction.DoesNotExist:
         pass
 
 def validate_worker_changed(previous, current):

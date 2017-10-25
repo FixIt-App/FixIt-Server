@@ -2,6 +2,8 @@ from django.db import models
 from worktype.models import WorkType
 from customer.models import Customer, Address
 from worker.models import Worker
+from customer.models import CreditCard
+from django.contrib.postgres.fields import JSONField
 
 class Rating(models.Model):
     score = models.IntegerField(blank = False)
@@ -32,8 +34,47 @@ class Work(models.Model):
     state = models.CharField(max_length = 20, choices = STATE_CHOICES, default = 'ORDERED')
 
     def __str__(self):
-        return "Usuario: %s | Trabajo: %s | Hora: %s | Dirección: %s " % (self.customer.user.email, self.worktype.name, str(self.time), self.address.address, )
-        
+        return "Id %s  Usuario: %s - %s | Trabajo: %s | Hora: %s | Dirección: %s " % (str(self.id), self.customer.user.username, self.customer.user.id, self.worktype.name, str(self.time), self.address.address, )
+
+class Transaction(models.Model):
+    timestamp = models.TimeField(auto_now = True, blank = False)
+    work = models.OneToOneField(Work, on_delete = models.CASCADE, blank = True, null = True)
+    receipt_number = models.IntegerField(blank = False, unique = True, null = False)
+    value = models.IntegerField(blank = False, null = False)
+    credit_card = models.ForeignKey(CreditCard, on_delete = models.CASCADE, blank = True, null = True)
+    STATE_CHOICES = (
+        ('CREATING', 'CREATING'),
+        ('CHARGE', 'CHARGE'),
+        ('ROLLBACK', 'ROLLBACK'),
+        ('PAYED', 'PAYED'),
+        ('REFUNDED', 'REFUNDED'),
+    )
+    state =  models.CharField(max_length = 20, choices = STATE_CHOICES, default = 'CREATING')
+    third_party_response = JSONField(null = True, default = None, blank = True)
+    third_party_id = models.CharField(max_length = 255, null = True, blank = True)
+    
+    def __str__(self):
+        return str(self.receipt_number)
+
+class TransactionItem(models.Model):
+    trx = models.ForeignKey(Transaction, blank = False, null = False)
+    description = models.TextField(blank = False, null = False)
+    price = models.IntegerField(blank = False, null = False)
+    TYPE_CHOICES = (
+        ('SERVICE', 'SERVICE'),
+        ('IVA', 'IVA'),
+        ('SUBTOTAL', 'SUBTOTAL'),
+        ('SUPPLY', 'SUPPLY'),
+        ('TOTAL', 'TOTAL'),
+    )
+    item_type =  models.CharField(max_length = 20, choices = TYPE_CHOICES, default = 'SERVICE')
+    bill_support = models.FileField(upload_to='uploads/%Y/%m/%d/', null = True, blank = True)
+
+
+    def __str__(self):
+        return str(self.id)
+
+
 class DynamicPricing(models.Model):
 
     start = models.TimeField(auto_now = False, blank = False)
