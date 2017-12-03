@@ -54,6 +54,6 @@ def convert_images_to_dict(images):
         return None
     image_list = []
     print("returning image list")
-    for image in images:
-        image_list.append(str(image.url))
+    for image in images.all():
+        image_list.append(str(image.image.url))
     return image_list
