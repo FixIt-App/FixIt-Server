@@ -1,18 +1,29 @@
 import json
 import requests
 import os
-
+from oauth2client.service_account import ServiceAccountCredentials
 from notification.models import Notification
 
 class Firebase(object):
 
+    URL = "https://fcm.googleapis.com/v1/projects/fixit-463da/messages:send"  
+    FCM_SCOPE = ['https://www.googleapis.com/auth/firebase.messaging']
+
+    @staticmethod
+    def get_access_token():
+        # TODO: change file path
+        credentials = ServiceAccountCredentials.from_json_keyfile_name('/Users/alfredo/Documents/projects/fixit/FixIt-Server/notification/service-account.json', Firebase.FCM_SCOPE)
+        access_token_info = credentials.get_access_token()
+        return access_token_info.access_token
+
     @staticmethod
     def send_notification(notification):
         headers = {
-            "Content-Type": "application/json",
-            "Authorization": "key=%s" % os.environ.get('FIREBASE_CUSTOMER_KEY') 
+            'Authorization': 'Bearer ' + Firebase.get_access_token(),
+            'Content-Type': 'application/json; UTF-8',
         }
-        r = requests.post('https://fcm.googleapis.com/fcm/send', data = json.dumps(notification.export()), headers = headers)
+        
+        r = requests.post(Firebase.URL, data = json.dumps(notification.export()), headers = headers)
         if r.status_code >= 200 and r.status_code <= 300:
             return True
         else:

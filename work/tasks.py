@@ -82,9 +82,9 @@ def notity_assignment(workid):
             "type": 'WORKER ASSIGNED',
             "work": serializer,
             "title": work.worktype.name,
-            "body": "Se ha asignado un trabajador"
+            "message": "Se ha asignado un trabajador..."
         }
-        notification = BaseNotification(notification = notification_body, to = token.token, priority = 10, notification_type = 'WA')
+        notification = BaseNotification(data = notification_body, token = token.token, priority = 10, notification_type = 'WA')
         saved_notification = Notification(user = user, payload = notification.export(), notification_type = 'WA')
         saved_notification.save()
         sent = Firebase.send_notification(notification)
@@ -115,11 +115,9 @@ def notity_work_finished(workid):
             "type": 'WORK FINISHED',
             "work": serializer,
             "title": work.worktype.name,
-            "body": "Trabajo terminado. Califícalo.",
-            "icon": "fixit_push_image",
-            "color": "#12A19B",
+            "message": "Trabajo terminado. Califícalo."
         }
-        notification = BaseNotification(notification = notification_body, to = token.token, priority = 10, notification_type = 'WF')
+        notification = BaseNotification(data = notification_body, token = token.token, priority = 10, notification_type = 'WF')
         saved_notification = Notification(user = user, payload = notification.export(), notification_type = 'WF')
         saved_notification.save()
         sent = Firebase.send_notification(notification)
