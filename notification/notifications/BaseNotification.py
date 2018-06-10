@@ -1,4 +1,5 @@
 
+from flatten_json import flatten
 
 class BaseNotification():
 
@@ -10,18 +11,23 @@ class BaseNotification():
         self.data['icon'] = "fixit_push_image"
         self.data['color'] = "#12A19B"
 
+    def dictToString(self, dict):
+        for key, value in dict.items():
+            if not isinstance(value, str):
+                dict[key] = str(value)
+        return dict
+
     def export(self):
-        # TODO: fabi mandar todo lo de data
-         return {
+        flat_data = flatten(self.data, separator = ".")
+        flat_data_all_strings = self.dictToString(flat_data)
+        return {
             "message": {
                 "token": self.token,
-                "data": {
-                    "icon": "aca deberia ir todo lo de self.data",
-                },
+                "data": flat_data_all_strings,
                 "notification": {
                     "body": self.data['message'],
                     "title": self.data['title']
                 }
-             }
-         }
+            }
+        }
 
