@@ -26,7 +26,7 @@ export AWS_DEFAULT_REGION=
 
 #firebase configuration
 export FIREBASE_CUSTOMER_KEY=
-
+export FCM_SERVICE_ACCOUNT_PATH=
 # server conf
 export DNS_NAME=localhost
 
